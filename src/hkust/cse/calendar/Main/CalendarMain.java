@@ -11,6 +11,7 @@ public class CalendarMain {
 	public static boolean logOut = false;
 	
 	public static void main(String[] args) {
+		Debug.main();
 		while(true){
 			logOut = false;
 			try{
