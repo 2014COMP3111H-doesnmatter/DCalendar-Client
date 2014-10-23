@@ -1,11 +1,9 @@
 package hkust.cse.calendar.api.welcome;
 
-import java.io.IOException;
-
-import java.io.OutputStream;
-
 import hkust.cse.calendar.utils.network.BaseAPI;
-import hkust.cse.calendar.utils.network.QueryString;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginAPI extends BaseAPI {
 	static String baseURL = "/welcome/login";
@@ -23,17 +21,13 @@ public class LoginAPI extends BaseAPI {
 	}
 	
 	@Override
-	public void writeRequestBody(OutputStream out) {
-		try {
-			QueryString queryStr = new QueryString();
-			queryStr.add("username", username);
-			queryStr.add("password", password);
-			String body = queryStr.toString();
-			out.write(body.getBytes());
-		} catch(IOException e) {
-			e.printStackTrace();
-			return;
-		}
+	protected Map<String, String> getParam() {
+		Map<String, String> params = new HashMap<String, String>();
+		
+		params.put("username", username);
+		params.put("password", password);
+		
+		return params;
 	}
 	
 	@Override

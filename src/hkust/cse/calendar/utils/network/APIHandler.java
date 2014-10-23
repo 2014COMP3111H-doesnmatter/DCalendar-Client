@@ -30,17 +30,21 @@ public class APIHandler implements Runnable {
 	
 	public APIHandler(BaseAPI api) {
 		this.api = api;
-		connection = prepareConnection(this.api.getRequestURL(), this.api.getRequestMethod());
+		connection = prepareConnection();
 	}
 	
-	static protected HttpURLConnection prepareConnection(String sUrl, String method) {
+	protected HttpURLConnection prepareConnection() {
 		HttpURLConnection conn;
+		String sUrl = this.api.getRequestURL();
+		String method = this.api.getRequestMethod();
+		String contentType = this.api.getRequestContentType();
 		try {
 			URL url = new URL(sUrl);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod(method);
 			if(!method.equals("GET")) {
-				conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+				conn.setRequestProperty("Content-Type", contentType);
+				conn.setDoOutput(true);
 			}
 			conn.setRequestProperty("Accept", "application/json");
 			conn.setRequestProperty("Accept-Charset", "utf-8");
@@ -59,14 +63,15 @@ public class APIHandler implements Runnable {
 		for(HttpCookie cookie: cookies) {
 			connection.addRequestProperty("Cookie", cookie.getValue());
 		}
-		connection.setDoOutput(true);
-		try {
-			OutputStream os = connection.getOutputStream();
-			this.api.writeRequestBody(os);
-			os.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
+		if(connection.getDoOutput()) {
+			try {
+				OutputStream os = connection.getOutputStream();
+				this.api.writeRequestBody(os);
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
 		}
 		connection.connect();
 	}
