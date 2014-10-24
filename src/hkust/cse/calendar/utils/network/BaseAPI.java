@@ -9,14 +9,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import hkust.cse.calendar.Main.Config;
+import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.EventSource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class BaseAPI {
-	private List<APIRequestEventListener> successListener = new ArrayList<APIRequestEventListener>();
-	private List<APIRequestEventListener> failListener = new ArrayList<APIRequestEventListener>();
-	private List<APIRequestEventListener> doneListener = new ArrayList<APIRequestEventListener>();
+public abstract class BaseAPI extends EventSource {
+	private List<GenListener<APIRequestEvent>> successListener = new ArrayList<GenListener<APIRequestEvent>>();
+	private List<GenListener<APIRequestEvent>> failListener = new ArrayList<GenListener<APIRequestEvent>>();
+	private List<GenListener<APIRequestEvent>> doneListener = new ArrayList<GenListener<APIRequestEvent>>();
 	
 	abstract public String getRequestURL();
 	
@@ -59,22 +61,20 @@ public abstract class BaseAPI {
 		return Config.baseServerURL + route;
 	}
 	
-	public void addSuccessListener(APIRequestEventListener listener) {
+	public void addSuccessListener(GenListener<APIRequestEvent> listener) {
 		this.successListener.add(listener);
 	}
 	
-	public void addFailListener(APIRequestEventListener listener) {
+	public void addFailListener(GenListener<APIRequestEvent> listener) {
 		this.failListener.add(listener);
 	}
 	
-	public void addDoneListener(APIRequestEventListener listener) {
+	public void addDoneListener(GenListener<APIRequestEvent> listener) {
 		this.doneListener.add(listener);
 	}
 	
 	private void notifyListener(JSONObject response) {
 		APIRequestEvent e = new APIRequestEvent(this, response);
-		APIRequestEventListener listener;
-		Iterator<APIRequestEventListener> itr;
 		int rtnCode;
 		
 		try {
@@ -85,26 +85,14 @@ public abstract class BaseAPI {
 		}
 		
 		//Do done for all
-		itr = this.doneListener.iterator();
-		while(itr.hasNext()) {
-			listener = itr.next();
-			listener.fireAPIRequestEvent(e);
-		}
+		fireList(doneListener, e);
 		
 		//Do success only when succeed
 		if(rtnCode == 200) {
-			itr = this.successListener.iterator();
-			while(itr.hasNext()) {
-				listener = itr.next();
-				listener.fireAPIRequestEvent(e);
-			}
+			fireList(successListener, e);
 		}
 		else {
-			itr = this.failListener.iterator();
-			while(itr.hasNext()) {
-				listener = itr.next();
-				listener.fireAPIRequestEvent(e);
-			}
+			fireList(failListener, e);
 		}
 	}
 };
