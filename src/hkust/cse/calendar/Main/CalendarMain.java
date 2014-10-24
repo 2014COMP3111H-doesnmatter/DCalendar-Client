@@ -4,7 +4,8 @@ package hkust.cse.calendar.Main;
 
 import javax.swing.UIManager;
 
-import hkust.cse.calendar.gui.LoginDialog;
+import hkust.cse.calendar.gui.controller.LoginController;
+import hkust.cse.calendar.gui.view.PrimLoginView;
 
 
 public class CalendarMain {
@@ -19,7 +20,8 @@ public class CalendarMain {
 			}catch(Exception e){
 				
 			}
-			LoginDialog loginDialog = new LoginDialog();
+			LoginController loginCtrl = new LoginController(new PrimLoginView());
+			loginCtrl.start();
 			while(logOut == false){
 				try {
 					Thread.sleep(300);
