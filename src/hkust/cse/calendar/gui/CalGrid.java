@@ -1,6 +1,6 @@
 package hkust.cse.calendar.gui;
 
-import hkust.cse.calendar.Main.CalendarMain;
+
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
@@ -348,7 +348,7 @@ public class CalGrid extends JFrame implements ActionListener {
 					//controller.dumpStorageToFile();
 					//System.out.println("closed");
 					dispose();
-					CalendarMain.logOut = true;
+					//CalendarMain.logOut = true;
 					return;	//return to CalendarMain()
 				}
 			}
