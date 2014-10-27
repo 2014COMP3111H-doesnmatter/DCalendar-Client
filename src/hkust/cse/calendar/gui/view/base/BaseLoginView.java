@@ -18,9 +18,7 @@ abstract public class BaseLoginView extends BaseView implements GenListener<Logi
 		fireList(nListener, e);
 	}
 	
-	public void fireEvent(LoginControllerEvent e) {
-		System.out.println(e.getCommand());
-	}
+	abstract public void fireEvent(LoginControllerEvent e);
 	
 	static public class LoginViewEvent extends EventObject {
 		public enum Command {

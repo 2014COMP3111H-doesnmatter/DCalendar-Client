@@ -1,23 +1,20 @@
 package hkust.cse.calendar.gui.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JFrame;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import hkust.cse.calendar.Main.DCalendarApp;
-import hkust.cse.calendar.api.welcome.LoginAPI;
+import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
+import hkust.cse.calendar.apptstorage.ApptStorageNullImpl;
+import hkust.cse.calendar.gui.CalGrid;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
 import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.model.User.UserQuery;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
-import hkust.cse.calendar.utils.network.APIHandler;
-import hkust.cse.calendar.utils.network.APIRequestEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JFrame;
 
 public class LoginController 
 extends EventSource implements Controller {
@@ -70,7 +67,9 @@ extends EventSource implements Controller {
 				DCalendarApp.getApp().setCurrentUser(user);
 				
 				// Pass control to another controller
-				System.out.println("hey~");
+				//System.out.println("hey~");
+				view.dispose();
+				CalGrid grid = new CalGrid(new ApptStorageControllerImpl(new ApptStorageNullImpl(new User())));
 			}
 			else if(rtnVal == UserQuery.RtnValue.AUTH_FAIL) {
 				LoginControllerEvent ev = new LoginControllerEvent(this, LoginControllerEvent.Command.PROMPT_ERR);

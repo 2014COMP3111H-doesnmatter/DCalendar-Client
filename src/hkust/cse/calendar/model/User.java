@@ -12,13 +12,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User extends EventSource {
-	private String mID;						// User id
+	private int id;						// User id
 	private String username;
 
 	public User() { }
 
-	public String getmID() {
-		return mID;
+	public int getId() {
+		return id;
 	}
 
 	public String getUsername() {
@@ -39,6 +39,9 @@ public class User extends EventSource {
 					if(rtnCode == 200) {
 						qry.setRtnValue(UserQuery.RtnValue.AUTH_OK);
 						User user = new User();
+						JSONObject userJson = json.getJSONObject("user");
+						user.id = userJson.getInt("id");
+						user.username = userJson.getString("username");
 						qry.setUser(user);
 					}
 					else if(rtnCode == 201 || rtnCode == 202) {

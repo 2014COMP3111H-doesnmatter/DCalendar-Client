@@ -97,7 +97,7 @@ public class DetailsDialog extends JFrame implements ActionListener {
 		area.append("Time: " + time + "\n");
 		area.append("\nParticipants:\n");
 		area.append("  Attend:");
-		LinkedList<String> attendList = appt.getAttendList();
+		LinkedList<Integer> attendList = appt.getAttendList();
 		if(attendList != null)
 		{
 			for(int i = 0; i < attendList.size(); i++)
@@ -106,7 +106,7 @@ public class DetailsDialog extends JFrame implements ActionListener {
 			}
 		}
 		area.append("\n\n  Reject:");
-		LinkedList<String> rejectList = appt.getRejectList();
+		LinkedList<Integer> rejectList = appt.getRejectList();
 		if(rejectList != null)
 		{
 			for(int i = 0; i < rejectList.size(); i++)
@@ -115,7 +115,7 @@ public class DetailsDialog extends JFrame implements ActionListener {
 			}
 		}
 		area.append("\n\n  Waiting:");
-		LinkedList<String> waitingList = appt.getWaitingList();
+		LinkedList<Integer> waitingList = appt.getWaitingList();
 		if(waitingList != null)
 		{
 			for(int i = 0; i < waitingList.size(); i++)

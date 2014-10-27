@@ -2,7 +2,7 @@ package hkust.cse.calendar.apptstorage;
 
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.model.User;
 
 /* This class is for managing the Appt Storage according to different actions */
 public class ApptStorageControllerImpl {

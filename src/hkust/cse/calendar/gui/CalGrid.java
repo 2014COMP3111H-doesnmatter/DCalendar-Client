@@ -4,7 +4,7 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.model.User;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -452,7 +452,7 @@ public class CalGrid extends JFrame implements ActionListener {
 
 	public void UpdateCal() {
 		if (mCurrUser != null) {
-			mCurrTitle = "Desktop Calendar - " + mCurrUser.ID() + " - ";
+			mCurrTitle = "Desktop Calendar - " + mCurrUser.getId() + " - ";
 			this.setTitle(mCurrTitle + "(" + currentY + "-" + currentM + "-"
 					+ currentD + ")");
 			Appt[] monthAppts = null;

@@ -17,11 +17,11 @@ public class Appt implements Serializable {
 
 	private boolean isjoint;					// The appointment is a joint appointment
 	
-	private LinkedList<String> attend;			// The Attendant list
+	private LinkedList<Integer> attend;			// The Attendant list
 	
-	private LinkedList<String> reject;			// The reject list
+	private LinkedList<Integer> reject;			// The reject list
 	
-	private LinkedList<String> waiting;			// The waiting list
+	private LinkedList<Integer> waiting;			// The waiting list
 	
 	public Appt() {								// A default constructor used to set all the attribute to default values
 		mApptID = 0;
@@ -29,9 +29,9 @@ public class Appt implements Serializable {
 		mTitle = "Untitled";
 		mInfo = "";
 		isjoint = false;
-		attend = new LinkedList<String>();
-		reject = new LinkedList<String>();
-		waiting = new LinkedList<String>();
+		attend = new LinkedList<Integer>();
+		reject = new LinkedList<Integer>();
+		waiting = new LinkedList<Integer>();
 		joinApptID = -1;
 	}
 
@@ -64,76 +64,79 @@ public class Appt implements Serializable {
 		this.joinApptID = joinID;
 	}
 	// Getter of the attend LinkedList<String>
-	public LinkedList<String> getAttendList(){
+	public LinkedList<Integer> getAttendList(){
 		return attend;
 	}
 	
 	// Getter of the reject LinkedList<String>
-	public LinkedList<String> getRejectList(){
+	public LinkedList<Integer> getRejectList(){
 		return reject;
 	}
 	
 	// Getter of the waiting LinkedList<String>
-	public LinkedList<String> getWaitingList(){
+	public LinkedList<Integer> getWaitingList(){
 		return waiting;
 	}
 	
-	public LinkedList<String> getAllPeople(){
-		LinkedList<String> allList = new LinkedList<String>();
+	public LinkedList<Integer> getAllPeople(){
+		
+		LinkedList<Integer> allList = new LinkedList<Integer>();
 		allList.addAll(attend);
 		allList.addAll(reject);
 		allList.addAll(waiting);
 		return allList;
 	}
 	
-	public void addAttendant(String addID){
+	public void addAttendant(Integer addID){
 		if (attend == null)
-			attend = new LinkedList<String>();
+			attend = new LinkedList<Integer>();
 		attend.add(addID);
 	}
 	
-	public void addReject(String addID){
+	public void addReject(int addID){
 		if (reject == null)
-			reject = new LinkedList<String>();
+			reject = new LinkedList<Integer>();
 		reject.add(addID);
 	}
 	
-	public void addWaiting(String addID){
+	public void addWaiting(Integer addID){
 		if (waiting == null)
-			waiting = new LinkedList<String>();
+			waiting = new LinkedList<Integer>();
 		waiting.add(addID);
 	}
 	
-	public void setWaitingList(LinkedList<String> waitingList){
+	public void setWaitingList(LinkedList<Integer> waitingList){
 		waiting = waitingList;
 	}
 	
 	public void setWaitingList(String[] waitingList){
-		LinkedList<String> tempLinkedList = new LinkedList<String>();
+		/*
+		LinkedList<Integer> tempLinkedList = new LinkedList<Integer>();
 		if (waitingList !=null){
 			for (int a=0; a<waitingList.length; a++){
 				tempLinkedList.add(waitingList[a].trim());
 			}
 		}
-		waiting = tempLinkedList;
+		waiting = tempLinkedList;*/
 	}
 	
-	public void setRejectList(LinkedList<String> rejectLinkedList) {
-		reject = rejectLinkedList;
+	public void setRejectList(LinkedList<Integer> rejectLinkedList) {
+		//reject = rejectLinkedList;
 	}
 	
 	public void setRejectList(String[] rejectList){
+		/*
 		LinkedList<String> tempLinkedList = new LinkedList<String>();
 		if (rejectList !=null){
 			for (int a=0; a<rejectList.length; a++){
 				tempLinkedList.add(rejectList[a].trim());
 			}
 		}
-		reject = tempLinkedList;
+		reject = tempLinkedList;*/
 	}
 	
 	public void setAttendList(LinkedList<String> attendLinkedList) {
-		attend = attendLinkedList;
+		//attend = attendLinkedList;
 	}
 	
 	public void setAttendList(String[] attendList){
@@ -143,7 +146,7 @@ public class Appt implements Serializable {
 				tempLinkedList.add(attendList[a].trim());
 			}
 		}
-		attend = tempLinkedList;
+		//attend = tempLinkedList;
 	}
 	// Getter of the appointment title
 	public String toString() {
