@@ -32,7 +32,7 @@ public class LoginAPI extends BaseAPI {
 	
 	@Override
 	public String getRequestMethod() {
-		return "GET";
+		return "POST";
 	}
 	
 }
