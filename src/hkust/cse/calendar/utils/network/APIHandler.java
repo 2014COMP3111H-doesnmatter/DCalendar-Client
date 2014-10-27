@@ -58,20 +58,10 @@ public class APIHandler implements Runnable {
 	}
 	
 	private void dispatchRequest() throws IOException {
-		CookieStore store = cookieManager.getCookieStore();
-		List<HttpCookie> cookies = store.getCookies();
-		for(HttpCookie cookie: cookies) {
-			connection.addRequestProperty("Cookie", cookie.getValue());
-		}
 		if(connection.getDoOutput()) {
-			try {
-				OutputStream os = connection.getOutputStream();
-				this.api.writeRequestBody(os);
-				os.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return;
-			}
+			OutputStream os = connection.getOutputStream();
+			this.api.writeRequestBody(os);
+			os.close();
 		}
 		connection.connect();
 	}
