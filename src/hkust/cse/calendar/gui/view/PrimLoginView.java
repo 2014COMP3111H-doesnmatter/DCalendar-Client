@@ -14,9 +14,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import hkust.cse.calendar.gui.controller.LoginControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
+import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
 
 public class PrimLoginView extends BaseLoginView implements ActionListener {
 	private JTextField userName;
@@ -30,7 +32,9 @@ public class PrimLoginView extends BaseLoginView implements ActionListener {
 		
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				System.exit(0);
+				LoginViewEvent ev = new LoginViewEvent(this);
+				ev.setCommand(LoginViewEvent.Command.EXIT);
+				triggerLoginViewEvent(ev);
 			}
 		});
 
@@ -69,7 +73,7 @@ public class PrimLoginView extends BaseLoginView implements ActionListener {
 		JPanel butPanel = new JPanel();
 		butPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-		button = new JButton("Log in (No user name and password required)");
+		button = new JButton("Log in");
 		button.addActionListener(this);
 		butPanel.add(button);
 		
@@ -81,29 +85,35 @@ public class PrimLoginView extends BaseLoginView implements ActionListener {
 		
 		pack();
 		setLocationRelativeTo(null);
-		//setVisible(true);
 	}
 	
 	@Override
 	public void fireEvent(LoginControllerEvent e) {
-		String command = e.getCommand();
-		if(command.equals("START")) {
+		LoginControllerEvent.Command command = e.getCommand();
+		if(command == LoginControllerEvent.Command.START) {
 			setVisible(true);
 		}
-		else if(command.equals("LoginPending")) {
+		else if(command == LoginControllerEvent.Command.LOGINPENDING) {
 			button.setEnabled(false);
 			button.setText("Logging in...");
+		}
+		else if(command == LoginControllerEvent.Command.PROMPT_ERR) {
+			button.setEnabled(true);
+			button.setText("Log in");
+			String errTitle = e.getErrTitle();
+			String errText = e.getErrText();
+			JOptionPane.showMessageDialog(null, errText, errTitle, JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		LoginViewEvent ev = new LoginViewEvent(this);
 		if(e.getSource() == button)
 		{
 			// When the button is clicked, check the user name and password, and try to log the user in
 			
-			LoginViewEvent ev = new LoginViewEvent(this);
-			ev.setCommand("Login");
+			ev.setCommand(LoginViewEvent.Command.LOGIN);
 			ev.setUsername(userName.getText());
 			ev.setPassword(new String(password.getPassword()));
 			
@@ -117,8 +127,10 @@ public class PrimLoginView extends BaseLoginView implements ActionListener {
 		{
 			int n = JOptionPane.showConfirmDialog(null, "Exit Program ?",
 					"Confirm", JOptionPane.YES_NO_OPTION);
-			if (n == JOptionPane.YES_OPTION)
-				System.exit(0);			
+			if (n == JOptionPane.YES_OPTION) {
+				ev.setCommand(LoginViewEvent.Command.EXIT);
+				triggerLoginViewEvent(ev);
+			}
 		}
 	}
 }

@@ -4,19 +4,29 @@ import java.util.EventObject;
 
 
 public class LoginControllerEvent extends EventObject {
-	private String command;
+	static public enum Command {
+		START,
+		LOGINPENDING,
+		PROMPT_ERR
+	};
+	private Command command;
 	private String errTitle;
 	private String errText;
 	
 	public LoginControllerEvent(final Object source) {
 		super(source);
 	}
+	
+	public LoginControllerEvent(final Object source, Command command) {
+		super(source);
+		this.command = command;
+	}
 
-	public String getCommand() {
+	public Command getCommand() {
 		return command;
 	}
 
-	public void setCommand(final String command) {
+	public void setCommand(final Command command) {
 		this.command = command;
 	}
 

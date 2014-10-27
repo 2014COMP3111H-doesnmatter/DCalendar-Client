@@ -22,21 +22,30 @@ abstract public class BaseLoginView extends BaseView implements GenListener<Logi
 		System.out.println(e.getCommand());
 	}
 	
-	public class LoginViewEvent extends EventObject {
-		private static final long serialVersionUID = 1L;
-		private String command;
+	static public class LoginViewEvent extends EventObject {
+		public enum Command {
+			LOGIN,
+			SIGNUP,
+			EXIT
+		};
+		private Command command;
 		private String username;
 		private String password;
 		
 		public LoginViewEvent(Object source) {
 			super(source);
 		}
+		
+		public LoginViewEvent(Object source, Command command) {
+			super(source);
+			this.command = command;
+		}
 
-		public String getCommand() {
+		public Command getCommand() {
 			return command;
 		}
 
-		public void setCommand(String command) {
+		public void setCommand(Command command) {
 			this.command = command;
 		}
 

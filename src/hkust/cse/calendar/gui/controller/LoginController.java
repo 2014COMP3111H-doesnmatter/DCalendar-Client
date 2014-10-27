@@ -3,46 +3,93 @@ package hkust.cse.calendar.gui.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.api.welcome.LoginAPI;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
+import hkust.cse.calendar.model.User;
+import hkust.cse.calendar.model.User.UserQuery;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 import hkust.cse.calendar.utils.network.APIHandler;
 import hkust.cse.calendar.utils.network.APIRequestEvent;
 
 public class LoginController 
-extends EventSource {
+extends EventSource implements Controller {
 	private BaseLoginView view;
 	GenListener<LoginViewEvent> loginViewListener= new GenListener<LoginViewEvent>() {
 		@Override
 		public void fireEvent(LoginViewEvent e) {
-			String command = e.getCommand();
+			LoginViewEvent.Command command = e.getCommand();
 			LoginControllerEvent ev = new LoginControllerEvent(this);
 			
-			if(command.equals("Login")) {
+			if(command == LoginViewEvent.Command.LOGIN) {
 				String username = e.getUsername();
 				String password = e.getPassword();
-				LoginAPI api = new LoginAPI(username, password);
-				api.addDoneListener(apiRequestListener);
-				Thread thrd = new Thread(new APIHandler(api));
-				thrd.start();
 				
-				ev.setCommand("LoginPending");
+				if(username.length() == 0) {
+					ev.setCommand(LoginControllerEvent.Command.PROMPT_ERR);
+					ev.setErrTitle("Invalid username");
+					ev.setErrText("Username cannot be empty");
+					fireList(nListener, ev);
+					return;
+				}
+				
+				if(password.length() == 0) {
+					ev.setCommand(LoginControllerEvent.Command.PROMPT_ERR);
+					ev.setErrTitle("Invalid password");
+					ev.setErrText("Password cannot be empty");
+					fireList(nListener, ev);
+					return;
+				}
+				
+				User.authUser(username, password, userQuerytListener);
+				ev.setCommand(LoginControllerEvent.Command.LOGINPENDING);
+				fireList(nListener, ev);
 			}
-			else if(command.equals("")) {
+			else if(command == LoginViewEvent.Command.SIGNUP) {
 				
 			}
-			else {
-				
+			else if(command == LoginViewEvent.Command.EXIT) {
+				DCalendarApp.getApp().exitApp();
+				view.dispose();
 			}
-			fireList(nListener, ev);
 		}
 	};
-	GenListener<APIRequestEvent> apiRequestListener = new GenListener<APIRequestEvent>() {
+	GenListener<UserQuery> userQuerytListener = new GenListener<UserQuery>() {
 		@Override
-		public void fireEvent(APIRequestEvent e) {
-			System.out.println(e.getJSON().toString());
+		public void fireEvent(UserQuery qry) {
+			UserQuery.RtnValue rtnVal = qry.getRtnValue();
+			if(rtnVal == UserQuery.RtnValue.AUTH_OK) {
+				User user = qry.getUser();
+				DCalendarApp.getApp().setCurrentUser(user);
+				
+				// Pass control to another controller
+				System.out.println("hey~");
+			}
+			else if(rtnVal == UserQuery.RtnValue.AUTH_FAIL) {
+				LoginControllerEvent ev = new LoginControllerEvent(this, LoginControllerEvent.Command.PROMPT_ERR);
+				ev.setErrText("Username or password incorrect");
+				ev.setErrTitle("Authentication Failed");
+				fireList(nListener, ev);
+			}
+			else if(rtnVal == UserQuery.RtnValue.NETWORK_ERR) {
+				LoginControllerEvent ev = new LoginControllerEvent(this, LoginControllerEvent.Command.PROMPT_ERR);
+				ev.setErrText("Network is not available, please check your connection");
+				ev.setErrTitle("Connection Failed");
+				fireList(nListener, ev);
+			}
+			else if(rtnVal == UserQuery.RtnValue.UNKNOWN_ERR) {
+				LoginControllerEvent ev = new LoginControllerEvent(this, LoginControllerEvent.Command.PROMPT_ERR);
+				ev.setErrText("Oops");
+				ev.setErrTitle("Unknown Error");
+				fireList(nListener, ev);
+			}
 		}
 	};
 	private List<GenListener<LoginControllerEvent>> nListener = new ArrayList<GenListener<LoginControllerEvent>>();
@@ -50,6 +97,7 @@ extends EventSource {
 	public LoginController(BaseLoginView view) {
 		this.view = view;
 		this.view.addLoginEventListener(loginViewListener);
+		this.view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.addLoginEventListener(view);
 		
 	}
@@ -68,7 +116,7 @@ extends EventSource {
 	
 	public void start() {
 		LoginControllerEvent e = new LoginControllerEvent(this);
-		e.setCommand("START");
+		e.setCommand(LoginControllerEvent.Command.START);
 		fireList(nListener, e);
 	}
 	
