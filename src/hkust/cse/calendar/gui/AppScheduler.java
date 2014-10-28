@@ -234,7 +234,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 		} else if (e.getSource() == rejectBut){
 			if (JOptionPane.showConfirmDialog(this, "Reject this joint appointment?", "Confirmation", JOptionPane.YES_NO_OPTION) == 0){
-				NewAppt.addReject(getCurrentUser());
+				//NewAppt.addReject(getCurrentUser());
 				NewAppt.getAttendList().remove(getCurrentUser());
 				NewAppt.getWaitingList().remove(getCurrentUser());
 				this.setVisible(false);
@@ -390,7 +390,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 	}
 	
-	public int getCurrentUser()		// get the id of the current user
+	public long getCurrentUser()		// get the id of the current user
 	{
 		return this.parent.mCurrUser.getId();
 	}
