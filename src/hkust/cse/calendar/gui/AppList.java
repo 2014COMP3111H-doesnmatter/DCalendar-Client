@@ -468,7 +468,6 @@ public class AppList extends JPanel implements ActionListener {
 			return;
 		}
 		int startTime;
-		
 		if (currentCol < 3)
 			startTime = currentRow * 15 + 480;
 		else
