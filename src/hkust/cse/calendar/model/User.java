@@ -11,15 +11,10 @@ import java.util.EventObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User extends EventSource {
-	private int id;						// User id
+public class User extends BaseModel {
 	private String username;
 
 	public User() { }
-
-	public int getId() {
-		return id;
-	}
 
 	public String getUsername() {
 		return username;
@@ -40,7 +35,7 @@ public class User extends EventSource {
 						qry.setRtnValue(UserQuery.RtnValue.AUTH_OK);
 						User user = new User();
 						JSONObject userJson = json.getJSONObject("user");
-						user.id = userJson.getInt("id");
+						user.id = userJson.getLong("id");
 						user.username = userJson.getString("username");
 						qry.setUser(user);
 					}
