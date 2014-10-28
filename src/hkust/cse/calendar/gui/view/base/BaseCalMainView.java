@@ -1,13 +1,16 @@
 package hkust.cse.calendar.gui.view.base;
 
 import hkust.cse.calendar.gui.controller.LoginControllerEvent;
+import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-abstract public class BaseCalMainView extends BaseView implements GenListener<LoginControllerEvent> {
+import javax.swing.JFrame;
+
+abstract public class BaseCalMainView extends JFrame implements GenListener<LoginControllerEvent> {
 	private List<GenListener<CalMainViewEvent>> nListener = new ArrayList<GenListener<CalMainViewEvent>>();
 
 	public void addLoginEventListener(GenListener<CalMainViewEvent> listener) {
@@ -15,7 +18,7 @@ abstract public class BaseCalMainView extends BaseView implements GenListener<Lo
 	}
 	
 	final protected void triggerLoginViewEvent(CalMainViewEvent e) {
-		fireList(nListener, e);
+		EventSource.fireList(nListener, e);
 	}
 	
 	abstract public void fireEvent(LoginControllerEvent e);
