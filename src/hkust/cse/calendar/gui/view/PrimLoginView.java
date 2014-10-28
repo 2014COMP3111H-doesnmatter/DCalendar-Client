@@ -37,7 +37,6 @@ public class PrimLoginView extends BaseLoginView implements ActionListener {
 				triggerLoginViewEvent(ev);
 			}
 		});
-
 		
 		Container contentPane;
 		contentPane = getContentPane();
@@ -107,7 +106,6 @@ public class PrimLoginView extends BaseLoginView implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		LoginViewEvent ev = new LoginViewEvent(this);
 		if(e.getSource() == button)
 		{

@@ -19,7 +19,7 @@ import javax.swing.JFrame;
 public class LoginController 
 extends EventSource implements Controller {
 	private BaseLoginView view;
-	GenListener<LoginViewEvent> loginViewListener= new GenListener<LoginViewEvent>() {
+	private GenListener<LoginViewEvent> loginViewListener= new GenListener<LoginViewEvent>() {
 		@Override
 		public void fireEvent(LoginViewEvent e) {
 			LoginViewEvent.Command command = e.getCommand();
@@ -58,7 +58,7 @@ extends EventSource implements Controller {
 			}
 		}
 	};
-	GenListener<UserQuery> userQuerytListener = new GenListener<UserQuery>() {
+	private GenListener<UserQuery> userQuerytListener = new GenListener<UserQuery>() {
 		@Override
 		public void fireEvent(UserQuery qry) {
 			UserQuery.RtnValue rtnVal = qry.getRtnValue();
