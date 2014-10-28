@@ -47,6 +47,7 @@ public abstract class BaseAPI extends EventSource {
 		while(itr.hasNext()) {
 			Entry<String, String> pair = itr.next();
 			queryStr.add(pair.getKey(), pair.getValue());
+			itr.remove();
 		}
 		return queryStr.toString();
 	}
