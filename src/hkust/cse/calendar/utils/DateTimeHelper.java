@@ -84,4 +84,8 @@ public class DateTimeHelper {
 		nextMonth.setDate(1);
 		return (int) ((nextMonth.getTime() - thisMonth.getTime()) / TIME_OF_DAY);
 	}
+	
+	static public int getDifferenceInDay(long stampA, long stampB) {
+		return (int)((stampA - stampB) / TIME_OF_DAY);
+	}
 }
