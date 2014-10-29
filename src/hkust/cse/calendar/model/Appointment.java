@@ -19,6 +19,10 @@ public class Appointment extends BaseModel {
 	private int frequency;
 	private long lastDay;
 	
+	public Appointment() {
+		name = "Untitled";
+	}
+	
 	public Appointment(JSONObject json) throws JSONException {
 		id = json.getInt("id");
 		name = json.getString("name");

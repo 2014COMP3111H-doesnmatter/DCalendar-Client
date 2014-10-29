@@ -31,6 +31,7 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 	}
 
 	public void paintContent() {
+		setTitle("Information");
 
 		Container content = getContentPane();
 		
@@ -59,6 +60,8 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 	}
 
 	public void displayText(Appointment appt) {
+		setTitle(appt.getName());
+		
 		Date startTime = new Date(appt.getStartTime());
 		Date endTime = new Date(appt.getEndTime());
 		
@@ -68,7 +71,7 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 		area.setText("Appointment Information \n");
 		area.append("Title: " + appt.getName() + "\n");
 		area.append("Time: " + time + "\n");
-		area.append("\n\nDescription: \n" + appt.getInfo());
+		area.append("\nDescription: \n" + appt.getInfo());
 		area.setEditable(false);
 	}
 
