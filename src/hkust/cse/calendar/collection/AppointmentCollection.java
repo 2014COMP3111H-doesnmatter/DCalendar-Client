@@ -81,12 +81,12 @@ public class AppointmentCollection extends BaseCollection {
 						}
 						flagHasEvent();
 						state = CLEAN;
-						ev.setCommand(CollectionEvent.Command.INFO_UPDATE);
+						triggerUpdate();
 					}
 					else {
 						ev.setCommand(CollectionEvent.Command.NETWORK_ERR);
+						fireList(colListener, ev);
 					}
-					fireList(colListener, ev);
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
@@ -113,6 +113,7 @@ public class AppointmentCollection extends BaseCollection {
 						if(DateTimeHelper.isInMonth(startOfMonth, rtnAppt)) {
 							aAppt.put(rtnAppt.getId(), rtnAppt);
 							flagHasEvent();
+							triggerUpdate();
 						}
 					}
 					else if(rtnCode == 405) {
@@ -161,6 +162,7 @@ public class AppointmentCollection extends BaseCollection {
 							aAppt.put(rtnAppt.getId(), rtnAppt);
 						}
 						flagHasEvent();
+						triggerUpdate();
 					}
 					else if(rtnCode == 405) {
 						qry.setCommand(EditAppointmentQuery.Command.APPT_NOT_FOUND);
@@ -208,6 +210,7 @@ public class AppointmentCollection extends BaseCollection {
 						if(aAppt.containsKey(appt.getId())) {
 							aAppt.remove(appt.getId());
 							flagHasEvent();
+							triggerUpdate();
 						}
 					}
 					else if(rtnCode == 405) {
@@ -274,7 +277,7 @@ public class AppointmentCollection extends BaseCollection {
 		}
 	}
 
-	public void getOccupiedInMonth(final long startOfMonth, final GenListener<MonthAppointmentQuery> listener) {
+	public void getOccupiedInMonth(final GenListener<MonthAppointmentQuery> listener) {
 		switch(state) {
 		case DIRTY:
 			load();
@@ -293,7 +296,7 @@ public class AppointmentCollection extends BaseCollection {
 					try {
 						int rtnCode = json.getInt("rtnCode");
 						if(rtnCode == 200) {
-							sendMonthQuery(startOfMonth, listener);
+							sendMonthQuery(listener);
 							return;
 						}
 						else if(rtnCode == -1) {
@@ -311,8 +314,19 @@ public class AppointmentCollection extends BaseCollection {
 			});
 			break;
 		default:
-			sendMonthQuery(startOfMonth, listener);
+			sendMonthQuery(listener);
 		}
+	}
+	
+	public void setMonthStart(long stamp) {
+		state = DIRTY;
+		this.startOfMonth = DateTimeHelper.getStartOfMonth(stamp);
+		load();
+	}
+	
+	private void triggerUpdate() {
+		CollectionEvent ev = new CollectionEvent(this, CollectionEvent.Command.INFO_UPDATE);
+		fireList(colListener, ev);
 	}
 	
 	private void sendListQuery(long startOfDay, GenListener<ListAppointmentQuery> listener) {
@@ -331,7 +345,7 @@ public class AppointmentCollection extends BaseCollection {
 		fireTo(listener, qry);
 	}
 	
-	private void sendMonthQuery(long startOfMonth, GenListener<MonthAppointmentQuery> listener) {
+	private void sendMonthQuery(GenListener<MonthAppointmentQuery> listener) {
 		MonthAppointmentQuery qry = new MonthAppointmentQuery(this, MonthAppointmentQuery.Command.OK);
 		qry.occupied = aHasEvent.clone();
 		fireTo(listener, qry);
