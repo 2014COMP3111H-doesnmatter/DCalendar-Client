@@ -94,11 +94,7 @@ extends EventSource implements Controller {
 	private List<GenListener<LoginControllerEvent>> nListener = new ArrayList<GenListener<LoginControllerEvent>>();
 	
 	public LoginController(BaseLoginView view) {
-		this.view = view;
-		this.view.addLoginEventListener(loginViewListener);
-		this.view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.addLoginEventListener(view);
-		
+		setView(view);
 	}
 
 	public BaseLoginView getView() {
@@ -107,6 +103,9 @@ extends EventSource implements Controller {
 
 	public void setView(BaseLoginView view) {
 		this.view = view;
+		this.view.addLoginEventListener(loginViewListener);
+		this.view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.addLoginEventListener(view);
 	}
 
 	public void addLoginEventListener(GenListener<LoginControllerEvent> listener) {

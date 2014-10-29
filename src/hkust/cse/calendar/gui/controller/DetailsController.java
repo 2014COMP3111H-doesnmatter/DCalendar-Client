@@ -32,10 +32,7 @@ extends EventSource implements Controller {
 	};
 	
 	public DetailsController(BaseDetailsView view) {
-		this.view = view;
-		this.view.addDetailsEventListener(detailsViewListener);
-		this.view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.addDetailsEventListener(view);
+		setView(view);
 	}
 	
 	public void addDetailsEventListener(GenListener<DetailsControllerEvent> listener) {
