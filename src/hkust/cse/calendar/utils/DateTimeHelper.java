@@ -17,7 +17,7 @@ public class DateTimeHelper {
 		
 		long startOfAppt = appt.getStartTime();
 		long endOfAppt = appt.getLastDay();
-		if(startOfAppt >= nextMonthStamp || (endOfAppt < startOfMonth && endOfAppt != 0L)) {
+		if(startOfAppt >= nextMonthStamp || endOfAppt < startOfMonth) {
 			return false;
 		}
 		if(appt.getFrequency() == Appointment.Frequency.MONTHLY) {
@@ -35,7 +35,7 @@ public class DateTimeHelper {
 		
 		long startOfAppt = appt.getStartTime();
 		long endOfAppt = appt.getLastDay();
-		if(startOfAppt >= nextDayStamp || (endOfAppt < startOfDay && endOfAppt != 0L)) {
+		if(startOfAppt >= nextDayStamp || endOfAppt < startOfDay) {
 			return false;
 		}
 		switch(appt.getFrequency()) {
