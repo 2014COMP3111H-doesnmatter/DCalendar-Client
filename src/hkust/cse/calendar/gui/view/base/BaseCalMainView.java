@@ -31,7 +31,8 @@ abstract public class BaseCalMainView extends JFrame implements GenListener<CalM
 		public enum Command {
 			LOGOUT,
 			EXIT,
-			MANUAL_SCHEDULE
+			MANUAL_SCHEDULE,
+			TIME_MACHINE
 		};
 		private Command command;
 		

@@ -31,7 +31,7 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements
 		TimeMachineControllerEvent.Command command = e.getCommand();
 		switch(command) {
 		case START:
-			
+			this.setVisible(true);
 		}
 
 	}

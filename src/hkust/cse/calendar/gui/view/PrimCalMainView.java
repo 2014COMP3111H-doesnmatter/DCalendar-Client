@@ -46,6 +46,7 @@ public class PrimCalMainView extends BaseCalMainView implements ActionListener {
 	private JMenuItem logoutMenuItem;
 	private JMenuItem exitMenuItem;
 	private JMenuItem mannualScheduleMenuItem;
+	private JMenuItem timeMachineMenuItem;
 	
 	public PrimCalMainView() {
 		super();
@@ -113,6 +114,23 @@ public class PrimCalMainView extends BaseCalMainView implements ActionListener {
 		menuBar.add(apptMenu);
 		//End of Appointment Menu
 		
+		//Begin of Timemachine Menu
+		JMenu timeMachineMenu = new JMenu("Time Machine");
+		timeMachineMenu.setMnemonic('T');
+		timeMachineMenu.getAccessibleContext().setAccessibleDescription(
+				"Manage Time Machine");
+		
+
+		timeMachineMenuItem = new JMenuItem("Tune Time");
+		timeMachineMenuItem.setMnemonic('u');
+		timeMachineMenuItem.getAccessibleContext().setAccessibleDescription(
+				"How time flies");
+		timeMachineMenuItem.addActionListener(this);
+		timeMachineMenu.add(timeMachineMenuItem);
+		//End of Timemachine menu
+		
+		menuBar.add(timeMachineMenu);
+		
 		return menuBar;
 	}
 	
@@ -130,6 +148,10 @@ public class PrimCalMainView extends BaseCalMainView implements ActionListener {
 		}
 		else if(obj == mannualScheduleMenuItem) {
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.MANUAL_SCHEDULE);
+			triggerCalMainViewEvent(ev);
+		}
+		else if(obj == timeMachineMenuItem) {
+			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.TIME_MACHINE);
 			triggerCalMainViewEvent(ev);
 		}
 	}
