@@ -25,10 +25,18 @@ public abstract class BaseMonthSelectorView extends JPanel implements GenListene
 
 	public static class MonthSelectorViewEvent extends EventObject {
 		public enum Command {
-			// TODO Auto-generated enum
-			PLACEHOLDER,
+			UPDATE,
+			UPDATE_YEAR,
+			UPDATE_MONTH,
+			PREV_YEAR,
+			NEXT_YEAR
 		};
 		private Command command;
+		private int year;
+		/**
+		 * From 0-11, as in Date
+		 */
+		private int month;
 		public MonthSelectorViewEvent(Object source) {
 			super(source);
 		}
@@ -43,6 +51,32 @@ public abstract class BaseMonthSelectorView extends JPanel implements GenListene
 
 		public void setCommand(Command command) {
 			this.command = command;
+		}
+
+		/**
+		 * Full year in this event. Equivalent to Date.getYear() + 1900
+		 * @see java.util.Date#getYear
+		 * @return the month
+		 */
+		public int getYear() {
+			return year;
+		}
+
+		public void setYear(int year) {
+			this.year = year;
+		}
+
+		/**
+		 * A number in 0-11 with 0=January, 11=December
+		 * @see java.util.Date#getMonth
+		 * @return the month
+		 */
+		public int getMonth() {
+			return month;
+		}
+
+		public void setMonth(int month) {
+			this.month = month;
 		}
 	}
 

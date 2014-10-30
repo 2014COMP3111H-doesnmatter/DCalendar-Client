@@ -101,15 +101,8 @@ extends EventSource implements Controller {
 		this.view.setApptListView(apptListController.getView());
 		
 		// month selector
-		monthSelectorController = new MonthSelectorController(manager.getMonthSelectorView());
+		monthSelectorController = new MonthSelectorController(manager.getMonthSelectorView(), model);
 		this.view.setMonthSelectView(monthSelectorController.getView());
-		
-		User user = DCalendarApp.getApp().getCurrentUser();
-		
-		CalMainControllerEvent e = new CalMainControllerEvent(this, CalMainControllerEvent.Command.UPDATE_INFO);
-		e.setSelectedDay(today);
-		e.setUsername(user.getUsername());
-		
 		
 		//Force trigger a model update
 		model.setSelectedDayStamp(today);
