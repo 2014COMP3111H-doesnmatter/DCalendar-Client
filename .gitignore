@@ -14,3 +14,4 @@ hs_err_pid*
 
 bin/
 src/hkust/cse/calendar/Main/Debug.java
+gui_kickstart/generated_tree/
