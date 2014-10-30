@@ -15,19 +15,19 @@ import javax.swing.JPanel;
 public abstract class BaseApptListView extends JPanel implements GenListener<ApptListControllerEvent>
 {
 	public static class ApptListViewEvent extends EventObject {
-		public static final class Command {
-			public static final int PLACEHOLDER = 0;
+		public enum Command {
+			PLACEHOLDER,
 		};
-		private int command;
+		private Command command;
 		public ApptListViewEvent(Object source) {
 			super(source);
 		}
 		
-		public ApptListViewEvent(Object source, int command) {
+		public ApptListViewEvent(Object source, Command command) {
 			super(source);
 			this.command = command;
 		}
-		public int getCommand() {
+		public Command getCommand() {
 			return command;
 		}
 
