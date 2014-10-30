@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -16,6 +17,7 @@ import javax.swing.JSplitPane;
 
 import hkust.cse.calendar.gui.controller.CalMainControllerEvent;
 import hkust.cse.calendar.gui.controller.LoginControllerEvent;
+import hkust.cse.calendar.gui.view.base.BaseApptListView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
@@ -24,15 +26,15 @@ import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
  * Display the main window with menu bar.
  * 
  * The main layout by this view is<pre>
- * ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
- * ©À©¤©¤©¤©¤©¤©¤©¤©¤©Ð©¤©¤©¤©¤©¤©¤©¤©¤©È
- * ©¦ select ©¦ select ©¦
- * ©¦ month  ©¦ day    ©¦
- * ©À©¤©¤©¤©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¤©¤©¤©È
- * ©¦                 ©¦
- * ©¦   Appointment   ©¦
- * ©¦   List          ©¦
- * ©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ select ï¿½ï¿½ select ï¿½ï¿½
+ * ï¿½ï¿½ month  ï¿½ï¿½ day    ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½                 ï¿½ï¿½
+ * ï¿½ï¿½   Appointment   ï¿½ï¿½
+ * ï¿½ï¿½   List          ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * </pre>
  * @author john
  *
@@ -154,6 +156,14 @@ public class PrimCalMainView extends BaseCalMainView implements ActionListener {
 		upperPane.setRightComponent(monthView);
 		pack();
 		repaint();
+	}
+
+	@Override
+	public void setApptListView(BaseApptListView apptListView) {
+		wholePane.setBottomComponent(apptListView);
+		pack();
+		repaint();
+		
 	}
 	
 }

@@ -9,6 +9,7 @@ import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.collection.AppointmentCollection;
 import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
+import hkust.cse.calendar.gui.view.PrimApptListView;
 import hkust.cse.calendar.gui.view.PrimCalMonthView;
 import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
@@ -86,6 +87,10 @@ extends EventSource implements Controller {
 		
 		monthController = new CalMonthController(manager.getCalMonthView(), model, aAppt);
 		this.view.setCalMonthView(monthController.getView());
+		
+		// appt list
+		ApptListController apptListController = new ApptListController(new PrimApptListView());
+		this.view.setApptListView(apptListController.getView());
 		
 		User user = DCalendarApp.getApp().getCurrentUser();
 		

@@ -23,6 +23,7 @@ abstract public class BaseCalMainView extends JFrame implements GenListener<CalM
 	}
 	
 	abstract public void setCalMonthView(BaseCalMonthView monthView);
+	abstract public void setApptListView(BaseApptListView apptListView);
 	
 	abstract public void fireEvent(CalMainControllerEvent e);
 	
