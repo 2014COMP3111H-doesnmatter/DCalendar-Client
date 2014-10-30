@@ -28,10 +28,10 @@ public class PrimApptListView extends BaseApptListView implements
 
 	@Override
 	public void fireEvent(ApptListControllerEvent e) {
-		int command = e.getCommand();
+		ApptListControllerEvent.Command command = e.getCommand();
 		switch(command) {
-		case ApptListControllerEvent.Command.START:
-			setVisible(true);
+		case START:
+			
 		}
 
 	}

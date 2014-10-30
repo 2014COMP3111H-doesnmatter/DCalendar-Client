@@ -27,5 +27,4 @@ public class TimeMachineControllerEvent extends EventObject
 	public void setCommand(int command) {
 		this.command = command;
 	}
-
 }

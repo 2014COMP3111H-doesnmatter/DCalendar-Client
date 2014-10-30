@@ -15,7 +15,7 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements
 
 	public PrimTimeMachineView()
 	{
-		JLabel p = new JLabel("PrimApptListView");
+		JLabel p = new JLabel("PrimTimeMachineView");
 		this.add(p);
 		
 	}
@@ -28,10 +28,10 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements
 
 	@Override
 	public void fireEvent(TimeMachineControllerEvent e) {
-		int command = e.getCommand();
+		TimeMachineControllerEvent.Command command = e.getCommand();
 		switch(command) {
-		case TimeMachineControllerEvent.Command.START:
-			setVisible(true);
+		case START:
+			
 		}
 
 	}

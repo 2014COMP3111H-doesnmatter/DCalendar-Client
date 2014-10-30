@@ -6,25 +6,25 @@ import java.util.EventObject;
 
 public class ApptListControllerEvent extends EventObject
 {
-	static public final class Command {
-		public static final int START = 0;
+	static public enum Command {
+		START,
 	};
-	private int command;
+	private Command command;
 	
 	public ApptListControllerEvent(final Object source) {
 		super(source);
 	}
 	
-	public ApptListControllerEvent(final Object source, int command) {
+	public ApptListControllerEvent(final Object source, Command command) {
 		super(source);
 		this.command = command;
 	}
 
-	public int getCommand() {
+	public Command getCommand() {
 		return command;
 	}
 
-	public void setCommand(int command) {
+	public void setCommand(Command command) {
 		this.command = command;
 	}
 

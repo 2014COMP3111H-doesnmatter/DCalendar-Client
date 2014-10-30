@@ -39,3 +39,4 @@ public abstract class BaseTimeMachineView extends JPanel implements GenListener<
 	@Override
 	abstract public void fireEvent(TimeMachineControllerEvent e);
 }
+

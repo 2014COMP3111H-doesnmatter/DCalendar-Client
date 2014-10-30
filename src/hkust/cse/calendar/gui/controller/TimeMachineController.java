@@ -42,5 +42,5 @@ public class TimeMachineController extends EventSource implements Controller
 		TimeMachineControllerEvent e = new TimeMachineControllerEvent(this, TimeMachineControllerEvent.Command.START);
 		fireList(aListener, e);
 	}
-
 }
+
