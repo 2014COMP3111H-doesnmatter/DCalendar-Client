@@ -219,6 +219,7 @@ public class PrimApptListView extends BaseApptListView implements
 		{
 		case START:
 		case SET_APPOINTMENT:
+			this.clear();
 			this.setTodayAppt(e.aAppt);
 		}
 
