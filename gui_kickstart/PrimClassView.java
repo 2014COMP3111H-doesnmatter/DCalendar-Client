@@ -8,12 +8,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 
-public class Prim{placeholder}View extends Base{placeholder}View implements
-		ActionListener
-{
-
-	public Prim{placeholder}View()
-	{
+public class Prim{placeholder}View extends Base{placeholder}View implements ActionListener {
+	public Prim{placeholder}View() {
 		JLabel p = new JLabel("Prim{placeholder}View");
 		this.add(p);
 		// TODO Auto-generated method stub
@@ -30,11 +26,9 @@ public class Prim{placeholder}View extends Base{placeholder}View implements
 		{placeholder}ControllerEvent.Command command = e.getCommand();
 		switch(command) {
 		case START:
-			
+			// TODO Auto-generated method stub
 		}
 
 	}
 	
-	
-
 }

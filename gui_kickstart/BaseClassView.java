@@ -11,8 +11,7 @@ import java.util.List;
 
 import javax.swing.{placeholder_ex};
 
-public abstract class Base{placeholder}View extends {placeholder_ex} implements GenListener<{placeholder}ControllerEvent>
-{
+public abstract class Base{placeholder}View extends {placeholder_ex} implements GenListener<{placeholder}ControllerEvent> {
 	private List<GenListener<{placeholder}ViewEvent>> aListener = new ArrayList<GenListener<{placeholder}ViewEvent>>();
 
 	public void add{placeholder}EventListener(GenListener<{placeholder}ViewEvent> listener) {

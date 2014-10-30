@@ -2,8 +2,7 @@ package hkust.cse.calendar.gui.controller;
 
 import java.util.EventObject;
 
-public class {placeholder}ControllerEvent extends EventObject
-{
+public class {placeholder}ControllerEvent extends EventObject {
 	static public enum Command {
 		// TODO Auto-generated enum
 		START,
