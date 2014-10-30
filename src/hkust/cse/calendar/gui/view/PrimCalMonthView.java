@@ -138,7 +138,7 @@ public class PrimCalMonthView extends BaseCalMonthView {
 		public void setMonth(long startOfMonth, long todayStamp, boolean[] occupied) {
 			dayInMonth = DateTimeHelper.getDayInMonth(startOfMonth);
 			dayOfFirstDate = (new Date(startOfMonth)).getDay();
-			if(today > 0) {
+			if(today >= 0) {
 				aDay[today].setToday(false);
 			}
 			today = DateTimeHelper.getDifferenceInDay(todayStamp, startOfMonth);
@@ -158,7 +158,7 @@ public class PrimCalMonthView extends BaseCalMonthView {
 				int c = today % DAY_IN_WEEK;
 				fireTableCellUpdated(r, c);
 			}
-			today = (new Date(todayStamp)).getDay() - 1;
+			today = (new Date(todayStamp)).getDate() - 1;
 			aDay[today].setToday(true);
 			int r = today / DAY_IN_WEEK;
 			int c = today % DAY_IN_WEEK;
