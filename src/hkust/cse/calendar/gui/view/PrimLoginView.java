@@ -51,12 +51,17 @@ public class PrimLoginView extends BaseLoginView implements ActionListener {
 		JPanel namePanel = new JPanel();
 		namePanel.add(new JLabel("User Name:"));
 		userName = new JTextField(15);
+		//TODO: remove this default
+		userName.setText("doesnmatter");
 		namePanel.add(userName);
 		top.add(namePanel);
 		
 		JPanel pwPanel = new JPanel();
 		pwPanel.add(new JLabel("Password:  "));
 		password = new JPasswordField(15);
+		//TODO: remove this default
+		password.setText("122333");
+		password.addActionListener(this);
 		pwPanel.add(password);
 		top.add(pwPanel);
 		
@@ -107,7 +112,7 @@ public class PrimLoginView extends BaseLoginView implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		LoginViewEvent ev = new LoginViewEvent(this);
-		if(e.getSource() == button)
+		if(e.getSource() == button || e.getSource() == password)
 		{
 			// When the button is clicked, check the user name and password, and try to log the user in
 			
