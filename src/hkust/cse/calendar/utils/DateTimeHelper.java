@@ -86,6 +86,6 @@ public class DateTimeHelper {
 	}
 	
 	static public int getDifferenceInDay(long stampA, long stampB) {
-		return (int)((stampA - stampB) / TIME_OF_DAY);
+		return (int)Math.floorDiv(stampA - stampB, TIME_OF_DAY);
 	}
 }
