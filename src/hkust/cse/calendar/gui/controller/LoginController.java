@@ -63,13 +63,15 @@ extends EventSource implements Controller {
 		public void fireEvent(UserQuery qry) {
 			UserQuery.RtnValue rtnVal = qry.getRtnValue();
 			if(rtnVal == UserQuery.RtnValue.AUTH_OK) {
+				DCalendarApp app = DCalendarApp.getApp();
 				User user = qry.getUser();
-				DCalendarApp.getApp().setCurrentUser(user);
+				app.setCurrentUser(user);
 				
 				// Pass control to another controller
 				//System.out.println("hey~");
+				app.switchController(new CalMainController(app.getViewManager().getCalMainView()));
 				view.dispose();
-				CalGrid grid = new CalGrid(new ApptStorageControllerImpl(new ApptStorageNullImpl(new User())));
+				
 			}
 			else if(rtnVal == UserQuery.RtnValue.AUTH_FAIL) {
 				LoginControllerEvent ev = new LoginControllerEvent(this, LoginControllerEvent.Command.PROMPT_ERR);

@@ -93,6 +93,9 @@ public class AppointmentCollection extends BaseCollection {
 			}
 			
 		});
+		
+		Thread thrd = new Thread(new APIHandler(api));
+		thrd.start();
 	}
 
 	public void createAppt(Appointment appt, final GenListener<AddAppointmentQuery> listener) {
@@ -319,9 +322,12 @@ public class AppointmentCollection extends BaseCollection {
 	}
 	
 	public void setMonthStart(long stamp) {
-		state = DIRTY;
-		this.startOfMonth = DateTimeHelper.getStartOfMonth(stamp);
-		load();
+		long newStart = DateTimeHelper.getStartOfMonth(stamp);
+		if(newStart != startOfMonth) {
+			state = DIRTY;
+			this.startOfMonth = DateTimeHelper.getStartOfMonth(stamp);
+			load();
+		}
 	}
 	
 	private void triggerUpdate() {

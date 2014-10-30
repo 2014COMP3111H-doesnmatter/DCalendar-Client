@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 
 public class APIHandler implements Runnable {
-	static CookieManager cookieManager = new CookieManager();
+	static private CookieManager cookieManager = new CookieManager();
 	static {
 		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(cookieManager);
@@ -107,6 +107,10 @@ public class APIHandler implements Runnable {
 			}
 		}
 		return jsonObj;
+	}
+	
+	static public void resetCookie() {
+		cookieManager.getCookieStore().removeAll();
 	}
 	
 	@Override

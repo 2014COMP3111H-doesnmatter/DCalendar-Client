@@ -2,7 +2,15 @@ package hkust.cse.calendar.Main;
 
 import hkust.cse.calendar.gui.controller.Controller;
 import hkust.cse.calendar.gui.controller.LoginController;
+import hkust.cse.calendar.gui.view.PrimCalMainView;
+import hkust.cse.calendar.gui.view.PrimCalMonthView;
+import hkust.cse.calendar.gui.view.PrimDetailsView;
 import hkust.cse.calendar.gui.view.PrimLoginView;
+import hkust.cse.calendar.gui.view.ViewManager;
+import hkust.cse.calendar.gui.view.base.BaseCalMainView;
+import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
+import hkust.cse.calendar.gui.view.base.BaseDetailsView;
+import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.model.User;
 
 public class DCalendarApp {
@@ -12,12 +20,36 @@ public class DCalendarApp {
 	private boolean switchControl;
 	
 	private User currentUser;
+	private ViewManager viewManager;
 	
 	public DCalendarApp() {
 		if(app != null) {
 			throw new RuntimeException("Only One instance allowed");
 		}
 		app = this;
+		viewManager = new ViewManager() {
+
+			@Override
+			public BaseCalMainView getCalMainView() {
+				return new PrimCalMainView();
+			}
+
+			@Override
+			public BaseCalMonthView getCalMonthView() {
+				return new PrimCalMonthView();
+			}
+
+			@Override
+			public BaseDetailsView getDetailsView() {
+				return new PrimDetailsView();
+			}
+
+			@Override
+			public BaseLoginView getLoginView() {
+				return new PrimLoginView();
+			}
+			
+		};
 	}
 	
 	static public DCalendarApp getApp() {
@@ -42,7 +74,7 @@ public class DCalendarApp {
 	}
 	
 	public void start() {
-		activeController = new LoginController(new PrimLoginView());
+		activeController = new LoginController(viewManager.getLoginView());
 		do {
 			switchControl = false;
 			activeController.start();
@@ -69,5 +101,13 @@ public class DCalendarApp {
 
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
+	}
+
+	public ViewManager getViewManager() {
+		return viewManager;
+	}
+
+	public void setViewManager(ViewManager viewManager) {
+		this.viewManager = viewManager;
 	}
 }

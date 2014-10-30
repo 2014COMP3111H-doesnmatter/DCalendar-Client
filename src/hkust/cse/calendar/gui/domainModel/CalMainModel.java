@@ -13,7 +13,7 @@ public class CalMainModel extends EventSource {
 	private Date selectedDay = new Date();
 	List<GenListener<CalMainModelEvent>> nListener = new ArrayList<GenListener<CalMainModelEvent>>();
 	
-	CalMainModel() {
+	public CalMainModel() {
 		trimDate();
 	}
 	
