@@ -2,7 +2,9 @@ package hkust.cse.calendar.gui.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,8 +14,11 @@ import hkust.cse.calendar.gui.controller.CalMonthControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.utils.DateTimeHelper;
 
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
@@ -37,19 +42,27 @@ public class PrimCalMonthView extends BaseCalMonthView {
 	};
 	
 	public PrimCalMonthView() {
+		monthTableModel = new CalendarTableModel();
+		
+		this.setLayout(new GridLayout(1, 1));
+		this.setPreferredSize(new Dimension(536, 280));
+		this.setMinimumSize(new Dimension(536, 280));
+		
 		monthTable = new JTable(monthTableModel);
 		monthTable.setDefaultRenderer(CalendarTableModel.CellObject.class, new PrimTableCellRenderer());
 
 		monthTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		monthTable.setRowHeight(40);
 		monthTable.setRowSelectionAllowed(false);
+		monthTable.setFillsViewportHeight(true);
 		JTableHeader head = monthTable.getTableHeader();
 		head.setReorderingAllowed(false);
 		head.setResizingAllowed(false);
 		
 		monthTable.addMouseListener(mouseListener);
 		
-		this.add(monthTable);
+		JScrollPane scrollPane = new JScrollPane(monthTable);
+		this.add(scrollPane);
 	}
 
 	@Override
@@ -75,6 +88,10 @@ public class PrimCalMonthView extends BaseCalMonthView {
 			      boolean hasFocus, int rowIndex, int vColIndex) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
 			CalendarTableModel.CellObject obj = (CalendarTableModel.CellObject)value;
+			
+			if(obj == null) {
+				return this;
+			}
 			
 			if(obj.isToday())
 				setForeground(Color.RED);
@@ -170,12 +187,17 @@ public class PrimCalMonthView extends BaseCalMonthView {
 		public Class<?> getColumnClass(int c) {
 			return CellObject.class;
 		}
+		
+		@Override
+		public String getColumnName(int c) {
+			return aDayName[c];
+		}
 
 		@Override
 		public Object getValueAt(int r, int c) {
 			int day = r * DAY_IN_WEEK + c - dayOfFirstDate;
 			
-			if(day < 0 || day > dayInMonth)
+			if(day < 0 || day >= dayInMonth)
 				return null;
 			
 			return aDay[day];
