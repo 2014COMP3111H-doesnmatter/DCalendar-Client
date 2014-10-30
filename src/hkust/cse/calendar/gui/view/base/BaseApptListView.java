@@ -2,6 +2,7 @@ package hkust.cse.calendar.gui.view.base;
 
 import hkust.cse.calendar.gui.controller.ApptListControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent.Command;
+import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 
@@ -25,6 +26,8 @@ public abstract class BaseApptListView extends JPanel implements GenListener<App
 			DESCRIB_APPOINTMENT
 		};
 		private Command command;
+		public Appointment appt;
+		
 		public ApptListViewEvent(Object source) {
 			super(source);
 		}
@@ -46,6 +49,10 @@ public abstract class BaseApptListView extends JPanel implements GenListener<App
 	
 	@Override
 	abstract public void fireEvent(ApptListControllerEvent e);
+	
+	public void addApptListViewEventListener(GenListener<ApptListViewEvent> e) {
+		this.aListener.add(e);
+	}
 	
 	final protected void triggerApptListViewEvent(ApptListViewEvent e) {
 		EventSource.fireList(this.aListener, e);

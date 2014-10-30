@@ -94,7 +94,7 @@ extends EventSource implements Controller {
 		this.view.setCalMonthView(monthController.getView());
 		
 		// appt list
-		ApptListController apptListController = new ApptListController(new PrimApptListView());
+		ApptListController apptListController = new ApptListController(new PrimApptListView(), model, aAppt);
 		this.view.setApptListView(apptListController.getView());
 		
 		User user = DCalendarApp.getApp().getCurrentUser();
