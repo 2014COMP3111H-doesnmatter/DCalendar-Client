@@ -9,3 +9,7 @@ import java.util.EventObject;
 import java.util.List;
 
 import javax.swing.JFrame;
+
+abstract public class BaseTimeMachineView {
+	
+}

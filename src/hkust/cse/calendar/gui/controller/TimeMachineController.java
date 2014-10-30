@@ -15,3 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+
+public class TimeMachineController extends EventSource implements Controller {
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}

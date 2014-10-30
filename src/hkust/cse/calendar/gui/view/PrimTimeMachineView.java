@@ -20,3 +20,6 @@ import hkust.cse.calendar.gui.controller.LoginControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseTimeMachineView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
 
+public class PrimTimeMachineView extends BaseTimeMachineView {
+	
+}
