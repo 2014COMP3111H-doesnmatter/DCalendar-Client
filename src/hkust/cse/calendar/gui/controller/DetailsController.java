@@ -45,7 +45,6 @@ extends EventSource implements Controller {
 	public void setView(BaseDetailsView view) {
 		this.view = view;
 		this.view.addDetailsEventListener(detailsViewListener);
-		this.view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.addDetailsEventListener(view);
 	}
 	
