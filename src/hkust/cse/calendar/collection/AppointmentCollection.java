@@ -11,6 +11,7 @@ import hkust.cse.calendar.utils.network.APIHandler;
 import hkust.cse.calendar.utils.network.APIRequestEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -358,6 +359,7 @@ public class AppointmentCollection extends BaseCollection {
 	
 	private void flagHasEvent() {
 		Iterator<Entry<Long, Appointment>> itr = aAppt.entrySet().iterator();
+		Arrays.fill(aHasEvent, false);
 		while(itr.hasNext()) {
 			Map.Entry<Long, Appointment> entry = (Map.Entry<Long, Appointment>)itr.next();
 			flagHasEvent(entry.getValue());
