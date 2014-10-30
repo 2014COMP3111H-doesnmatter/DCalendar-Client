@@ -60,14 +60,17 @@ public class CalMainModel extends EventSource {
 	 * @param year The year to set
 	 */
 	public void setYear(int year) {
-		boolean isOrigLeapYear = false;
-		if(selectedDay.getMonth() == 1 && selectedDay.getDate() == 29) {
-			isOrigLeapYear = true;
+		if(year == selectedDay.getYear() + 1900) {
+			return;
 		}
+		int origDate = selectedDay.getDate();
+		int origMonth = selectedDay.getMonth();
 		selectedDay.setYear(year - 1900);
-		if(isOrigLeapYear && selectedDay.getMonth() != 1) {
-			selectedDay.setMonth(1);
-			selectedDay.setMonth(29);
+		if(selectedDay.getDate() != origDate) {
+			//Set month back
+			selectedDay.setMonth(origMonth);
+			int dayInMonth = DateTimeHelper.getDayInMonth(selectedDay.getTime());
+			selectedDay.setDate(dayInMonth - 1);
 		}
 		triggerUpdate();
 	}
@@ -87,10 +90,39 @@ public class CalMainModel extends EventSource {
 	 * @param month The month to set, range 0-11
 	 */
 	public void setMonth(int month) {
+		if(month == selectedDay.getMonth()) {
+			return;
+		}
 		int origDate = selectedDay.getDate();
 		selectedDay.setMonth(month);
 		if(selectedDay.getDate() != origDate) {
 			//Set month again because 31/05 -> 31/04 = 01/05
+			selectedDay.setMonth(month);
+			int dayInMonth = DateTimeHelper.getDayInMonth(selectedDay.getTime());
+			selectedDay.setDate(dayInMonth - 1);
+		}
+		triggerUpdate();
+	}
+	
+	/**
+	 * Set month and year together.
+	 * The behaviour is similar to @link{#setYear} and @link{#stMonth}
+	 * @see #setYear
+	 * @see #setMonth
+	 * @param year Year to set
+	 * @param month Month to set, 0-11
+	 */
+	public void setYearMonth(int year, int month) {
+		if(year == selectedDay.getYear() + 1900 && month == selectedDay.getMonth()) {
+			return;
+		}
+		int origDate = selectedDay.getDate();
+		selectedDay.setYear(year - 1900);
+		selectedDay.setMonth(month);
+		selectedDay.setMonth(month);
+		selectedDay.setDate(origDate);
+		if(selectedDay.getDate() != origDate) {
+			//Set month again
 			selectedDay.setMonth(month);
 			int dayInMonth = DateTimeHelper.getDayInMonth(selectedDay.getTime());
 			selectedDay.setDate(dayInMonth - 1);
