@@ -25,6 +25,8 @@ public class CalMainController
 extends EventSource implements Controller {
 	private BaseCalMainView view;
 	private CalMonthController monthController;
+	private ApptListController apptListController;
+	private MonthSelectorController monthSelectorController;
 	private CalMainModel model;
 	private AppointmentCollection aAppt;
 	
@@ -90,12 +92,17 @@ extends EventSource implements Controller {
 		aAppt = new AppointmentCollection(today);
 		aAppt.load();
 		
+		// month view
 		monthController = new CalMonthController(manager.getCalMonthView(), model, aAppt);
 		this.view.setCalMonthView(monthController.getView());
 		
 		// appt list
-		ApptListController apptListController = new ApptListController(new PrimApptListView(), model, aAppt);
+		apptListController = new ApptListController(manager.getApptListView(), model, aAppt);
 		this.view.setApptListView(apptListController.getView());
+		
+		// month selector
+		monthSelectorController = new MonthSelectorController(manager.getMonthSelectorView());
+		this.view.setMonthSelectView(monthSelectorController.getView());
 		
 		User user = DCalendarApp.getApp().getCurrentUser();
 		
@@ -106,7 +113,6 @@ extends EventSource implements Controller {
 		
 		//Force trigger a model update
 		model.setSelectedDayStamp(today);
-		//fireList(nListener, e);
 	}
 	
 	

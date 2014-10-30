@@ -21,6 +21,7 @@ import hkust.cse.calendar.gui.view.base.BaseApptListView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
+import hkust.cse.calendar.gui.view.base.BaseMonthSelectorView;
 
 /**
  * Display the main window with menu bar.
@@ -185,7 +186,13 @@ public class PrimCalMainView extends BaseCalMainView implements ActionListener {
 		wholePane.setBottomComponent(apptListView);
 		pack();
 		repaint();
-		
+	}
+
+	@Override
+	public void setMonthSelectView(BaseMonthSelectorView monthSelectorView) {
+		upperPane.setLeftComponent(monthSelectorView);
+		pack();
+		repaint();
 	}
 	
 }
