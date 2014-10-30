@@ -11,6 +11,10 @@ abstract public class BaseCollection extends EventSource {
 	
 	protected List<GenListener<CollectionEvent>> colListener = new ArrayList<GenListener<CollectionEvent>>();
 	
+	public void addColEventListener(GenListener<CollectionEvent> listener) {
+		colListener.add(listener);
+	}
+	
 	final static public class CollectionEvent extends EventObject {
 		static public enum Command {
 			NETWORK_ERR,
