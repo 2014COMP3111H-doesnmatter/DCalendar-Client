@@ -204,6 +204,7 @@ public class AppList extends JPanel implements ActionListener {
 		h.setResizingAllowed(true);
 		h.setReorderingAllowed(false);
 
+		
 		tableView.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				pressResponse(e);

@@ -2,11 +2,14 @@ package hkust.cse.calendar.gui.view.base;
 
 import hkust.cse.calendar.gui.controller.ApptListControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent.Command;
+import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 
 import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
+import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,7 +19,10 @@ public abstract class BaseApptListView extends JPanel implements GenListener<App
 {
 	public static class ApptListViewEvent extends EventObject {
 		public enum Command {
-			PLACEHOLDER,
+			NEW_APPOINTMENT,
+			DELETE_APPOITNMENT,
+			EDIT_APPOINTMENT,
+			DESCRIB_APPOINTMENT
 		};
 		private Command command;
 		public ApptListViewEvent(Object source) {
@@ -35,7 +41,13 @@ public abstract class BaseApptListView extends JPanel implements GenListener<App
 			this.command = command;
 		}
 	}
-
+	
+	public List<GenListener<ApptListViewEvent>> aListener = new ArrayList<GenListener<ApptListViewEvent>>();
+	
 	@Override
 	abstract public void fireEvent(ApptListControllerEvent e);
+	
+	final protected void triggerApptListViewEvent(ApptListViewEvent e) {
+		EventSource.fireList(this.aListener, e);
+	}
 }

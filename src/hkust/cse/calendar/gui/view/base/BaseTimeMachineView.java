@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public abstract class BaseTimeMachineView extends JPanel implements GenListener<TimeMachineControllerEvent>
+public abstract class BaseTimeMachineView extends JFrame implements GenListener<TimeMachineControllerEvent>
 {
 	public static class TimeMachineViewEvent extends EventObject {
 		public enum Command {
