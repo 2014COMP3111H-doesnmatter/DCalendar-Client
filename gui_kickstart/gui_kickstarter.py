@@ -46,8 +46,10 @@ def main():
 
 
 def generate_file(template, to, class_name, parent_name):
+    func = lambda s: s[:1].lower() + s[1:] if s else ''
     for line in template:
         line = line.replace('{placeholder}', class_name)
+        line = line.replace('{placeholder_}', func(class_name))
         line = line.replace('{placeholder_ex}', parent_name)
         to.write(line)
 

@@ -13,7 +13,7 @@ public class {placeholder}Controller extends EventSource implements Controller
 
 	private Base{placeholder}View view;
 	private List<GenListener<{placeholder}ControllerEvent>> aListener = new ArrayList<GenListener<{placeholder}ControllerEvent>>();
-	private GenListener<{placeholder}ViewEvent> apptListViewListener = new GenListener<{placeholder}ViewEvent>() {
+	private GenListener<{placeholder}ViewEvent> {placeholder_}ViewListener = new GenListener<{placeholder}ViewEvent>() {
 
 		@Override
 		public void fireEvent({placeholder}ViewEvent e) {
@@ -31,6 +31,8 @@ public class {placeholder}Controller extends EventSource implements Controller
 	}
 	private void setView(Base{placeholder}View view) {
 		this.view = view;
+		this.view.add{placeholder}EventListener({placeholder_}ViewListener);
+		add{placeholder}ControllerEventListener(view);
 		// TODO Auto-generated method stub
 	}
 	public void add{placeholder}ControllerEventListener(GenListener<{placeholder}ControllerEvent> listener) {
