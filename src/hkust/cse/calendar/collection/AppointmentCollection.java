@@ -344,7 +344,6 @@ public class AppointmentCollection extends BaseCollection {
 			if(DateTimeHelper.isInDay(startOfDay, appt)) {
 				filteredEvent.add(appt);
 			}
-			itr.remove();
 		}
 		ListAppointmentQuery qry = new ListAppointmentQuery(this, ListAppointmentQuery.Command.OK);
 		qry.setaAppt(filteredEvent);
@@ -362,7 +361,6 @@ public class AppointmentCollection extends BaseCollection {
 		while(itr.hasNext()) {
 			Map.Entry<Long, Appointment> entry = (Map.Entry<Long, Appointment>)itr.next();
 			flagHasEvent(entry.getValue());
-			itr.remove();
 		}
 	}
 	
