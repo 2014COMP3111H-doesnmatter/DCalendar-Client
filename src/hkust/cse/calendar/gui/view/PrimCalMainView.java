@@ -26,15 +26,15 @@ import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
  * Display the main window with menu bar.
  * 
  * The main layout by this view is<pre>
- * ��������������������������������������
- * �������������������Щ�����������������
- * �� select �� select ��
- * �� month  �� day    ��
- * �������������������ة�����������������
- * ��                 ��
- * ��   Appointment   ��
- * ��   List          ��
- * ��������������������������������������
+ * *******************
+ * *******************
+ * * select * select *
+ * * month  * day    *
+ * *******************
+ * *                 *
+ * *   Appointment   *
+ * *   List          *
+ * *******************
  * </pre>
  * @author john
  *
