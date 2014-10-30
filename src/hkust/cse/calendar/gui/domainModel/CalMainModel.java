@@ -70,7 +70,7 @@ public class CalMainModel extends EventSource {
 			//Set month back
 			selectedDay.setMonth(origMonth);
 			int dayInMonth = DateTimeHelper.getDayInMonth(selectedDay.getTime());
-			selectedDay.setDate(dayInMonth - 1);
+			selectedDay.setDate(dayInMonth);
 		}
 		triggerUpdate();
 	}
@@ -99,7 +99,7 @@ public class CalMainModel extends EventSource {
 			//Set month again because 31/05 -> 31/04 = 01/05
 			selectedDay.setMonth(month);
 			int dayInMonth = DateTimeHelper.getDayInMonth(selectedDay.getTime());
-			selectedDay.setDate(dayInMonth - 1);
+			selectedDay.setDate(dayInMonth);
 		}
 		triggerUpdate();
 	}
@@ -125,7 +125,7 @@ public class CalMainModel extends EventSource {
 			//Set month again
 			selectedDay.setMonth(month);
 			int dayInMonth = DateTimeHelper.getDayInMonth(selectedDay.getTime());
-			selectedDay.setDate(dayInMonth - 1);
+			selectedDay.setDate(dayInMonth);
 		}
 		triggerUpdate();
 	}
