@@ -94,6 +94,11 @@ public class Appointment extends BaseModel {
 	public void setInitiator(User initiator) {
 		this.initiator = initiator;
 	}
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
 
 	public static final class Frequency {
 		public static final int ONCE = 0;
