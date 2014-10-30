@@ -11,6 +11,7 @@ import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
 import hkust.cse.calendar.gui.view.PrimApptListView;
 import hkust.cse.calendar.gui.view.PrimCalMonthView;
+import hkust.cse.calendar.gui.view.PrimTimeMachineView;
 import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
@@ -35,20 +36,24 @@ extends EventSource implements Controller {
 		public void fireEvent(CalMainViewEvent e) {
 			CalMainViewEvent.Command command = e.getCommand();
 			DCalendarApp app = DCalendarApp.getApp();
-			if(command == CalMainViewEvent.Command.EXIT) {
+			switch(command) {
+			case EXIT:
 				app.exitApp();
 				view.dispose();
-			}
-			else if(command == CalMainViewEvent.Command.LOGOUT) {
+				break;
+			case LOGOUT:
 				APIHandler.resetCookie();
 				BaseLoginView loginView = app.getViewManager().getLoginView();
 				app.switchController(new LoginController(loginView));
 				view.dispose();
-			}
-			else if(command == CalMainViewEvent.Command.MANUAL_SCHEDULE) {
+				break;
+			case MANUAL_SCHEDULE:
 				//TODO: adapt to App scheduler
+				break;
+			case TIME_MACHINE:
+				TimeMachineController controller = new TimeMachineController(new PrimTimeMachineView());
+				controller.start();
 			}
-			
 		}
 		
 	};

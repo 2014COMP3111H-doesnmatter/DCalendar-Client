@@ -32,6 +32,7 @@ public class TimeMachineController extends EventSource implements Controller
 	}
 	private void setView(BaseTimeMachineView view) {
 		this.view = view;
+		addTimeMachineControllerEventListener(view);
 		
 	}
 	public void addTimeMachineControllerEventListener(GenListener<TimeMachineControllerEvent> listener) {
