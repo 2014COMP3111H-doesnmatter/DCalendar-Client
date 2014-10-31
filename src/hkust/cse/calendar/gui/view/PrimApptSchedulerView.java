@@ -362,7 +362,9 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if(obj == )
+		if(obj == null) {
+			
+		}
 
 	}
 
