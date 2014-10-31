@@ -373,7 +373,7 @@ public class PrimApptListView extends BaseApptListView implements
 	}
 
 	public void clear() {
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < ROWNUM; i++)
 		{
 			setTextAt(" ", i, 1);
 
