@@ -7,18 +7,22 @@ import javax.swing.JFrame;
 
 import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.collection.AppointmentCollection;
+import hkust.cse.calendar.collection.VenueCollection;
 import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
 import hkust.cse.calendar.gui.view.PrimApptListView;
+import hkust.cse.calendar.gui.view.PrimApptSchedulerView;
 import hkust.cse.calendar.gui.view.PrimCalMonthView;
 import hkust.cse.calendar.gui.view.PrimTimeMachineView;
 import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
+import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.Updatable.UpdatableEvent;
 import hkust.cse.calendar.utils.network.APIHandler;
 
 public class CalMainController 
@@ -29,6 +33,10 @@ extends EventSource implements Controller {
 	private MonthSelectorController monthSelectorController;
 	private CalMainModel model;
 	private AppointmentCollection aAppt;
+	private VenueCollection aVenue;
+	
+	private boolean isStarted = false;
+	private boolean isVenueLoaded = false;
 	
 	private List<GenListener<CalMainControllerEvent>> nListener = new ArrayList<GenListener<CalMainControllerEvent>>();
 	
@@ -50,7 +58,8 @@ extends EventSource implements Controller {
 				view.dispose();
 				break;
 			case MANUAL_SCHEDULE:
-				//TODO: adapt to App scheduler
+				ApptSchedulerController schedulerCont = new ApptSchedulerController(new PrimApptSchedulerView(), aAppt, aVenue, null);
+				schedulerCont.start();
 				break;
 			case TIME_MACHINE:
 				TimeMachineController controller = new TimeMachineController(new PrimTimeMachineView());
@@ -91,6 +100,20 @@ extends EventSource implements Controller {
 		long today = model.getSelectedDayStamp();
 		aAppt = new AppointmentCollection(today);
 		aAppt.load();
+		aVenue = new VenueCollection();
+		aVenue.addColEventListener(new GenListener<UpdatableEvent>() {
+
+			@Override
+			public void fireEvent(UpdatableEvent e) {
+				isVenueLoaded = true;
+				if(isStarted) {
+					start();
+				}
+				
+			}
+			
+		});
+		aVenue.load();
 		
 		// month view
 		monthController = new CalMonthController(manager.getCalMonthView(), model, aAppt);
@@ -111,6 +134,10 @@ extends EventSource implements Controller {
 	
 	@Override
 	public void start() {
+		isStarted = true;
+		if(!isVenueLoaded) {
+			return;
+		}
 		CalMainControllerEvent e = new CalMainControllerEvent(this, CalMainControllerEvent.Command.START);
 		fireList(nListener, e);
 	}
