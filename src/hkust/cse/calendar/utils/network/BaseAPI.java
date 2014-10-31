@@ -3,6 +3,7 @@ package hkust.cse.calendar.utils.network;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,9 @@ public abstract class BaseAPI extends EventSource {
 	}
 	
 	abstract protected Map<String, String> getParam();
+	protected Map<Date, Date> getDateParam() {
+		return null;
+	}
 	
 	public void handleResponse(JSONObject response) {
 		notifyListener(response);

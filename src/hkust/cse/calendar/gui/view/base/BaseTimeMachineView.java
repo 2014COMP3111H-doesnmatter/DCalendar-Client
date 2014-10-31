@@ -1,9 +1,8 @@
 package hkust.cse.calendar.gui.view.base;
 
-import hkust.cse.calendar.gui.controller.LoginControllerEvent;
 import hkust.cse.calendar.gui.controller.TimeMachineControllerEvent;
-import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
-import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent.Command;
+import hkust.cse.calendar.gui.view.base.BaseTimeMachineView.TimeMachineViewEvent;
+import hkust.cse.calendar.gui.view.base.BaseTimeMachineView.TimeMachineViewEvent.Command;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 
@@ -20,14 +19,14 @@ import javax.swing.JPanel;
 
 public abstract class BaseTimeMachineView extends JFrame implements GenListener<TimeMachineControllerEvent>
 {
-	private List<GenListener<TimeMachineViewEvent>> nListener = new ArrayList<GenListener<TimeMachineViewEvent>>();
+	private List<GenListener<TimeMachineViewEvent>> aListener = new ArrayList<GenListener<TimeMachineViewEvent>>();
 
 	public void addTimeMachineEventListener(GenListener<TimeMachineViewEvent> listener) {
-		nListener.add(listener);
+		aListener.add(listener);
 	}
 	
 	final protected void triggerTimeMachineViewEvent(TimeMachineViewEvent e) {
-		EventSource.fireList(nListener, e);
+		EventSource.fireList(aListener, e);
 	}
 	
 	
@@ -58,11 +57,11 @@ public abstract class BaseTimeMachineView extends JFrame implements GenListener<
 			this.command = command;
 		}
 		
-		public long setTime (){
+		public long getTime (){
 			return timestamp;
 		}
 		
-		public void getTime (Date d){
+		public void setTime (Date d){
 			timestamp = d.getTime();
 		}
 	}
