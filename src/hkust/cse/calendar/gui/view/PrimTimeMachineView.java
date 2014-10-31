@@ -12,10 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.JFormattedTextField;
 
 import hkust.cse.calendar.gui.controller.TimeMachineControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseTimeMachineView;
@@ -24,22 +22,19 @@ import hkust.cse.calendar.gui.view.base.BaseTimeMachineView.TimeMachineViewEvent
 
 public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionListener
 {
-//	private JTextField year;
-//	private JTextField month;
-//	private JTextField day;
-//	private JTextField hour;
-//	private JTextField minute;
-//	private JTextField second;
-	private JFormattedTextField date;
-	private JButton getTimeButton;
+	private JTextField year;
+	private JTextField month;
+	private JTextField day;
+	private JTextField hour;
+	private JTextField minute;
+	private JTextField second;
 	private JButton setTimeButton;
 	private JButton doneButton;
-
+	
+	
 	public PrimTimeMachineView()
 	{
 		setTitle("Time Machine");
-//		JLabel p = new JLabel("PrimTimeMachineView");
-//		this.add(p);
 		
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -49,6 +44,7 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionLi
 			}
 		});
 		
+		
 		Container contentPane;
 		contentPane = getContentPane();
 		
@@ -56,65 +52,73 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionLi
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		
 		JPanel messPanel = new JPanel();
-		messPanel.add(new JLabel("Get your time or fill in a new time"));
+		messPanel.add(new JLabel("Please set your time."));
 		top.add(messPanel);
 		
-//		JPanel yearPanel = new JPanel();
-//		yearPanel.add(new JLabel("Year:"));
-//		year = new JTextField(15);
-//		//TODO: remove this default
-//		year.setText("year");
-//		yearPanel.add(year);
-//		top.add(year);
-//		
-//		JPanel monthPanel = new JPanel();
-//		monthPanel.add(new JLabel("Month:"));
-//		month = new JTextField(15);
-//		//TODO: remove this default
-//		month.setText("month");
-//		monthPanel.add(month);
-//		top.add(month);
-//		
-//		JPanel dayPanel = new JPanel();
-//		dayPanel.add(new JLabel("Day:"));
-//		day = new JTextField(15);
-//		//TODO: remove this default
-//		day.setText("day");
-//		dayPanel.add(day);
-//		top.add(day);
+		JPanel yearPanel = new JPanel();
+		yearPanel.add(new JLabel("Year:"));
+		year = new JTextField(15);
+		//TODO: remove this default
+		year.setText("year");
+		yearPanel.add(year);
+		top.add(yearPanel);
 		
+		JPanel monthPanel = new JPanel();
+		monthPanel.add(new JLabel("Month:"));
+		month = new JTextField(15);
+		//TODO: remove this default
+		month.setText("month");
+		monthPanel.add(month);
+		top.add(monthPanel);
 		
-//		JPanel Panel = new JPanel();
-//		pwPanel.add(new JLabel("Password:  "));
-//		password = new JPasswordField(15);
-//		//TODO: remove this default
-//		password.setText("122333");
-//		password.addActionListener(this);
-//		pwPanel.add(password);
-//		top.add(pwPanel);
-//		
-//		JPanel signupPanel = new JPanel();
-//		signupPanel.add(new JLabel("If you don't have an account, please sign up:"));
-//		signupButton = new JButton("Sign up now");
-//		signupButton.addActionListener(this);
-//		signupPanel.add(signupButton);
-//		top.add(signupPanel);
-//		
-//		contentPane.add("North", top);
-//		
-//		JPanel butPanel = new JPanel();
-//		butPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//
-//		button = new JButton("Log in");
-//		button.addActionListener(this);
-//		butPanel.add(button);
-//		
-//		closeButton = new JButton("Close program");
-//		closeButton.addActionListener(this);
-//		butPanel.add(closeButton);
-//		
-//		contentPane.add("South", butPanel);
+		JPanel dayPanel = new JPanel();
+		dayPanel.add(new JLabel("Day:"));
+		day = new JTextField(15);
+		//TODO: remove this default
+		day.setText("day");
+		dayPanel.add(day);
+		top.add(dayPanel);
 		
+		JPanel hourPanel = new JPanel();
+		hourPanel.add(new JLabel("Hour:"));
+		hour = new JTextField(15);
+		//TODO: remove this default
+		hour.setText("hour");
+		hourPanel.add(hour);
+		top.add(hourPanel);
+		
+		JPanel minutePanel = new JPanel();
+		minutePanel.add(new JLabel("Minute:"));
+		minute = new JTextField(15);
+		//TODO: remove this default
+		minute.setText("minute");
+		minutePanel.add(minute);
+		top.add(minutePanel);
+		
+		JPanel secondPanel = new JPanel();
+		secondPanel.add(new JLabel("Second:"));
+		second = new JTextField(15);
+		//TODO: remove this default
+		second.setText("second");
+		secondPanel.add(second);
+		top.add(secondPanel);
+		
+		JPanel setTimePanel = new JPanel();
+		setTimeButton = new JButton("Set");
+		setTimeButton.addActionListener(this);
+		setTimePanel.add(setTimeButton);
+		top.add(setTimePanel);
+		
+		contentPane.add("North", top);
+		
+		JPanel butPanel = new JPanel();
+		butPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		doneButton = new JButton("Done");
+		doneButton.addActionListener(this);
+		butPanel.add(doneButton);
+		
+		contentPane.add("South", butPanel);
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -122,19 +126,36 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionLi
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		TimeMachineViewEvent ev = new TimeMachineViewEvent(this);
+		if(e.getSource() == setTimeButton)
+		{
+			ev.setCommand(TimeMachineViewEvent.Command.SETTIME);
+			long timestamp = 0;
+			ev.setTime(timestamp);			
+			triggerTimeMachineViewEvent(ev);
+		}
+		
+		else if(e.getSource() == doneButton)
+		{
+			ev.setCommand(TimeMachineViewEvent.Command.DONE);
+			triggerTimeMachineViewEvent(ev);
+		}
 
 	}
 
 	@Override
 	public void fireEvent(TimeMachineControllerEvent e) {
 		TimeMachineControllerEvent.Command command = e.getCommand();
-		switch(command) {
-		case START:
-			this.setVisible(true);
+		if(command == TimeMachineControllerEvent.Command.START) {
+			setVisible(true);
 		}
-
+		else if(command == TimeMachineControllerEvent.Command.SETTIMEPENDING) {
+			setTimeButton.setEnabled(false);
+			setTimeButton.setText("Setting...");
+		}
+		else if(command == TimeMachineControllerEvent.Command.SETTIMECOMPLETE) {
+			setTimeButton.setEnabled(true);
+			setTimeButton.setText("Setting Complete. Reset.");
+		}
 	}
-	
-	
-
 }

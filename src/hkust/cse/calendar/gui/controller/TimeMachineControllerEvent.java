@@ -1,7 +1,5 @@
 package hkust.cse.calendar.gui.controller;
 
-import hkust.cse.calendar.gui.controller.LoginControllerEvent.Command;
-
 import java.util.EventObject;
 
 public class TimeMachineControllerEvent extends EventObject
@@ -9,7 +7,7 @@ public class TimeMachineControllerEvent extends EventObject
 	static public enum Command {
 		START,
 		SETTIMEPENDING,
-		GETTIMEPENDING
+		SETTIMECOMPLETE
 	};
 	private Command command;
 	

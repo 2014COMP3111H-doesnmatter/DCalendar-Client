@@ -1,21 +1,14 @@
 package hkust.cse.calendar.gui.view.base;
 
 import hkust.cse.calendar.gui.controller.TimeMachineControllerEvent;
-import hkust.cse.calendar.gui.view.base.BaseTimeMachineView.TimeMachineViewEvent;
-import hkust.cse.calendar.gui.view.base.BaseTimeMachineView.TimeMachineViewEvent.Command;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
-
-import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.EventObject;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+
 
 public abstract class BaseTimeMachineView extends JFrame implements GenListener<TimeMachineControllerEvent>
 {
@@ -33,7 +26,6 @@ public abstract class BaseTimeMachineView extends JFrame implements GenListener<
 	
 	public static class TimeMachineViewEvent extends EventObject {
 		public enum Command {
-			GETTIME,
 			SETTIME,
 			DONE
 		};
@@ -61,8 +53,8 @@ public abstract class BaseTimeMachineView extends JFrame implements GenListener<
 			return timestamp;
 		}
 		
-		public void setTime (Date d){
-			timestamp = d.getTime();
+		public void setTime(long ts){
+			timestamp = ts;
 		}
 	}
 

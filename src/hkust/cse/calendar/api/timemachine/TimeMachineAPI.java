@@ -9,11 +9,11 @@ import java.util.Map;
 public abstract class TimeMachineAPI extends BaseAPI {
 	static String baseURL = "/TimeMachine/SetTime";
 	private Date date;
-//	private long timestamp;
+	private long timestamp;
 	
 	public TimeMachineAPI(long timestamp) {
 		this.date = new Date();
-//		this.timestamp = timestamp;
+		this.timestamp = timestamp;
 	}
 	
 	@Override

@@ -33,8 +33,8 @@ public class TimeMachine extends BaseModel {
 	}
 	
 	//add server listener
-	static public void setTime(final Date date, final GenListener<SetTime> listener) {
-		TimeMachineAPI api =  new TimeMachineAPI(date);
+	static public void setTime(final long timestamp, final GenListener<SetTime> listener) {
+		TimeMachineAPI api =  new TimeMachineAPI(timestamp);
 		api.addDoneListener(new GenListener<APIRequestEvent>() {
 
 			@Override
