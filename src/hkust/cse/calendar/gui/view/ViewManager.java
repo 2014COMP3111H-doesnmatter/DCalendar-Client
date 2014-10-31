@@ -1,6 +1,7 @@
 package hkust.cse.calendar.gui.view;
 
 import hkust.cse.calendar.gui.view.base.BaseApptListView;
+import hkust.cse.calendar.gui.view.base.BaseApptSchedulerView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView;
@@ -20,4 +21,6 @@ public interface ViewManager {
 	BaseApptListView getApptListView();
 	
 	BaseMonthSelectorView getMonthSelectorView();
+	
+	BaseApptSchedulerView getApptSchedulerView();
 }

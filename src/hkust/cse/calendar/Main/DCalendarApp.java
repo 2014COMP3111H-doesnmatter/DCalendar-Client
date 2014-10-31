@@ -3,6 +3,7 @@ package hkust.cse.calendar.Main;
 import hkust.cse.calendar.gui.controller.Controller;
 import hkust.cse.calendar.gui.controller.LoginController;
 import hkust.cse.calendar.gui.view.PrimApptListView;
+import hkust.cse.calendar.gui.view.PrimApptSchedulerView;
 import hkust.cse.calendar.gui.view.PrimCalMainView;
 import hkust.cse.calendar.gui.view.PrimCalMonthView;
 import hkust.cse.calendar.gui.view.PrimDetailsView;
@@ -10,6 +11,7 @@ import hkust.cse.calendar.gui.view.PrimLoginView;
 import hkust.cse.calendar.gui.view.PrimMonthSelectorView;
 import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseApptListView;
+import hkust.cse.calendar.gui.view.base.BaseApptSchedulerView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView;
@@ -61,6 +63,11 @@ public class DCalendarApp {
 			@Override
 			public BaseMonthSelectorView getMonthSelectorView() {
 				return new PrimMonthSelectorView();
+			}
+
+			@Override
+			public BaseApptSchedulerView getApptSchedulerView() {
+				return new PrimApptSchedulerView();
 			}
 			
 		};
