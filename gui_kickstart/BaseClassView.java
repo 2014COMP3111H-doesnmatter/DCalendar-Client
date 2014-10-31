@@ -1,7 +1,6 @@
 package hkust.cse.calendar.gui.view.base;
 
-import hkust.cse.calendar.gui.controller.MonthSelectorControllerEvent;
-import hkust.cse.calendar.gui.view.base.BaseMonthSelectorView.MonthSelectorViewEvent.Command;
+import hkust.cse.calendar.gui.controller.{placeholder}ControllerEvent;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 
