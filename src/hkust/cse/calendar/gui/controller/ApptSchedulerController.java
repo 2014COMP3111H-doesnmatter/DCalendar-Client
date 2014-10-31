@@ -27,11 +27,12 @@ public class ApptSchedulerController extends EventSource implements Controller {
 		@Override
 		public void fireEvent(ApptSchedulerViewEvent e) {
 			ApptSchedulerViewEvent.Command command = e.getCommand();
+			Appointment appt = e.getAppt();
 			switch(command) {
 			case SAVE:
-				if(currentAppt.getId() == 0L) {
+				if(appt.getId() == 0L) {
 					//Create new
-					aAppt.createAppt(currentAppt, new GenListener<AddAppointmentQuery>() {
+					aAppt.createAppt(appt, new GenListener<AddAppointmentQuery>() {
 
 						@Override
 						public void fireEvent(AddAppointmentQuery e) {
@@ -40,7 +41,7 @@ public class ApptSchedulerController extends EventSource implements Controller {
 							switch(command) {
 							case OK:
 								view.dispose();
-								break;
+								return;
 							case VENUE_NOT_FOUND:
 								ev.setCommand(ApptSchedulerControllerEvent.Command.PROMPT_ERR);
 								ev.setErrText("Venue is not found");
@@ -69,7 +70,7 @@ public class ApptSchedulerController extends EventSource implements Controller {
 				}
 				else {
 					//Edit existing
-					aAppt.editAppt(currentAppt, new GenListener<EditAppointmentQuery>() {
+					aAppt.editAppt(appt, new GenListener<EditAppointmentQuery>() {
 
 						@Override
 						public void fireEvent(EditAppointmentQuery e) {
@@ -78,7 +79,7 @@ public class ApptSchedulerController extends EventSource implements Controller {
 							switch(command) {
 							case OK:
 								view.dispose();
-								break;
+								return;
 							case VENUE_NOT_FOUND:
 								ev.setCommand(ApptSchedulerControllerEvent.Command.PROMPT_ERR);
 								ev.setErrText("Venue is not found");
@@ -130,8 +131,8 @@ public class ApptSchedulerController extends EventSource implements Controller {
 			AppointmentCollection aAppt, VenueCollection aVenue, Appointment currentAppt) {
 		setView(view);
 		setaAppt(aAppt);
-		setCurrentAppt(currentAppt);
 		setaVenue(aVenue);
+		this.currentAppt = currentAppt;
 	}
 	
 	static protected String toSentence(String words) {
@@ -149,7 +150,6 @@ public class ApptSchedulerController extends EventSource implements Controller {
 		this.view = view;
 		this.view.addApptSchedulerEventListener(apptSchedulerViewListener);
 		addApptSchedulerControllerEventListener(view);
-		// TODO Auto-generated method stub
 	}
 	
 	public void addApptSchedulerControllerEventListener(GenListener<ApptSchedulerControllerEvent> listener) {
@@ -158,6 +158,8 @@ public class ApptSchedulerController extends EventSource implements Controller {
 	
 	@Override
 	public void start() {
+		this.view.setaAvenue(aVenue.getVenueList());
+		setCurrentAppt(currentAppt);
 		ApptSchedulerControllerEvent e = new ApptSchedulerControllerEvent(this, ApptSchedulerControllerEvent.Command.START);
 		fireList(aListener, e);
 	}
@@ -196,7 +198,6 @@ public class ApptSchedulerController extends EventSource implements Controller {
 
 	public void setaVenue(VenueCollection aVenue) {
 		this.aVenue = aVenue;
-		this.view.setaAvenue(aVenue.getVenueList());
 	}
 
 }

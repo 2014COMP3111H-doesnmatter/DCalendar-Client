@@ -28,6 +28,9 @@ public class AddAPI extends BaseAPI {
 		params.put("venueId", String.valueOf(appt.getVenueId()));
 		params.put("startTime", String.valueOf(appt.getStartTime()));
 		params.put("endTime", String.valueOf(appt.getEndTime()));
+		params.put("frequency", String.valueOf(appt.getFrequency()));
+		params.put("lastDay", String.valueOf(appt.getLastDay()));
+		params.put("reminderAhead", String.valueOf(appt.getReminderAhead()));
 		params.put("info", appt.getInfo());
 		
 		return params;

@@ -4,6 +4,7 @@ import hkust.cse.calendar.gui.controller.ApptSchedulerControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseApptSchedulerView;
 import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.model.Venue;
+import hkust.cse.calendar.utils.DateTimeHelper;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -12,8 +13,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import javax.swing.BoxLayout;
@@ -70,6 +74,7 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 		"Nov", "Dec" };
 	private final static int FIELD_HEIGHT = 25;
 	private final static String[] aFrequency = { "Once", "Daily", "Weekly", "Monthly" };
+	private final static long MS_IN_SECOND = 60 * 1000;
 	
 	public PrimApptSchedulerView() {
 		this.setAlwaysOnTop(true);
@@ -169,6 +174,7 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 		pReminder.setBorder(reminderBorder);
 		
 		needReminder = new JCheckBox();
+		needReminder.addActionListener(this);
 		pReminder.add(needReminder);
 		pReminder.add(new JLabel("Remind me "));
 		reminderF = new JTextField(4);
@@ -282,12 +288,14 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 				if(appt.getLastDay() == Long.MAX_VALUE) {
 					tillDayBtn.setEnabled(false);
 					foreverBtn.setEnabled(true);
+					foreverBtn.setSelected(true);
 					tillYearF.setEnabled(false);
 					tillMonthBox.setEnabled(false);
 					tillDayF.setEnabled(false);
 				}
 				else {
 					tillDayBtn.setEnabled(true);
+					tillDayBtn.setSelected(true);
 					foreverBtn.setEnabled(false);
 					tillYearF.setEnabled(true);
 					tillMonthBox.setEnabled(true);
@@ -298,7 +306,7 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 			boolean isReminded = appt.getReminderAhead() > 0;
 			needReminder.setSelected(isReminded);
 			reminderF.setEnabled(isReminded);
-			reminderF.setText(isReminded ? String.valueOf(appt.getReminderAhead()) : "");
+			reminderF.setText(isReminded ? String.valueOf(appt.getReminderAhead() / MS_IN_SECOND) : "");
 			venueBox.setSelectedItem(aVenue.get(appt.getVenueId()));
 			titleField.setText(appt.getName());
 			detailArea.setText(appt.getInfo());
@@ -321,6 +329,76 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 			tillMonthBox.setEnabled(true);
 			tillDayF.setEnabled(true);
 		}
+	}
+	
+	private Appointment collectAppointment() {
+		Date startTime, endTime;
+		long lastDayStamp;
+		long notificationAhead = 0;
+		Appointment doneAppt = new Appointment();
+		try{
+			String timeStr = String.format("%s.%s.%s %s:%s", 
+					yearF.getText(), monthBox.getSelectedItem(), 
+					dayF.getText(), sTimeHBox.getSelectedItem(), sTimeMBox.getSelectedItem());
+			startTime = new SimpleDateFormat("yyyy.MMM.dd HH:m", Locale.ENGLISH).parse(timeStr);
+			//If parsed, at least day should be integer
+			int day = Integer.parseInt(dayF.getText());
+			if(day != startTime.getDate()) {
+				throw new ParseException("", 0);
+			}
+			//Given startTime parsable, just parse endTIme
+			timeStr = String.format("%s.%s.%s %s:%s", 
+					yearF.getText(), monthBox.getSelectedItem(), 
+					dayF.getText(), eTimeHBox.getSelectedItem(), eTimeMBox.getSelectedItem());
+			endTime = new SimpleDateFormat("yyyy.MMM.dd HH:m", Locale.ENGLISH).parse(timeStr);
+		} catch(ParseException e) {
+			JOptionPane.showMessageDialog(null, "Start Date cannot be parsed.\nPlease check again.",
+					"Invalid Input", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+		if(repeatBox.getSelectedIndex() != 0 && tillDayBtn.isSelected()) {
+			//Parse end date
+			try {
+				String timeStr = String.format("%s.%s.%s", 
+					tillYearF.getText(), tillMonthBox.getSelectedItem(), 
+					tillDayF.getText());
+				Date endDay = new SimpleDateFormat("yyyy.MMM.dd", Locale.ENGLISH).parse(timeStr);
+				lastDayStamp = endDay.getTime();
+			} catch(ParseException e) {
+				JOptionPane.showMessageDialog(null, "End Date cannot be parsed.\nPlease check again.",
+						"Invalid Input", JOptionPane.ERROR_MESSAGE);
+				return null;
+			}
+		}
+		else if(repeatBox.getSelectedIndex() == 0) {
+			lastDayStamp = DateTimeHelper.getStartOfDay(endTime.getTime());
+		}
+		else {
+			lastDayStamp = Long.MAX_VALUE;
+		}
+		if(needReminder.isSelected()) {
+			try {
+				notificationAhead = Integer.parseInt(reminderF.getText());
+				if(notificationAhead <= 0) {
+					throw new ParseException("", 0);
+				}
+			} catch(ParseException e) {
+				JOptionPane.showMessageDialog(null, "Invalid reminder settings.\nPlease check again.",
+						"Invalid Input", JOptionPane.ERROR_MESSAGE);
+				return null;
+			}
+		}
+		//Now we don't need to parse anything. So just copy data to appointment object
+		doneAppt.setId(this.appt.getId());
+		doneAppt.setStartTime(startTime.getTime());
+		doneAppt.setEndTime(endTime.getTime());
+		doneAppt.setFrequency(repeatBox.getSelectedIndex());
+		doneAppt.setLastDay(lastDayStamp);
+		doneAppt.setName(titleField.getText());
+		doneAppt.setReminderAhead(notificationAhead * MS_IN_SECOND);
+		doneAppt.setInfo(detailArea.getText());
+		doneAppt.setVenueId(((Venue)venueBox.getSelectedItem()).getId());
+		return doneAppt;
 	}
 	
 	private JTextField getYearField() {
@@ -362,10 +440,34 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if(obj == null) {
-			
+		if(obj == repeatBox) {
+			setRepeat(repeatBox.getSelectedIndex());
 		}
-
+		else if(obj == tillDayBtn) {
+			tillYearF.setEnabled(true);
+			tillMonthBox.setEnabled(true);
+			tillDayF.setEnabled(true);
+		}
+		else if(obj == foreverBtn) {
+			tillYearF.setEnabled(false);
+			tillMonthBox.setEnabled(false);
+			tillDayF.setEnabled(false);
+		}
+		else if(obj == needReminder) {
+			reminderF.setEnabled(needReminder.isSelected());
+		}
+		else if(obj == saveBtn) {
+			Appointment newAppt = collectAppointment();
+			if(newAppt != null) {
+				ApptSchedulerViewEvent ev = new ApptSchedulerViewEvent(this, ApptSchedulerViewEvent.Command.SAVE);
+				ev.setAppt(newAppt);
+				this.triggerApptSchedulerViewEvent(ev);
+			}
+		}
+		else if(obj == cancelBtn) {
+			ApptSchedulerViewEvent ev = new ApptSchedulerViewEvent(this, ApptSchedulerViewEvent.Command.CLOSE);
+			this.triggerApptSchedulerViewEvent(ev);
+		}
 	}
 
 	@Override

@@ -120,7 +120,7 @@ extends EventSource implements Controller {
 		this.view.setCalMonthView(monthController.getView());
 		
 		// appt list
-		apptListController = new ApptListController(manager.getApptListView(), model, aAppt);
+		apptListController = new ApptListController(manager.getApptListView(), model, aAppt, aVenue);
 		this.view.setApptListView(apptListController.getView());
 		
 		// month selector

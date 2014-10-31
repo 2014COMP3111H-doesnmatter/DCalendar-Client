@@ -46,6 +46,7 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 			CLOSE,
 		};
 		private Command command;
+		private Appointment appt;
 		public ApptSchedulerViewEvent(Object source) {
 			super(source);
 		}
@@ -60,6 +61,14 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 
 		public void setCommand(Command command) {
 			this.command = command;
+		}
+
+		public Appointment getAppt() {
+			return appt;
+		}
+
+		public void setAppt(Appointment appt) {
+			this.appt = appt;
 		}
 	}
 

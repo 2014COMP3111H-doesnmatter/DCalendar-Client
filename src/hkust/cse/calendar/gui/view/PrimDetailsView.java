@@ -22,6 +22,8 @@ import javax.swing.border.TitledBorder;
 public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 	private JButton exitBut;
 	private JTextArea area;
+	
+	final static private String[] aFrequency = {"Once", "Daily", "Weekly", "Monthly"};
 
 	public PrimDetailsView() {
 		paintContent();
@@ -64,6 +66,15 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 		
 		Date startTime = new Date(appt.getStartTime());
 		Date endTime = new Date(appt.getEndTime());
+		long stamp = appt.getLastDay();
+		String endDay;
+		if(stamp == Long.MAX_VALUE) {
+			endDay = "forever";
+		}
+		else {
+			endDay = new SimpleDateFormat("yyyy-MM-dd").format(new Date(stamp));
+		}
+		long reminderAhead = appt.getReminderAhead() / (60 * 1000);
 		
 		SimpleDateFormat format = new SimpleDateFormat("kk:mm");
 		String time = format.format(startTime) + "-" + format.format(endTime);
@@ -71,6 +82,8 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 		area.setText("Appointment Information \n");
 		area.append("Title: " + appt.getName() + "\n");
 		area.append("Time: " + time + "\n");
+		area.append("Repeat: " + aFrequency[appt.getFrequency()] + " till " + endDay + "\n");
+		area.append("Reminder: " + (reminderAhead == 0 ? "No": (reminderAhead + " minutes ahead")) + "\n");
 		area.append("\nDescription: \n" + appt.getInfo());
 		area.setEditable(false);
 	}
