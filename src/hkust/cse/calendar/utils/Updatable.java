@@ -1,21 +1,18 @@
-package hkust.cse.calendar.collection;
+package hkust.cse.calendar.utils;
 
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-import hkust.cse.calendar.utils.EventSource;
-import hkust.cse.calendar.utils.GenListener;
-
-abstract public class BaseCollection extends EventSource {
+abstract public class Updatable extends EventSource {
 	
-	protected List<GenListener<CollectionEvent>> colListener = new ArrayList<GenListener<CollectionEvent>>();
+	protected List<GenListener<UpdatableEvent>> colListener = new ArrayList<GenListener<UpdatableEvent>>();
 	
-	public void addColEventListener(GenListener<CollectionEvent> listener) {
+	public void addColEventListener(GenListener<UpdatableEvent> listener) {
 		colListener.add(listener);
 	}
 	
-	final static public class CollectionEvent extends EventObject {
+	final static public class UpdatableEvent extends EventObject {
 		static public enum Command {
 			NETWORK_ERR,
 			INFO_UPDATE
@@ -23,11 +20,11 @@ abstract public class BaseCollection extends EventSource {
 		
 		private Command command;
 		
-		public CollectionEvent(Object source) {
+		public UpdatableEvent(Object source) {
 			super(source);
 		}
 		
-		public CollectionEvent(Object source, Command command) {
+		public UpdatableEvent(Object source, Command command) {
 			super(source);
 			this.command = command;
 		}

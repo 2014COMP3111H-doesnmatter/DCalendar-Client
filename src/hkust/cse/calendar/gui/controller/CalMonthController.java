@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 
 import hkust.cse.calendar.collection.AppointmentCollection;
 import hkust.cse.calendar.collection.AppointmentCollection.MonthAppointmentQuery;
-import hkust.cse.calendar.collection.BaseCollection.CollectionEvent;
 import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
@@ -17,6 +16,7 @@ import hkust.cse.calendar.gui.view.base.BaseCalMonthView.CalMonthViewEvent;
 import hkust.cse.calendar.utils.DateTimeHelper;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.Updatable.UpdatableEvent;
 
 public class CalMonthController extends EventSource implements Controller {
 	private BaseCalMonthView view;
@@ -59,12 +59,12 @@ public class CalMonthController extends EventSource implements Controller {
 		
 	};
 	
-	private GenListener<CollectionEvent> collectionListener = new GenListener<CollectionEvent>() {
+	private GenListener<UpdatableEvent> collectionListener = new GenListener<UpdatableEvent>() {
 
 		@Override
-		public void fireEvent(CollectionEvent e) {
-			CollectionEvent.Command command = e.getCommand();
-			if(command == CollectionEvent.Command.INFO_UPDATE) {
+		public void fireEvent(UpdatableEvent e) {
+			UpdatableEvent.Command command = e.getCommand();
+			if(command == UpdatableEvent.Command.INFO_UPDATE) {
 				//Let's find out what's new
 				queryOccupied();
 			}

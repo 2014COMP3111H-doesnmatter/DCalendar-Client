@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import hkust.cse.calendar.collection.AppointmentCollection;
 import hkust.cse.calendar.collection.AppointmentCollection.ListAppointmentQuery;
 import hkust.cse.calendar.collection.AppointmentCollection.RemoveAppointmentQuery;
-import hkust.cse.calendar.collection.BaseCollection.CollectionEvent;
+import hkust.cse.calendar.utils.Updatable;
 import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
 import hkust.cse.calendar.gui.view.PrimDetailsView;
@@ -18,6 +18,7 @@ import hkust.cse.calendar.gui.view.base.BaseApptListView.ApptListViewEvent;
 import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.Updatable.UpdatableEvent;
 
 public class ApptListController extends EventSource implements Controller
 {
@@ -52,10 +53,10 @@ public class ApptListController extends EventSource implements Controller
 		}
 		
 	};
-	private GenListener<CollectionEvent> collectionListener = new GenListener<CollectionEvent>() {
+	private GenListener<UpdatableEvent> collectionListener = new GenListener<UpdatableEvent>() {
 
 		@Override
-		public void fireEvent(CollectionEvent e) {
+		public void fireEvent(UpdatableEvent e) {
 			switch(e.getCommand()) {
 			case INFO_UPDATE:
 				update();

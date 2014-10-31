@@ -3,6 +3,8 @@ package hkust.cse.calendar.collection;
 import hkust.cse.calendar.api.venue.ListAPI;
 import hkust.cse.calendar.model.Venue;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.Updatable;
+import hkust.cse.calendar.utils.network.APIHandler;
 import hkust.cse.calendar.utils.network.APIRequestEvent;
 
 import java.util.HashMap;
@@ -12,7 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class VenueCollection extends BaseCollection {
+public class VenueCollection extends Updatable {
 	private Map<Long, Venue> aVenue = new HashMap<Long, Venue>();
 	
 	public void load() {
@@ -27,7 +29,7 @@ public class VenueCollection extends BaseCollection {
 				JSONObject json = e.getJSON();
 				try {
 					int rtnCode = json.getInt("rtnCode");
-					CollectionEvent ev = new CollectionEvent(that);
+					UpdatableEvent ev = new UpdatableEvent(that);
 					if(rtnCode == 200) {
 						JSONArray aJson = json.getJSONArray("aVenue");
 						for(i = 0, size = aJson.length(); i < size; i++) {
@@ -35,10 +37,10 @@ public class VenueCollection extends BaseCollection {
 							Venue venue = new Venue(apptJson);
 							aVenue.put(venue.getId(), venue);
 						}
-						ev.setCommand(CollectionEvent.Command.INFO_UPDATE);
+						ev.setCommand(UpdatableEvent.Command.INFO_UPDATE);
 					}
 					else {
-						ev.setCommand(CollectionEvent.Command.NETWORK_ERR);
+						ev.setCommand(UpdatableEvent.Command.NETWORK_ERR);
 					}
 					fireList(colListener, ev);
 				} catch (JSONException ex) {
@@ -48,9 +50,15 @@ public class VenueCollection extends BaseCollection {
 			}
 			
 		});
+		Thread thrd = new Thread(new APIHandler(api));
+		thrd.start();
 	}
 
 	public Map<Long, Venue> getVenueList() {
 		return aVenue;
+	}
+	
+	public Venue getVenue(long id) {
+		return aVenue.get(id);
 	}
 }

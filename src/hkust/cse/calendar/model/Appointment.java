@@ -15,9 +15,10 @@ public class Appointment extends BaseModel {
 	private User initiator;
 	private String name;
 	private String info;
-	private Venue venue;
+	private long venueId;
 	private int frequency;
 	private long lastDay;
+	private long reminderAhead;
 	
 	public Appointment() {
 		name = "Untitled";
@@ -26,11 +27,18 @@ public class Appointment extends BaseModel {
 	public Appointment(JSONObject json) throws JSONException {
 		id = json.getInt("id");
 		name = json.getString("name");
-		setStartTime(json.getLong("startTime"));
-		setEndTime(json.getLong("endTime"));
+		startTime = json.getLong("startTime");
+		endTime = json.getLong("endTime");
+		venueId = json.getLong("venueId");
 		info = json.getString("info");
 		frequency = json.getInt("frequency");
 		lastDay = json.getLong("lastDay");
+		reminderAhead = json.getLong("reminderAhead");
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
 	}
 	
 	public String getName() {
@@ -45,13 +53,6 @@ public class Appointment extends BaseModel {
 	}
 	public void setInfo(String info) {
 		this.info = info;
-	}
-	
-	public Venue getVenue() {
-		return venue;
-	}
-	public void setVenue(Venue venue) {
-		this.venue = venue;
 	}
 	
 	public int getFrequency() {
@@ -94,10 +95,21 @@ public class Appointment extends BaseModel {
 	public void setInitiator(User initiator) {
 		this.initiator = initiator;
 	}
-	
-	@Override
-	public String toString() {
-		return this.name;
+
+	public long getReminderAhead() {
+		return reminderAhead;
+	}
+
+	public void setReminderAhead(long reminderAhead) {
+		this.reminderAhead = reminderAhead;
+	}
+
+	public long getVenueId() {
+		return venueId;
+	}
+
+	public void setVenueId(long venueId) {
+		this.venueId = venueId;
 	}
 
 	public static final class Frequency {

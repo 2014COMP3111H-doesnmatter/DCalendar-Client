@@ -26,7 +26,7 @@ public class EditAPI extends BaseAPI {
 		
 		params.put("id", String.valueOf(appt.getId()));
 		params.put("name", appt.getName());
-		params.put("venueId", String.valueOf(appt.getVenue().getId()));
+		params.put("venueId", String.valueOf(appt.getVenueId()));
 		params.put("startTime", String.valueOf(appt.getStartTime()));
 		params.put("endTime", String.valueOf(appt.getEndTime()));
 		params.put("info", appt.getInfo());

@@ -7,6 +7,7 @@ import hkust.cse.calendar.api.appointment.RemoveAPI;
 import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.utils.DateTimeHelper;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.Updatable;
 import hkust.cse.calendar.utils.network.APIHandler;
 import hkust.cse.calendar.utils.network.APIRequestEvent;
 
@@ -36,7 +37,7 @@ import org.json.JSONObject;
  * @author john
  *
  */
-public class AppointmentCollection extends BaseCollection {
+public class AppointmentCollection extends Updatable {
 	final static private int MAX_DAY_IN_MONTH = 31;
 	
 	private long startOfMonth;
@@ -72,7 +73,7 @@ public class AppointmentCollection extends BaseCollection {
 				JSONObject json = e.getJSON();
 				try {
 					int rtnCode = json.getInt("rtnCode");
-					CollectionEvent ev = new CollectionEvent(that);
+					UpdatableEvent ev = new UpdatableEvent(that);
 					if(rtnCode == 200) {
 						JSONArray aJson = json.getJSONArray("aAppointment");
 						for(i = 0, size = aJson.length(); i < size; i++) {
@@ -85,7 +86,7 @@ public class AppointmentCollection extends BaseCollection {
 						triggerUpdate();
 					}
 					else {
-						ev.setCommand(CollectionEvent.Command.NETWORK_ERR);
+						ev.setCommand(UpdatableEvent.Command.NETWORK_ERR);
 						fireList(colListener, ev);
 					}
 				} catch (JSONException ex) {
@@ -332,7 +333,7 @@ public class AppointmentCollection extends BaseCollection {
 	}
 	
 	private void triggerUpdate() {
-		CollectionEvent ev = new CollectionEvent(this, CollectionEvent.Command.INFO_UPDATE);
+		UpdatableEvent ev = new UpdatableEvent(this, UpdatableEvent.Command.INFO_UPDATE);
 		fireList(colListener, ev);
 	}
 	
