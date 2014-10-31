@@ -8,10 +8,12 @@ import java.util.Map;
 
 public abstract class TimeMachineAPI extends BaseAPI {
 	static String baseURL = "/TimeMachine/SetTime";
-	private Date timestamp;
+	private Date date;
+//	private long timestamp;
 	
-	public TimeMachineAPI(Date timestamp) {
-		this.timestamp = timestamp;
+	public TimeMachineAPI(long timestamp) {
+		this.date = new Date();
+//		this.timestamp = timestamp;
 	}
 	
 	@Override
@@ -23,7 +25,7 @@ public abstract class TimeMachineAPI extends BaseAPI {
 	protected Map<Date,Date> getDateParam() {
 		Map<Date, Date> params = new HashMap<Date, Date>();
 		
-		params.put(new Date(), timestamp);
+		params.put(new Date(), date);
 		
 		return params;
 	}
