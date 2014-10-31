@@ -6,18 +6,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
 import hkust.cse.calendar.gui.controller.TimeMachineControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseTimeMachineView;
-import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseTimeMachineView.TimeMachineViewEvent;
 
 public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionListener
@@ -130,7 +130,16 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionLi
 		if(e.getSource() == setTimeButton)
 		{
 			ev.setCommand(TimeMachineViewEvent.Command.SETTIME);
-			long timestamp = 0;
+			String timeInput = year.getText()+"."+month.getText()+"."+day.getText()+" "
+								+hour.getText()+":"+minute.getText()+":"+second.getText();
+			Date d = null;
+			try {
+				d = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH).parse(timeInput);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			long timestamp = d.getTime();
 			ev.setTime(timestamp);			
 			triggerTimeMachineViewEvent(ev);
 		}
