@@ -283,7 +283,7 @@ public class PrimApptListView extends BaseApptListView implements
 				new ApptListViewEvent(this,
 						ApptListViewEvent.Command.DELETE_APPOITNMENT);
 		e.appt = this.getSelectedAppt();
-
+		if(e.appt == null) return;
 		this.triggerApptListViewEvent(e);
 	}
 
@@ -292,6 +292,7 @@ public class PrimApptListView extends BaseApptListView implements
 				new ApptListViewEvent(this,
 						ApptListViewEvent.Command.EDIT_APPOINTMENT);
 		e.appt = this.getSelectedAppt();
+		if(e.appt == null) return;
 		this.triggerApptListViewEvent(e);
 	}
 

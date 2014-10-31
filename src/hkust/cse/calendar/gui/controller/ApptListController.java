@@ -3,8 +3,11 @@ package hkust.cse.calendar.gui.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import hkust.cse.calendar.collection.AppointmentCollection;
 import hkust.cse.calendar.collection.AppointmentCollection.ListAppointmentQuery;
+import hkust.cse.calendar.collection.AppointmentCollection.RemoveAppointmentQuery;
 import hkust.cse.calendar.collection.BaseCollection.CollectionEvent;
 import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
@@ -29,6 +32,18 @@ public class ApptListController extends EventSource implements Controller
 		public void fireEvent(ApptListViewEvent e) {
 			
 			switch(e.getCommand()) {
+			case DELETE_APPOITNMENT:
+				int n = JOptionPane.showConfirmDialog(null, "Delete Appointment " + e.appt + " ?",
+						"Confirm", JOptionPane.YES_NO_OPTION);
+				if(n == JOptionPane.NO_OPTION) break;
+				aAppt.removeAppt(e.appt, new GenListener<RemoveAppointmentQuery>() {
+					@Override
+					public void fireEvent(RemoveAppointmentQuery e) {
+						
+					}
+					
+				});
+				break;
 			case DESCRIB_APPOINTMENT:
 				DetailsController dom = new DetailsController(new PrimDetailsView());
 				dom.setAppt(e.appt);

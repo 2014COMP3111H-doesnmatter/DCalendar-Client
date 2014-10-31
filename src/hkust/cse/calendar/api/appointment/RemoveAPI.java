@@ -23,7 +23,7 @@ public class RemoveAPI extends BaseAPI {
 	protected Map<String, String> getParam() {
 		Map<String, String> params = new HashMap<String, String>();
 		
-		params.put("id", String.valueOf(appt));
+		params.put("id", String.valueOf(appt.getId()));
 		
 		return params;
 	}
