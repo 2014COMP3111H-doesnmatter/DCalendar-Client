@@ -8,6 +8,8 @@ public class TimeMachineControllerEvent extends EventObject
 {
 	static public enum Command {
 		START,
+		SETTIMEPENDING,
+		GETTIMEPENDING
 	};
 	private Command command;
 	
