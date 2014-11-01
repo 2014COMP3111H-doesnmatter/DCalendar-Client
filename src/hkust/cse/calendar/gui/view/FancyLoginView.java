@@ -27,6 +27,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicPasswordFieldUI;
+import javax.swing.plaf.basic.BasicTextFieldUI;
+
 import org.jdesktop.swingx.border.DropShadowBorder;
 
 import hkust.cse.calendar.gui.controller.LoginControllerEvent;
@@ -185,7 +188,7 @@ public class FancyLoginView extends BaseLoginView implements ActionListener{
 		password = new JPasswordField(25);
 		password.setText("122333");
 		password.setBorder(defaultBorder);
-		password.setUI(new HintTextFieldUI("   Password", false, Color.LIGHT_GRAY));
+		password.setUI(new HintTextFieldUI("   Password", false, Color.LIGHT_GRAY, new BasicPasswordFieldUI()));
 		password.addMouseListener(textFieldMouseListener);
 		password.addFocusListener(textFieldFocusListener);
 		pwPanel.add(password);

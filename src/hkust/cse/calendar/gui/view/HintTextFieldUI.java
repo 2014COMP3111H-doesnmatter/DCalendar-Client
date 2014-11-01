@@ -5,27 +5,47 @@ import java.awt.event.FocusListener;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import javax.swing.JComponent;
+import javax.swing.JPasswordField;
+import javax.swing.plaf.basic.BasicPasswordFieldUI;
 import javax.swing.plaf.basic.BasicTextFieldUI;
 import javax.swing.text.JTextComponent;
 
+/**
+ * Charles Zhang, your decorator pattern rocks!
+ *
+ */
 public class HintTextFieldUI extends BasicTextFieldUI implements FocusListener {
 
 	private String hintText;
 	private boolean hideOnFocus;
 	private Color color;
-	
-	public HintTextFieldUI(String hintText, boolean hideOnFocus, Color color){
+	private BasicTextFieldUI ui;
+	public HintTextFieldUI(String hintText, boolean hideOnFocus, Color color, BasicTextFieldUI ui){
 		this.hintText = hintText;
 		this.hideOnFocus = hideOnFocus;
 		this.color = color;
+		this.ui = ui;
+	}
+	
+	public HintTextFieldUI(String hintText, boolean hideOnFocus, Color color){
+		this(hintText, hideOnFocus, color, new BasicTextFieldUI());
+	}
+	
+	public HintTextFieldUI(String hintText, boolean hideOnFocus, BasicTextFieldUI ui){
+		this(hintText, hideOnFocus, null, ui);
 	}
 	
 	public HintTextFieldUI(String hintText, boolean hideOnFocus){
-		this(hintText, hideOnFocus, null);
+		this(hintText, hideOnFocus, null, new BasicTextFieldUI());
+	}
+	
+	public HintTextFieldUI(String hintText, BasicTextFieldUI ui){
+		this(hintText, false, ui);
 	}
 	
 	public HintTextFieldUI(String hintText){
-		this(hintText, false);
+		this(hintText, false, new BasicTextFieldUI());
 	}
 	
 	public String getHint(){
@@ -75,8 +95,8 @@ public class HintTextFieldUI extends BasicTextFieldUI implements FocusListener {
 	
 	@Override
 	protected void paintSafely(Graphics g) {
-		super.paintSafely(g);
         JTextComponent comp = getComponent();
+        ui.paint(g, comp);
         if(hintText!=null && comp.getText().length() == 0 && (!(hideOnFocus && comp.hasFocus()))){
             if(color != null) {
                 g.setColor(color);
@@ -89,8 +109,19 @@ public class HintTextFieldUI extends BasicTextFieldUI implements FocusListener {
 	}
 	
 	@Override
+	public void installUI(JComponent c) {
+		ui.installUI(c);
+		super.installUI(c);
+	}
+	
+	@Override
+	public void uninstallUI(JComponent c) {
+		ui.uninstallUI(c);
+		super.uninstallUI(c);
+	}
+	
+	@Override
     protected void installListeners() {
-        super.installListeners();
         getComponent().addFocusListener(this);
     }
 	
