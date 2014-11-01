@@ -1,0 +1,17 @@
+This file decribes the features each team member implemented.
+
+ZHAO Liyao:
+- Time Machine.
+
+HAN Haiyang:
+- A very fancy login interface.
+
+YAN Yuchen:
+- The server framework.
+- All API on the server.
+- Data management on the server.
+- ApptList and Venue Manager in client.
+
+TAN Shuhao:
+- The client framework(Refactor the whole skeleton code)
+- ApptScheduler, MonthSelector, MonthView, Data Management in client.
