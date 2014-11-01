@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import hkust.cse.calendar.collection.VenueCollection;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView.DetailsViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
@@ -17,6 +18,7 @@ public class DetailsController
 extends EventSource implements Controller {
 	private BaseDetailsView view;
 	private Appointment appt;
+	private VenueCollection aVenue;
 	
 	private List<GenListener<DetailsControllerEvent>> nListener = new ArrayList<GenListener<DetailsControllerEvent>>();
 	private GenListener<DetailsViewEvent> detailsViewListener = new GenListener<DetailsViewEvent>() {
@@ -33,6 +35,7 @@ extends EventSource implements Controller {
 	
 	public DetailsController(BaseDetailsView view) {
 		setView(view);
+		this.aVenue = VenueCollection.getInstance();
 	}
 	
 	public void addDetailsEventListener(GenListener<DetailsControllerEvent> listener) {
@@ -55,6 +58,7 @@ extends EventSource implements Controller {
 		this.appt = appt;
 		DetailsControllerEvent e = new DetailsControllerEvent(this, DetailsControllerEvent.Command.UPDATE_TEXT);
 		e.setAppt(appt);
+		e.setaVenue(aVenue.getVenueList());
 		fireList(nListener, e);
 	}
 	
@@ -62,6 +66,7 @@ extends EventSource implements Controller {
 	public void start() {
 		DetailsControllerEvent e = new DetailsControllerEvent(this, DetailsControllerEvent.Command.START);
 		e.setAppt(appt);
+		e.setaVenue(aVenue.getVenueList());
 		fireList(nListener, e);
 	}
 }

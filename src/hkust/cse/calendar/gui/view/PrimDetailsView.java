@@ -3,6 +3,7 @@ package hkust.cse.calendar.gui.view;
 import hkust.cse.calendar.gui.controller.DetailsControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView;
 import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.Venue;
 
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -61,7 +63,7 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 
 	}
 
-	public void displayText(Appointment appt) {
+	public void displayText(Appointment appt, Map<Long, Venue> aVenue) {
 		setTitle(appt.getName());
 		
 		Date startTime = new Date(appt.getStartTime());
@@ -76,7 +78,7 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 		}
 		long reminderAhead = appt.getReminderAhead() / (60 * 1000);
 		
-		SimpleDateFormat format = new SimpleDateFormat("kk:mm");
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 		String time = format.format(startTime) + "-" + format.format(endTime);
 
 		area.setText("Appointment Information \n");
@@ -84,6 +86,7 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 		area.append("Time: " + time + "\n");
 		area.append("Repeat: " + aFrequency[appt.getFrequency()] + " till " + endDay + "\n");
 		area.append("Reminder: " + (reminderAhead == 0 ? "No": (reminderAhead + " minutes ahead")) + "\n");
+		area.append("Venue: " + aVenue.get(appt.getVenueId()) + "\n");
 		area.append("\nDescription: \n" + appt.getInfo());
 		area.setEditable(false);
 	}
@@ -95,7 +98,7 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 			setVisible(true);
 		}
 		else if(command == DetailsControllerEvent.Command.UPDATE_TEXT) {
-			displayText(e.getAppt());
+			displayText(e.getAppt(), e.getaVenue());
 		}
 	}
 	

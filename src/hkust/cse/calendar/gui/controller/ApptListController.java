@@ -30,7 +30,6 @@ public class ApptListController extends EventSource implements Controller
 	private BaseApptListView view;
 	private AppointmentCollection aAppt;
 	private CalMainModel model;
-	private VenueCollection aVenue;
 	private List<GenListener<ApptListControllerEvent>> aListener = new ArrayList<GenListener<ApptListControllerEvent>>();
 	private GenListener<ApptListViewEvent> apptListViewListener = new GenListener<ApptListViewEvent>() {
 
@@ -41,12 +40,12 @@ public class ApptListController extends EventSource implements Controller
 			switch(e.getCommand()) {
 			case NEW_APPOINTMENT:
 				scheduler = new ApptSchedulerController(
-						manager.getApptSchedulerView(), aAppt, aVenue, null);
+						manager.getApptSchedulerView(), null);
 				scheduler.start();
 				break;
 			case EDIT_APPOINTMENT:
 				scheduler = new ApptSchedulerController(
-						manager.getApptSchedulerView(), aAppt, aVenue, e.appt);
+						manager.getApptSchedulerView(), e.appt);
 				scheduler.start();
 				break;
 			case DELETE_APPOITNMENT:
@@ -94,14 +93,13 @@ public class ApptListController extends EventSource implements Controller
 		}
 		
 	};
-	public ApptListController(BaseApptListView view, CalMainModel model, AppointmentCollection aAppt, VenueCollection aVenue)
+	public ApptListController(BaseApptListView view)
 	{
-		this.model = model;
-		this.aAppt = aAppt;
+		this.model = CalMainModel.getInstance();
+		this.aAppt = AppointmentCollection.getInstance();
 		model.addModelEventListener(modelListener);
 		aAppt.addColEventListener(collectionListener);
 		setView(view);
-		this.aVenue = aVenue;
 		
 	}
 	public BaseApptListView getView() {
