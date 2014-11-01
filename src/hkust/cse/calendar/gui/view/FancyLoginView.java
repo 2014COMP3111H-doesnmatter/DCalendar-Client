@@ -182,8 +182,8 @@ public class FancyLoginView extends BaseLoginView implements ActionListener{
 		
 		JPanel pwPanel = new JPanel();
 		//TODO: remove default password
-		password.setText("122333");
 		password = new JPasswordField(25);
+		password.setText("122333");
 		password.setBorder(defaultBorder);
 		password.setUI(new HintTextFieldUI("   Password", false, Color.LIGHT_GRAY));
 		password.addMouseListener(textFieldMouseListener);
