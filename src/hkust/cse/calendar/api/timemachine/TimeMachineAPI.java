@@ -6,13 +6,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class TimeMachineAPI extends BaseAPI {
-	static String baseURL = "/TimeMachine/SetTime";
-	private Date date;
+public class TimeMachineAPI extends BaseAPI {
+	static String baseURL = "/timeMachine/setNow";
 	private long timestamp;
 	
 	public TimeMachineAPI(long timestamp) {
-		this.date = new Date();
 		this.timestamp = timestamp;
 	}
 	
@@ -22,10 +20,10 @@ public abstract class TimeMachineAPI extends BaseAPI {
 	}
 	
 	@Override
-	protected Map<Date,Date> getDateParam() {
-		Map<Date, Date> params = new HashMap<Date, Date>();
+	protected Map<String,String> getParam() {
+		Map<String, String> params = new HashMap<String, String>();
 		
-		params.put(new Date(), date);
+		params.put("timestamp", String.valueOf(timestamp));
 		
 		return params;
 	}
