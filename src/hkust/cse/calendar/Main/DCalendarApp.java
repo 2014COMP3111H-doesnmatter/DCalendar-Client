@@ -2,6 +2,7 @@ package hkust.cse.calendar.Main;
 
 import hkust.cse.calendar.gui.controller.Controller;
 import hkust.cse.calendar.gui.controller.LoginController;
+import hkust.cse.calendar.gui.view.FancyLoginView;
 import hkust.cse.calendar.gui.view.PrimApptListView;
 import hkust.cse.calendar.gui.view.PrimApptSchedulerView;
 import hkust.cse.calendar.gui.view.PrimCalMainView;
@@ -52,7 +53,7 @@ public class DCalendarApp {
 
 			@Override
 			public BaseLoginView getLoginView() {
-				return new PrimLoginView();
+				return new FancyLoginView();
 			}
 
 			@Override
