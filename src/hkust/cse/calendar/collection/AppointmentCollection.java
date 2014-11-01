@@ -38,6 +38,7 @@ import org.json.JSONObject;
  *
  */
 public class AppointmentCollection extends Updatable {
+	static private AppointmentCollection instance;
 	final static private int MAX_DAY_IN_MONTH = 31;
 	
 	private long startOfMonth;
@@ -55,6 +56,11 @@ public class AppointmentCollection extends Updatable {
 	public AppointmentCollection(long initStamp) {
 		state = DIRTY;
 		this.startOfMonth = DateTimeHelper.getStartOfMonth(initStamp);
+		instance = this;
+	}
+	
+	static public AppointmentCollection getInstance() {
+		return instance;
 	}
 	
 	public void load() {

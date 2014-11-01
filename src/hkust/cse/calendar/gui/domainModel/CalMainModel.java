@@ -11,18 +11,26 @@ import hkust.cse.calendar.utils.GenListener;
 
 public class CalMainModel extends EventSource {
 	private Date selectedDay = new Date();
+	static private CalMainModel instance;
 	List<GenListener<CalMainModelEvent>> nListener = new ArrayList<GenListener<CalMainModelEvent>>();
 	
 	public CalMainModel() {
 		trimDate();
+		instance = this;
 	}
 	
-	CalMainModel(long stamp) {
+	public CalMainModel(long stamp) {
 		setSelectedDayStamp(stamp);
+		instance = this;
 	}
 	
-	CalMainModel(Date date) {
+	public CalMainModel(Date date) {
 		setSelectedDay(date);
+		instance = this;
+	}
+	
+	static public CalMainModel getInstance() {
+		return instance;
 	}
 
 	public Date getSelectedDay() {

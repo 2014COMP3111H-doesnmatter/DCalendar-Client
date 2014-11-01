@@ -127,11 +127,10 @@ public class ApptSchedulerController extends EventSource implements Controller {
 		
 	};
 	
-	public ApptSchedulerController(BaseApptSchedulerView view,
-			AppointmentCollection aAppt, VenueCollection aVenue, Appointment currentAppt) {
+	public ApptSchedulerController(BaseApptSchedulerView view, Appointment currentAppt) {
 		setView(view);
-		setaAppt(aAppt);
-		setaVenue(aVenue);
+		setaAppt(AppointmentCollection.getInstance());
+		setaVenue(VenueCollection.getInstance());
 		this.currentAppt = currentAppt;
 	}
 	
@@ -158,7 +157,7 @@ public class ApptSchedulerController extends EventSource implements Controller {
 	
 	@Override
 	public void start() {
-		this.view.setaAvenue(aVenue.getVenueList());
+		this.view.setaVenue(aVenue.getVenueList());
 		setCurrentAppt(currentAppt);
 		ApptSchedulerControllerEvent e = new ApptSchedulerControllerEvent(this, ApptSchedulerControllerEvent.Command.START);
 		fireList(aListener, e);

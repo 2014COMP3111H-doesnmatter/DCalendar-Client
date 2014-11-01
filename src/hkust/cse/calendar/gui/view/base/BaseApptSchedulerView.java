@@ -26,7 +26,7 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 		EventSource.fireList(aListener, e);
 	}
 	
-	final public void setaAvenue(Map<Long, Venue> aVenue) {
+	final public void setaVenue(Map<Long, Venue> aVenue) {
 		this.aVenue = aVenue;
 		updateVenueList();
 	}

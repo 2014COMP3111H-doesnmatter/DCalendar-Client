@@ -16,6 +16,15 @@ import org.json.JSONObject;
 
 public class VenueCollection extends Updatable {
 	private Map<Long, Venue> aVenue = new HashMap<Long, Venue>();
+	static private VenueCollection instance;
+	
+	public VenueCollection() {
+		instance = this;
+	}
+	
+	static public VenueCollection getInstance() {
+		return instance;
+	}
 	
 	public void load() {
 		final ListAPI api = new ListAPI();

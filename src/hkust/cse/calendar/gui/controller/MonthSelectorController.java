@@ -63,9 +63,9 @@ public class MonthSelectorController extends EventSource implements Controller
 		}
 		
 	};
-	public MonthSelectorController(BaseMonthSelectorView view, CalMainModel model) {
+	public MonthSelectorController(BaseMonthSelectorView view) {
 		setView(view);
-		setModel(model);
+		setModel(CalMainModel.getInstance());
 	}
 	
 	public BaseMonthSelectorView getView() {

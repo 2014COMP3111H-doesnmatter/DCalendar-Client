@@ -100,10 +100,10 @@ public class CalMonthController extends EventSource implements Controller {
 		});
 	}
 	
-	public CalMonthController(BaseCalMonthView view, CalMainModel model, AppointmentCollection aAppt) {
+	public CalMonthController(BaseCalMonthView view) {
 		setView(view);
-		setModel(model);
-		setCollection(aAppt);
+		setModel(CalMainModel.getInstance());
+		setCollection(AppointmentCollection.getInstance());
 	}
 
 	public BaseCalMonthView getView() {
@@ -131,7 +131,7 @@ public class CalMonthController extends EventSource implements Controller {
 
 	public void setCollection(AppointmentCollection aAppt) {
 		this.aAppt = aAppt;
-		this.model.addModelEventListener(modelListener);
+		this.aAppt.addColEventListener(collectionListener);
 	}
 
 	public void addCalMonthEventListener(GenListener<CalMonthControllerEvent> listener) {

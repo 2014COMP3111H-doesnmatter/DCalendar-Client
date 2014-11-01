@@ -58,7 +58,7 @@ extends EventSource implements Controller {
 				view.dispose();
 				break;
 			case MANUAL_SCHEDULE:
-				ApptSchedulerController schedulerCont = new ApptSchedulerController(new PrimApptSchedulerView(), aAppt, aVenue, null);
+				ApptSchedulerController schedulerCont = new ApptSchedulerController(new PrimApptSchedulerView(), null);
 				schedulerCont.start();
 				break;
 			case TIME_MACHINE:
@@ -116,15 +116,15 @@ extends EventSource implements Controller {
 		aVenue.load();
 		
 		// month view
-		monthController = new CalMonthController(manager.getCalMonthView(), model, aAppt);
+		monthController = new CalMonthController(manager.getCalMonthView());
 		this.view.setCalMonthView(monthController.getView());
 		
 		// appt list
-		apptListController = new ApptListController(manager.getApptListView(), model, aAppt, aVenue);
+		apptListController = new ApptListController(manager.getApptListView());
 		this.view.setApptListView(apptListController.getView());
 		
 		// month selector
-		monthSelectorController = new MonthSelectorController(manager.getMonthSelectorView(), model);
+		monthSelectorController = new MonthSelectorController(manager.getMonthSelectorView());
 		this.view.setMonthSelectView(monthSelectorController.getView());
 		
 		//Force trigger a model update

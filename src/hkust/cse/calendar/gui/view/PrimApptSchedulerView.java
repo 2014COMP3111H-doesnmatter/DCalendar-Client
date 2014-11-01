@@ -276,6 +276,7 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 			setTitle("Edit");
 			Date sTime = new Date(appt.getStartTime());
 			Date eTime = new Date(appt.getEndTime());
+			Date lastDay = new Date(appt.getLastDay());
 			yearF.setText(String.valueOf(sTime.getYear() + 1900));
 			monthBox.setSelectedIndex(sTime.getMonth());
 			dayF.setText(String.valueOf(sTime.getDate()));
@@ -290,16 +291,22 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 					foreverBtn.setEnabled(true);
 					foreverBtn.setSelected(true);
 					tillYearF.setEnabled(false);
+					tillYearF.setText("");
 					tillMonthBox.setEnabled(false);
+					tillMonthBox.setSelectedIndex(0);
 					tillDayF.setEnabled(false);
+					tillDayF.setText("");
 				}
 				else {
 					tillDayBtn.setEnabled(true);
 					tillDayBtn.setSelected(true);
 					foreverBtn.setEnabled(false);
 					tillYearF.setEnabled(true);
+					tillYearF.setText(String.valueOf(lastDay.getYear() + 1900));
 					tillMonthBox.setEnabled(true);
+					tillMonthBox.setSelectedIndex(lastDay.getMonth());
 					tillDayF.setEnabled(true);
+					tillDayF.setText(String.valueOf(lastDay.getDate()));
 				}
 			}
 			
