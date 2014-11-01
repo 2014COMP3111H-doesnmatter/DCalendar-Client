@@ -3,7 +3,6 @@ package hkust.cse.calendar.gui.view;
 import hkust.cse.calendar.gui.controller.ApptListControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseApptListView;
 import hkust.cse.calendar.model.Appointment;
-import hkust.cse.calendar.unit.Appt;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,11 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;

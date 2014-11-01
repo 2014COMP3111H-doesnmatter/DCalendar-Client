@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import hkust.cse.calendar.model.Appointment;
-import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.utils.network.BaseAPI;
 
 public class ListByMonthAPI extends BaseAPI {

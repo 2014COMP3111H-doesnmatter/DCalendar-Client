@@ -1,7 +1,6 @@
 package hkust.cse.calendar.api.appointment;
 
 import hkust.cse.calendar.model.Appointment;
-import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.utils.network.BaseAPI;
 
 import java.util.HashMap;

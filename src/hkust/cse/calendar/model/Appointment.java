@@ -1,12 +1,7 @@
 package hkust.cse.calendar.model;
 
-import java.util.Date;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.utils.EventSource;
 
 public class Appointment extends BaseModel {
 	
