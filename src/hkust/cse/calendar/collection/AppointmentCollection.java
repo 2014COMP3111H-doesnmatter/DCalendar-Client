@@ -230,6 +230,9 @@ public class AppointmentCollection extends Updatable {
 					else if(rtnCode == 406) {
 						qry.setCommand(RemoveAppointmentQuery.Command.PERM_DENIED);
 					}
+					else if(rtnCode == 407) {
+						qry.setCommand(RemoveAppointmentQuery.Command.ILLEGAL_TIME);
+					}
 					else if(rtnCode == -1) {
 						qry.setCommand(RemoveAppointmentQuery.Command.NETWORK_ERR);
 					}
@@ -486,6 +489,7 @@ public class AppointmentCollection extends Updatable {
 			OK,
 			APPT_NOT_FOUND,
 			PERM_DENIED,
+			ILLEGAL_TIME,
 			NETWORK_ERR,
 			UNKNOWN_ERR
 		};

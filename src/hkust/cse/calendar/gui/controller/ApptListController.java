@@ -55,7 +55,10 @@ public class ApptListController extends EventSource implements Controller
 				aAppt.removeAppt(e.appt, new GenListener<RemoveAppointmentQuery>() {
 					@Override
 					public void fireEvent(RemoveAppointmentQuery e) {
-						
+						switch(e.getCommand()) {
+						case ILLEGAL_TIME:
+							JOptionPane.showMessageDialog(null, "Cannot delete appointment in the past.");
+						}
 					}
 					
 				});

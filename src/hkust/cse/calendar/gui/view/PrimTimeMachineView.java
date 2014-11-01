@@ -141,7 +141,6 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionLi
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, "Oops! Cannot parse your information. Please retry with valid numbers.", 
 						"Parsing Error", JOptionPane.ERROR_MESSAGE);
-				e1.printStackTrace();
 			}
 			long timestamp = d.getTime();
 			ev.setTime(timestamp);			
