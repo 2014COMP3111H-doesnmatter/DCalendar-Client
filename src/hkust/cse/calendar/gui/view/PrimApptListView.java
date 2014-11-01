@@ -240,6 +240,14 @@ public class PrimApptListView extends BaseApptListView implements
 			}
 		});
 
+		mi = (JMenuItem) pop.add(new JMenuItem("Edit"));
+		mi.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e) {
+				onEditAppointment();
+			}
+		});
+		
 		mi = (JMenuItem) pop.add(new JMenuItem("Delete"));
 
 		mi.addActionListener(new ActionListener()
@@ -248,14 +256,7 @@ public class PrimApptListView extends BaseApptListView implements
 				onDeleteAppointment();
 			}
 		});
-
-		mi = (JMenuItem) pop.add(new JMenuItem("Edit"));
-		mi.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e) {
-				onEditAppointment();
-			}
-		});
+		
 		pop.add(new JPopupMenu.Separator());
 		JMenuItem j = new JMenuItem("Details");
 		j.setFont(f);
