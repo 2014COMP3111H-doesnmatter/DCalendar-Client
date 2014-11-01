@@ -19,6 +19,7 @@ import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.TimeMachine;
 import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
@@ -34,9 +35,11 @@ extends EventSource implements Controller {
 	private CalMainModel model;
 	private AppointmentCollection aAppt;
 	private VenueCollection aVenue;
+	private TimeMachine timeMachine;
 	
 	private boolean isStarted = false;
 	private boolean isVenueLoaded = false;
+	private boolean isTimeMachineLoaded = false;
 	
 	private List<GenListener<CalMainControllerEvent>> nListener = new ArrayList<GenListener<CalMainControllerEvent>>();
 	
@@ -94,26 +97,35 @@ extends EventSource implements Controller {
 		setView(view);
 		ViewManager manager = DCalendarApp.getApp().getViewManager();
 		
-		//TODO: adapt to Timemachine
 		model = new CalMainModel();
 		model.addModelEventListener(modelListener);
-		long today = model.getSelectedDayStamp();
-		aAppt = new AppointmentCollection(today);
-		aAppt.load();
 		aVenue = new VenueCollection();
 		aVenue.addColEventListener(new GenListener<UpdatableEvent>() {
 
 			@Override
 			public void fireEvent(UpdatableEvent e) {
 				isVenueLoaded = true;
-				if(isStarted) {
+				if(isStarted)
 					start();
-				}
-				
 			}
 			
 		});
 		aVenue.load();
+		
+		timeMachine = new TimeMachine();
+		timeMachine.addColEventListener(new GenListener<UpdatableEvent>() {
+
+			@Override
+			public void fireEvent(UpdatableEvent e) {
+				isTimeMachineLoaded = true;
+				if(isStarted)
+					start();
+			}
+			
+		});
+		timeMachine.load();
+		
+		aAppt = new AppointmentCollection(0);
 		
 		// month view
 		monthController = new CalMonthController(manager.getCalMonthView());
@@ -126,18 +138,20 @@ extends EventSource implements Controller {
 		// month selector
 		monthSelectorController = new MonthSelectorController(manager.getMonthSelectorView());
 		this.view.setMonthSelectView(monthSelectorController.getView());
-		
-		//Force trigger a model update
-		model.setSelectedDayStamp(today);
 	}
 	
 	
 	@Override
 	public void start() {
 		isStarted = true;
-		if(!isVenueLoaded) {
+		if(!isVenueLoaded || !isTimeMachineLoaded) {
 			return;
 		}
+		isStarted = false;
+		
+		//Force trigger a model update
+		model.setSelectedDay(timeMachine.getNow());
+		
 		CalMainControllerEvent e = new CalMainControllerEvent(this, CalMainControllerEvent.Command.START);
 		fireList(nListener, e);
 	}

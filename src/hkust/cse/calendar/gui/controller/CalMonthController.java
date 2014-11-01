@@ -13,6 +13,7 @@ import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView.CalMonthViewEvent;
+import hkust.cse.calendar.model.TimeMachine;
 import hkust.cse.calendar.utils.DateTimeHelper;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
@@ -42,8 +43,7 @@ public class CalMonthController extends EventSource implements Controller {
 				//Change the view first then fetch occupied
 
 				long newStamp = model.getSelectedDayStamp();
-				//TODO: Adapt to Timemachine
-				long today = (new Date()).getTime();
+				long today = TimeMachine.getInstance().getNow().getTime();
 				boolean[] occupied = new boolean[DateTimeHelper.MAX_DAY_IN_MONTH];
 				Arrays.fill(occupied, false);
 				
@@ -55,6 +55,24 @@ public class CalMonthController extends EventSource implements Controller {
 				
 				queryOccupied();
 			}
+		}
+	};
+	
+	private GenListener<UpdatableEvent> timeMachineListener = new GenListener<UpdatableEvent>() {
+
+		@Override
+		public void fireEvent(UpdatableEvent e) {
+			long today = TimeMachine.getInstance().getNow().getTime();
+			long selectedDay = model.getSelectedDayStamp();
+			long startOfSelected = DateTimeHelper.getStartOfMonth(selectedDay);
+			int dayInMonth = DateTimeHelper.getDayInMonth(startOfSelected);
+			int todayDate = DateTimeHelper.getDifferenceInDay(today, startOfSelected);
+			if(todayDate < 0 || todayDate >= dayInMonth) {
+				today = Long.MAX_VALUE;
+			}
+			CalMonthControllerEvent ev = new CalMonthControllerEvent(this, CalMonthControllerEvent.Command.UPDATE_TODAY);
+			ev.setToday(today);
+			fireList(nListener, ev);
 		}
 		
 	};
@@ -104,6 +122,7 @@ public class CalMonthController extends EventSource implements Controller {
 		setView(view);
 		setModel(CalMainModel.getInstance());
 		setCollection(AppointmentCollection.getInstance());
+		TimeMachine.getInstance().addColEventListener(timeMachineListener);
 	}
 
 	public BaseCalMonthView getView() {

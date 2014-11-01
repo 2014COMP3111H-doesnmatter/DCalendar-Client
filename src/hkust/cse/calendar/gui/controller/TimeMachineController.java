@@ -23,7 +23,7 @@ public class TimeMachineController extends EventSource implements Controller
 			TimeMachineControllerEvent ev = new TimeMachineControllerEvent(this);
 			if(command == TimeMachineViewEvent.Command.SETTIME) {
 				long timestamp = e.getTime();
-				TimeMachine.setTime(timestamp, setTimeListener);
+				TimeMachine.getInstance().setTime(timestamp, setTimeListener);
 				ev.setCommand(TimeMachineControllerEvent.Command.SETTIMEPENDING);
 				fireList(aListener,ev);
 			}

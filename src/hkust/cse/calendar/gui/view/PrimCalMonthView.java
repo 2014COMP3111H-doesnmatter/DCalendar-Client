@@ -152,16 +152,19 @@ public class PrimCalMonthView extends BaseCalMonthView {
 		}
 		
 		public void setToday(long todayStamp) {
-			if(today > 0) {
+			if(today >= 0) {
 				aDay[today].setToday(false);
-				int r = today / DAY_IN_WEEK;
-				int c = today % DAY_IN_WEEK;
+				int r = (today + dayOfFirstDate) / DAY_IN_WEEK;
+				int c = (today + dayOfFirstDate) % DAY_IN_WEEK;
 				fireTableCellUpdated(r, c);
+			}
+			if(todayStamp == Long.MAX_VALUE) {
+				return;
 			}
 			today = (new Date(todayStamp)).getDate() - 1;
 			aDay[today].setToday(true);
-			int r = today / DAY_IN_WEEK;
-			int c = today % DAY_IN_WEEK;
+			int r = (today + dayOfFirstDate) / DAY_IN_WEEK;
+			int c = (today + dayOfFirstDate) % DAY_IN_WEEK;
 			fireTableCellUpdated(r, c);
 		}
 		

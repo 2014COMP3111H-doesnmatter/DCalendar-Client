@@ -168,7 +168,7 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionLi
 		}
 		else if(command == TimeMachineControllerEvent.Command.SETTIMECOMPLETE) {
 			setTimeButton.setEnabled(true);
-			setTimeButton.setText("Setting Complete. Reset.");
+			setTimeButton.setText("Set");
 		}
 	}
 }
