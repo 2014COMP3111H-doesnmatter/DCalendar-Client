@@ -40,8 +40,9 @@ public class TimeMachineController extends EventSource implements Controller
 			TimeMachineControllerEvent ev = new TimeMachineControllerEvent(this);
 			SetTime.RtnValue rtnVal = qry.getRtnValue();
 			if(rtnVal == SetTime.RtnValue.COMPLETE) {
-				ev.setCommand(TimeMachineControllerEvent.Command.SETTIMECOMPLETE);
-				fireList(aListener,ev);
+				view.dispose();
+				//ev.setCommand(TimeMachineControllerEvent.Command.SETTIMECOMPLETE);
+				//fireList(aListener,ev);
 			}
 		}
 	};

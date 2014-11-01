@@ -37,6 +37,7 @@ extends EventSource implements Controller {
 	private AppointmentCollection aAppt;
 	private VenueCollection aVenue;
 	private TimeMachine timeMachine;
+	private NotificationController notifyController;
 	
 	private boolean isStarted = false;
 	private boolean isVenueLoaded = false;
@@ -157,6 +158,8 @@ extends EventSource implements Controller {
 		
 		//Force trigger a model update
 		model.setSelectedDay(timeMachine.getNow());
+		notifyController = new NotificationController();
+		notifyController.start();
 		
 		CalMainControllerEvent e = new CalMainControllerEvent(this, CalMainControllerEvent.Command.START);
 		fireList(nListener, e);
