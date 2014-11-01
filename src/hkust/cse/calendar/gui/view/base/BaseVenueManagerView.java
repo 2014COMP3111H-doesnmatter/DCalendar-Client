@@ -24,9 +24,10 @@ public abstract class BaseVenueManagerView extends JDialog implements GenListene
 	public static class VenueManagerViewEvent extends EventObject {
 		public enum Command {
 			// TODO Auto-generated enum
-			PLACEHOLDER,
+			ADD_VENUE,
 		};
 		private Command command;
+		public String name;
 		public VenueManagerViewEvent(Object source) {
 			super(source);
 		}

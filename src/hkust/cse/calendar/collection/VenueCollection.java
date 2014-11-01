@@ -1,12 +1,16 @@
 package hkust.cse.calendar.collection;
 
+import hkust.cse.calendar.api.venue.AddAPI;
 import hkust.cse.calendar.api.venue.ListAPI;
+import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.model.Venue;
 import hkust.cse.calendar.utils.GenListener;
 import hkust.cse.calendar.utils.Updatable;
+import hkust.cse.calendar.utils.Updatable.UpdatableEvent;
 import hkust.cse.calendar.utils.network.APIHandler;
 import hkust.cse.calendar.utils.network.APIRequestEvent;
 
+import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,4 +74,39 @@ public class VenueCollection extends Updatable {
 	public Venue getVenue(long id) {
 		return aVenue.get(id);
 	}
+	
+	public void addVenue(String name) {
+		final AddAPI addApi = new AddAPI(name);
+		addApi.addDoneListener(new GenListener<APIRequestEvent>() {
+
+			@Override
+			public void fireEvent(APIRequestEvent e) {
+				
+				JSONObject json = e.getJSON();
+				
+				try {
+					int rtnCode = json.getInt("rtnCode");
+					UpdatableEvent ev = new UpdatableEvent(VenueCollection.this);
+					switch(rtnCode) {
+					case 200:
+						Venue rtnVenue = new Venue(json.getJSONObject("venue"));
+						aVenue.put(rtnVenue.getId(), rtnVenue);
+						ev.setCommand(UpdatableEvent.Command.INFO_UPDATE);
+						fireList(colListener, ev);
+						break;
+					default:
+						break;
+					}
+					
+				}
+				catch(Exception e1) {
+					
+				}
+			}
+			
+		});
+		Thread thrd = new Thread(new APIHandler(addApi));
+		thrd.start();
+	}
+
 }

@@ -48,6 +48,7 @@ public class PrimCalMainView extends BaseCalMainView implements ActionListener {
 	private JMenuItem exitMenuItem;
 	private JMenuItem mannualScheduleMenuItem;
 	private JMenuItem timeMachineMenuItem;
+	private JMenuItem venueMenuItem;
 	
 	public PrimCalMainView() {
 		super();
@@ -132,6 +133,23 @@ public class PrimCalMainView extends BaseCalMainView implements ActionListener {
 		
 		menuBar.add(timeMachineMenu);
 		
+		//Begin of Venue Menu
+		JMenu venueMenu = new JMenu("Location");
+		venueMenu.setMnemonic('L');
+		venueMenu.getAccessibleContext().setAccessibleDescription(
+				"Manage Location");
+		
+
+		venueMenuItem = new JMenuItem("Manage Location");
+		venueMenuItem.setMnemonic('M');
+		venueMenuItem.getAccessibleContext().setAccessibleDescription(
+				"Manage Location");
+		venueMenuItem.addActionListener(this);
+		venueMenu.add(venueMenuItem);
+		//End of Venue menu
+		
+		menuBar.add(venueMenu);
+		
 		return menuBar;
 	}
 	
@@ -153,6 +171,10 @@ public class PrimCalMainView extends BaseCalMainView implements ActionListener {
 		}
 		else if(obj == timeMachineMenuItem) {
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.TIME_MACHINE);
+			triggerCalMainViewEvent(ev);
+		}
+		else if(obj == venueMenuItem) {
+			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.VENUE);
 			triggerCalMainViewEvent(ev);
 		}
 	}

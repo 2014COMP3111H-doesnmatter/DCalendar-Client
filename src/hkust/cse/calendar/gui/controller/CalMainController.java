@@ -14,6 +14,7 @@ import hkust.cse.calendar.gui.view.PrimApptListView;
 import hkust.cse.calendar.gui.view.PrimApptSchedulerView;
 import hkust.cse.calendar.gui.view.PrimCalMonthView;
 import hkust.cse.calendar.gui.view.PrimTimeMachineView;
+import hkust.cse.calendar.gui.view.PrimVenueManagerView;
 import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
@@ -67,6 +68,11 @@ extends EventSource implements Controller {
 			case TIME_MACHINE:
 				TimeMachineController controller = new TimeMachineController(new PrimTimeMachineView());
 				controller.start();
+				break;
+			case VENUE:
+				VenueManagerController venueCtrl = new VenueManagerController(new PrimVenueManagerView());
+				venueCtrl.start();
+				break;
 			}
 		}
 		

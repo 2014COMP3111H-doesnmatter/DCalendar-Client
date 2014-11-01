@@ -33,7 +33,8 @@ abstract public class BaseCalMainView extends JFrame implements GenListener<CalM
 			LOGOUT,
 			EXIT,
 			MANUAL_SCHEDULE,
-			TIME_MACHINE
+			TIME_MACHINE,
+			VENUE,
 		};
 		private Command command;
 		
