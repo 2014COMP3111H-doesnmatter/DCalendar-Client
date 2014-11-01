@@ -193,7 +193,7 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 		
 
 		JPanel pDetail = new JPanel();
-		pDetail.setLayout(new BorderLayout());
+		pDetail.setLayout(new BoxLayout(pDetail, BoxLayout.Y_AXIS));
 		Border detailBorder = new TitledBorder(null, "Appointment Description");
 		pDetail.setBorder(detailBorder);
 		
@@ -203,12 +203,12 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 		titleField.setPreferredSize(new Dimension(300, FIELD_HEIGHT));
 		titleAndTextPanel.add(titleL);
 		titleAndTextPanel.add(titleField);
-		pDetail.add(titleAndTextPanel, BorderLayout.NORTH);
+		pDetail.add(titleAndTextPanel);
 
 		detailArea = new JTextArea(20, 30);
 		detailArea.setEditable(true);
 		JScrollPane detailScroll = new JScrollPane(detailArea);
-		pDetail.add(detailScroll, BorderLayout.SOUTH);
+		pDetail.add(detailScroll);
 
 		
 		JPanel top = new JPanel();
