@@ -92,18 +92,18 @@ public class PrimCalMonthView extends BaseCalMonthView {
 			if(obj == null) {
 				return this;
 			}
-			
-			if(obj.isToday())
-				setForeground(Color.RED);
-			else
-				setForeground(Color.BLACK);
 
 			Font f = getFont();
-			if(obj.hasEvent()) {
+			if(obj.isToday())
 				setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+			else
+				setFont(f.deriveFont(f.getStyle() & ~Font.BOLD));
+
+			if(obj.hasEvent()) {
+				setForeground(Color.BLUE);
 			}
 			else {
-				setFont(f.deriveFont(f.getStyle() & ~Font.BOLD));
+				setForeground(Color.BLACK);
 			}
 			setBackground(Color.WHITE);
 			setHorizontalAlignment(SwingConstants.RIGHT);
