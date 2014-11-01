@@ -14,8 +14,10 @@ import java.util.Locale;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 import hkust.cse.calendar.gui.controller.TimeMachineControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseTimeMachineView;
 import hkust.cse.calendar.gui.view.base.BaseTimeMachineView.TimeMachineViewEvent;
@@ -137,6 +139,8 @@ public class PrimTimeMachineView extends BaseTimeMachineView implements	ActionLi
 				d = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH).parse(timeInput);
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, "Oops! Cannot parse your information. Please retry with valid numbers.", 
+						"Parsing Error", JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 			}
 			long timestamp = d.getTime();
