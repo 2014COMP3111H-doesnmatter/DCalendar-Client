@@ -34,6 +34,7 @@ import org.jdesktop.swingx.border.DropShadowBorder;
 
 import hkust.cse.calendar.gui.controller.LoginControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
+import hkust.cse.calendar.utils.ImagePool;
 
 public class FancyLoginView extends BaseLoginView implements ActionListener{
 	private JTextField userName;
@@ -60,17 +61,8 @@ public class FancyLoginView extends BaseLoginView implements ActionListener{
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		
-		BufferedImage loginLogo = null;
-		try {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			InputStream input = classLoader.getResourceAsStream("login.png");
-			loginLogo = ImageIO.read(input);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
 		JPanel picPanel = new JPanel();
-		JLabel loginLogoLabel = new JLabel(new ImageIcon(loginLogo));
+		JLabel loginLogoLabel = new JLabel(new ImageIcon(ImagePool.getInstance().getImage("login.png")));
 		picPanel.add(loginLogoLabel);
 		
 		JPanel messPanel = new JPanel();
