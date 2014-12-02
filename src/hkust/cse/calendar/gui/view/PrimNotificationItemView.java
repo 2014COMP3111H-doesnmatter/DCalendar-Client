@@ -91,7 +91,7 @@ public class PrimNotificationItemView extends BaseNotificationItemView implement
 		closeBtn = new JButton(new ImageIcon(ImagePool.getInstance().getImage("close.png").getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH)));
 		closeBtn.setUI(new BasicButtonUI());
 		closeBtn.setOpaque(false);
-		closeBtn.setBorder(new EmptyBorder(0,0,0,0));
+		closeBtn.setBorder(null);
 		ImageIcon hover = new ImageIcon(ImagePool.getInstance().getImage("close_hover.png").getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
 		closeBtn.setRolloverIcon(hover);
 		closeBtn.setPressedIcon(hover);

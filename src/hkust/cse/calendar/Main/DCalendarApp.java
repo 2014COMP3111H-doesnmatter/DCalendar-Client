@@ -41,7 +41,7 @@ public class DCalendarApp {
 
 			@Override
 			public BaseCalMainView getCalMainView() {
-				return new PrimCalMainView();
+				return new FancyCalMainView();
 			}
 
 			@Override

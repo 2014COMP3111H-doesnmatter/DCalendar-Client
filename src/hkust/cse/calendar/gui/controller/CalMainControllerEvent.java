@@ -5,7 +5,7 @@ import java.util.EventObject;
 public class CalMainControllerEvent extends EventObject {
 	static public enum Command {
 		START,
-		UPDATE_INFO
+		UPDATE_INFO,
 	};
 	private Command command;
 	private String username;

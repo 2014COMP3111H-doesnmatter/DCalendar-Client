@@ -2,6 +2,7 @@ package hkust.cse.calendar.gui.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -38,6 +40,7 @@ import hkust.cse.calendar.gui.controller.LoginControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseApptListView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
+import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseMonthSelectorView;
 import hkust.cse.calendar.utils.ImagePool;
@@ -71,6 +74,13 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 	
 	private JButton userButton, functionButton, notificationButton;
 	
+	private JPanel functionPanel, adminFunctionPanel, userPanel, notificationPanel;
+	
+	private JButton timeMachineBtn;
+	private JButton logoutBtn;
+	private JButton exitBtn;
+	private JLabel usernameLabel;
+	
 	public FancyCalMainView() {
 		super();
 		Container contentPane = this.getContentPane();
@@ -78,13 +88,10 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 
 		contentPane.add(createToolBar());
 		
-		JPanel lower = new JPanel();
-		
 		upperPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		wholePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		wholePane.setTopComponent(upperPane);
-		
-		lower.add(wholePane);
+		wholePane.setAlignmentX(LEFT_ALIGNMENT);
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -93,10 +100,11 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 			}
 		});
 		
-		contentPane.add(lower);
+		contentPane.add(wholePane);
 		
 		pack();
 		setVisible(false);
+		initMenuPanels();
 	}
 	
 	JPanel createToolBar() {
@@ -120,6 +128,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		userButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		userButton.setOpaque(false);
 		userButton.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
+		userButton.addActionListener(this);
 		
 		functionButton = new JButton();
 		functionButton.setUI(new ToolBarButtonUI("function.png"));
@@ -132,6 +141,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		notificationButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		notificationButton.setOpaque(false);
 		notificationButton.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
+		notificationButton.addActionListener(this);
 		
 		panel.add(logoLabel);
 		
@@ -140,32 +150,60 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		panel.add(userButton);
 		panel.add(functionButton);
 		panel.add(notificationButton);
+		panel.setAlignmentX(LEFT_ALIGNMENT);
 		
 		return panel;
 	}
 	
+	private void initMenuPanels() {
+		userPanel = new JPanel();
+		userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.PAGE_AXIS));
+		userPanel.setBackground(Color.WHITE);
+		
+		//userPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
+		JPanel upperP = new JPanel();
+		upperP.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+		upperP.setOpaque(false);
+		usernameLabel = new JLabel("username");
+		usernameLabel.setHorizontalAlignment(JLabel.LEFT);
+		usernameLabel.setAlignmentX(LEFT_ALIGNMENT);
+		upperP.setPreferredSize(new Dimension(120, 80));
+		upperP.add(usernameLabel);
+		upperP.setAlignmentX(LEFT_ALIGNMENT);
+		
+		JPanel lowerP = new JPanel();
+		lowerP.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		lowerP.setBackground(new Color(245, 245, 245));
+		lowerP.setLayout(new BoxLayout(lowerP, BoxLayout.X_AXIS));
+		logoutBtn = new JButton("Logout");
+		logoutBtn.addActionListener(this);
+		lowerP.add(logoutBtn);
+		Dimension minSize = new Dimension(80, 1);
+		Dimension prefSize = new Dimension(80, 1);
+		Dimension maxSize = new Dimension(Short.MAX_VALUE, 1);
+		lowerP.add(new Box.Filler(minSize, prefSize, maxSize));
+		exitBtn = new JButton("Exit");
+		exitBtn.addActionListener(this);
+		lowerP.add(exitBtn);
+		lowerP.setAlignmentX(LEFT_ALIGNMENT);
+		
+		userPanel.add(upperP);
+		userPanel.add(lowerP);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if(obj == logoutMenuItem) {
+		if(obj == userButton) {
+			new PopupPanel((Component)obj, userPanel);
+		}
+		else if(obj == logoutBtn) {
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.LOGOUT);
 			triggerCalMainViewEvent(ev);
 		}
-		else if(obj == exitMenuItem) {
+		else if(obj == exitBtn) {
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.EXIT);
-			triggerCalMainViewEvent(ev);
-		}
-		else if(obj == mannualScheduleMenuItem) {
-			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.MANUAL_SCHEDULE);
-			triggerCalMainViewEvent(ev);
-		}
-		else if(obj == timeMachineMenuItem) {
-			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.TIME_MACHINE);
-			triggerCalMainViewEvent(ev);
-		}
-		else if(obj == venueMenuItem) {
-			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.VENUE);
 			triggerCalMainViewEvent(ev);
 		}
 	}
@@ -182,6 +220,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 			setTitle("DCalendar - " + username + " - " + format.format(new Date(selectedStamp)));
 			
 			userButton.setText(username);
+			usernameLabel.setText(username);
 		}
 		else if(command == CalMainControllerEvent.Command.START) {
 			setVisible(true);
