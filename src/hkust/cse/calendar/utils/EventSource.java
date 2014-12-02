@@ -15,7 +15,8 @@ abstract public class EventSource {
 				GenListener<T> listener;
 				while(itr.hasNext()) {
 					listener = itr.next();
-					listener.fireEvent(e);
+					if(listener != null)
+						listener.fireEvent(e);
 				}
 			}
 		});
@@ -25,7 +26,8 @@ abstract public class EventSource {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				listener.fireEvent(e);
+				if(listener != null)
+					listener.fireEvent(e);
 			}
 		});
 	}
