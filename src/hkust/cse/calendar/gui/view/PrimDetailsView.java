@@ -96,6 +96,7 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 		DetailsControllerEvent.Command command = e.getCommand();
 		if(command == DetailsControllerEvent.Command.START) {
 			setVisible(true);
+			this.setLocationRelativeTo(null);
 		}
 		else if(command == DetailsControllerEvent.Command.UPDATE_TEXT) {
 			displayText(e.getAppt(), e.getaVenue());

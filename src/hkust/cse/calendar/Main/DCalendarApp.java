@@ -2,6 +2,7 @@ package hkust.cse.calendar.Main;
 
 import hkust.cse.calendar.gui.controller.Controller;
 import hkust.cse.calendar.gui.controller.LoginController;
+import hkust.cse.calendar.gui.view.FancyCalMainView;
 import hkust.cse.calendar.gui.view.FancyLoginView;
 import hkust.cse.calendar.gui.view.PrimApptListView;
 import hkust.cse.calendar.gui.view.PrimApptSchedulerView;
@@ -10,6 +11,7 @@ import hkust.cse.calendar.gui.view.PrimCalMonthView;
 import hkust.cse.calendar.gui.view.PrimDetailsView;
 import hkust.cse.calendar.gui.view.PrimLoginView;
 import hkust.cse.calendar.gui.view.PrimMonthSelectorView;
+import hkust.cse.calendar.gui.view.PrimNotificationContainerView;
 import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseApptListView;
 import hkust.cse.calendar.gui.view.base.BaseApptSchedulerView;
@@ -18,6 +20,7 @@ import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.gui.view.base.BaseMonthSelectorView;
+import hkust.cse.calendar.gui.view.base.BaseNotificationContainerView;
 import hkust.cse.calendar.model.User;
 
 public class DCalendarApp {
@@ -69,6 +72,11 @@ public class DCalendarApp {
 			@Override
 			public BaseApptSchedulerView getApptSchedulerView() {
 				return new PrimApptSchedulerView();
+			}
+
+			@Override
+			public BaseNotificationContainerView getNotificationContainerView() {
+				return new PrimNotificationContainerView();
 			}
 			
 		};

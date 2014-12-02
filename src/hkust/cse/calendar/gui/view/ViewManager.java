@@ -7,6 +7,7 @@ import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.gui.view.base.BaseMonthSelectorView;
+import hkust.cse.calendar.gui.view.base.BaseNotificationContainerView;
 
 public interface ViewManager {
 	
@@ -23,4 +24,6 @@ public interface ViewManager {
 	BaseMonthSelectorView getMonthSelectorView();
 	
 	BaseApptSchedulerView getApptSchedulerView();
+
+	BaseNotificationContainerView getNotificationContainerView();
 }

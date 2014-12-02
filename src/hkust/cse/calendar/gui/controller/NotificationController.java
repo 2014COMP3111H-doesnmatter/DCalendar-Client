@@ -2,6 +2,7 @@ package hkust.cse.calendar.gui.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,9 +14,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.api.appointment.ListByDayAPI;
 import hkust.cse.calendar.collection.AppointmentCollection;
 import hkust.cse.calendar.collection.VenueCollection;
+import hkust.cse.calendar.gui.view.PrimDetailsView;
+import hkust.cse.calendar.gui.view.ViewManager;
+import hkust.cse.calendar.gui.view.base.BaseNotificationItemView.NotificationItemViewEvent;
 import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.model.TimeMachine;
 import hkust.cse.calendar.utils.DateTimeHelper;
@@ -108,12 +113,29 @@ public class NotificationController implements Controller, ActionListener {
 		int idx;
 		try {
 			idx = Integer.parseInt(e.getActionCommand());
-			Appointment appt = aNotifyObject.get(idx);
-			String message = "The Appointment " + appt.getName() + " will be started in\n";
-			message += String.valueOf(appt.getReminderAhead() / (60 * 1000)) + " minutes\n";
-			message += "at " + VenueCollection.getInstance().getVenue(appt.getVenueId()).getName() + "\n";
-			message += "Info: " + appt.getInfo();
-			JOptionPane.showMessageDialog(null, message, "Reminder", JOptionPane.INFORMATION_MESSAGE);
+			final Appointment appt = aNotifyObject.get(idx);
+			String message = appt.getName() + " is starting at ";
+			message += new SimpleDateFormat("HH:mm").format(new Date(appt.getStartTime()));
+			message += " in " + VenueCollection.getInstance().getVenue(appt.getVenueId()).getName() + ".";
+			DesktopNotificationController.getInstance().pushNotification(
+					"DCalendar notification", message, "bell.png", new GenListener<NotificationItemViewEvent>() {
+
+						@Override
+						public void fireEvent(NotificationItemViewEvent e) {
+							ViewManager viewManager = DCalendarApp.getApp().getViewManager();
+							switch(e.getCommand()) {
+							case ACTIVATE:
+
+								DetailsController dom = new DetailsController(viewManager.getDetailsView());
+								dom.setAppt(appt);
+								dom.start();
+								break;
+							}
+							
+						}
+						
+					});
+			
 		} catch(NumberFormatException ex) {
 			ex.printStackTrace();
 		}

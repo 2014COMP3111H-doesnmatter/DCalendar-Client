@@ -64,7 +64,7 @@ public class ApptListController extends EventSource implements Controller
 				});
 				break;
 			case DESCRIB_APPOINTMENT:
-				DetailsController dom = new DetailsController(new PrimDetailsView());
+				DetailsController dom = new DetailsController(manager.getDetailsView());
 				dom.setAppt(e.appt);
 				dom.start();
 			}

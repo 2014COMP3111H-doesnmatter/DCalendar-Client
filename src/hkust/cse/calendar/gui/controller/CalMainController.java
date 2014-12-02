@@ -163,6 +163,7 @@ extends EventSource implements Controller {
 		
 		CalMainControllerEvent e = new CalMainControllerEvent(this, CalMainControllerEvent.Command.START);
 		fireList(nListener, e);
+		
 	}
 
 	public void addCalMainControllerEventListener(GenListener<CalMainControllerEvent> listener) {
