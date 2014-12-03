@@ -14,6 +14,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.HierarchyBoundsAdapter;
+import java.awt.event.HierarchyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -60,11 +62,31 @@ public class PopupPanel extends JPanel {
 		
 		layeredPane.add(this, JLayeredPane.POPUP_LAYER);
 		
-		final ComponentAdapter listener = new ComponentAdapter() {
+		final HierarchyBoundsAdapter listener = new HierarchyBoundsAdapter() {
+
 			@Override
-			public void componentResized(ComponentEvent e) {
+			public void ancestorMoved(HierarchyEvent e) {
 				adjustPosition();
 			}
+
+			@Override
+			public void ancestorResized(HierarchyEvent e) {
+				adjustPosition();
+			}
+		};
+		
+		final ComponentAdapter cListener = new ComponentAdapter() {
+
+			@Override
+			public void componentMoved(ComponentEvent arg0) {
+				adjustPosition();
+			}
+
+			@Override
+			public void componentResized(ComponentEvent arg0) {
+				adjustPosition();
+			}
+			
 		};
 		
 		final KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -82,7 +104,8 @@ public class PopupPanel extends JPanel {
 	                  (!SwingUtilities.isDescendingFrom(c, PopupPanel.this))) {
 	            	
 	            	focusManager.removePropertyChangeListener(this);
-					rootPane.removeComponentListener(listener);
+	            	PopupPanel.this.source.removeHierarchyBoundsListener(listener);
+	            	PopupPanel.this.source.removeComponentListener(cListener);
 					layeredPane.remove(PopupPanel.this);
 					layeredPane.repaint();
 	            }
@@ -91,7 +114,8 @@ public class PopupPanel extends JPanel {
 			
 		};
 		focusManager.addPropertyChangeListener("focusOwner", focusListener);
-		rootPane.addComponentListener(listener);
+		source.addHierarchyBoundsListener(listener);
+		source.addComponentListener(cListener);
 		this.requestFocusInWindow();
 	}
 	
