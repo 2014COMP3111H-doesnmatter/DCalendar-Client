@@ -20,6 +20,7 @@ import hkust.cse.calendar.gui.view.base.BaseNotificationItemView;
 import hkust.cse.calendar.gui.view.base.BaseNotificationItemView.NotificationItemViewEvent;
 import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.model.Notification;
+import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.model.Venue;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
@@ -83,12 +84,36 @@ public class DesktopNotificationController extends EventSource implements Contro
 			final Venue venue = (Venue)n.getBody();
 			
 			message = "Venue " + venue.getName() + "is to be removed. All appointmnet at the venue will be removed together.";
-			pushNotification("Removal of Venue", message, "bell.png", new GenListener<NotificationItemViewEvent>() {
+			pushNotification("Removal of Venue", message, "venueremove.png", new GenListener<NotificationItemViewEvent>() {
 
 				@Override
 				public void fireEvent(NotificationItemViewEvent ev) {
 					switch(ev.getCommand()) {
 					case ACTIVATE:
+						VenueRemovalController vCtrl = new VenueRemovalController(venue);
+						vCtrl.start();
+						break;
+					}
+					
+				}
+				
+			});
+			break;
+		case "UserRemovalInitiated":
+			final User user = (User)n.getBody();
+			
+
+			message = "You are to be removed by administrator.\n" +
+					"All you appointments are to be removed also.\n" +
+					"You will be log out upon confirmation.";
+			pushNotification("Removal of User", message, "userremove.png", new GenListener<NotificationItemViewEvent>() {
+
+				@Override
+				public void fireEvent(NotificationItemViewEvent ev) {
+					switch(ev.getCommand()) {
+					case ACTIVATE:
+						UserRemovalController vCtrl = new UserRemovalController(user);
+						vCtrl.start();
 						break;
 					}
 					

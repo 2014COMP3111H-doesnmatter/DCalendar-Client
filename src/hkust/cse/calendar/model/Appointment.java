@@ -1,5 +1,9 @@
 package hkust.cse.calendar.model;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +18,10 @@ public class Appointment extends BaseModel {
 	private int frequency;
 	private long lastDay;
 	private long reminderAhead;
+
+	private List<User> aAccepted;
+	private List<User> aRejected;
+	private List<User> aWaiting;
 	
 	public Appointment() {
 		name = "Untitled";

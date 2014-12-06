@@ -21,6 +21,7 @@ import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.Notification;
 import hkust.cse.calendar.model.TimeMachine;
 import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.utils.EventSource;
@@ -45,6 +46,8 @@ extends EventSource implements Controller {
 	private boolean isStarted = false;
 	private boolean isVenueLoaded = false;
 	private boolean isTimeMachineLoaded = false;
+	
+	static private CalMainController instance;
 	
 	private List<GenListener<CalMainControllerEvent>> nListener = new ArrayList<GenListener<CalMainControllerEvent>>();
 	
@@ -102,6 +105,33 @@ extends EventSource implements Controller {
 		}
 		
 	};
+	private GenListener<UpdatableEvent> notificationListener = new GenListener<UpdatableEvent>() {
+
+		@Override
+		public void fireEvent(UpdatableEvent e) {
+			int i;
+			switch(e.getCommand()) {
+			case INFO_UPDATE:
+				List<Notification> aNew = (List<Notification>)e.getNewVal();
+				List<Notification> aConcern = new ArrayList<Notification>();
+				for(i = 0; i < aNew.size(); i++) {
+					Notification n = aNew.get(i);
+					switch(n.getType()) {
+					case "VenueRemovalInitiated":
+					case "UserRemovalInitiated":
+						aConcern.add(n);
+						break;
+					case "VenueRemovalFinalized":
+						aVenue.load();
+						break;
+					}
+				}
+				break;
+			}
+			// TODO: notify view to update notification
+		}
+		
+	};
 	
 	CalMainController(BaseCalMainView view) {
 		setView(view);
@@ -137,6 +167,7 @@ extends EventSource implements Controller {
 		
 		aAppt = new AppointmentCollection(0);
 		aNotification = new NotificationCollection();
+		aNotification.addColEventListener(notificationListener);
 
 		desktopCtrler = new DesktopNotificationController(manager.getNotificationContainerView());
 		
@@ -151,6 +182,12 @@ extends EventSource implements Controller {
 		// month selector
 		monthSelectorController = new MonthSelectorController(manager.getMonthSelectorView());
 		this.view.setMonthSelectView(monthSelectorController.getView());
+		
+		instance = this;
+	}
+	
+	static public CalMainController getInstance() {
+		return instance;
 	}
 	
 	

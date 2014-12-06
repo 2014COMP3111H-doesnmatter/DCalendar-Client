@@ -1,8 +1,10 @@
 package hkust.cse.calendar.gui.controller;
 
+import hkust.cse.calendar.model.Notification;
 import hkust.cse.calendar.model.User;
 
 import java.util.EventObject;
+import java.util.List;
 
 public class CalMainControllerEvent extends EventObject {
 	static public enum Command {
@@ -13,6 +15,7 @@ public class CalMainControllerEvent extends EventObject {
 	private String username;
 	private User user;
 	private long selectedDay;
+	private List<Notification> aNotification;
 	
 	CalMainControllerEvent(Object source) {
 		super(source);
