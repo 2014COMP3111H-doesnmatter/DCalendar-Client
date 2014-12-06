@@ -19,6 +19,7 @@ abstract public class Updatable extends EventSource {
 		};
 		
 		private Command command;
+		private Object newVal;
 		
 		public UpdatableEvent(Object source) {
 			super(source);
@@ -35,6 +36,14 @@ abstract public class Updatable extends EventSource {
 
 		public void setCommand(Command command) {
 			this.command = command;
+		}
+
+		public Object getNewVal() {
+			return newVal;
+		}
+
+		public void setNewVal(Object newVal) {
+			this.newVal = newVal;
 		}
 		
 	}

@@ -17,11 +17,13 @@ import org.json.JSONObject;
 import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.api.appointment.ListByDayAPI;
 import hkust.cse.calendar.collection.AppointmentCollection;
+import hkust.cse.calendar.collection.NotificationCollection;
 import hkust.cse.calendar.collection.VenueCollection;
 import hkust.cse.calendar.gui.view.PrimDetailsView;
 import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseNotificationItemView.NotificationItemViewEvent;
 import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.Notification;
 import hkust.cse.calendar.model.TimeMachine;
 import hkust.cse.calendar.utils.DateTimeHelper;
 import hkust.cse.calendar.utils.GenListener;
@@ -114,27 +116,7 @@ public class NotificationController implements Controller, ActionListener {
 		try {
 			idx = Integer.parseInt(e.getActionCommand());
 			final Appointment appt = aNotifyObject.get(idx);
-			String message = appt.getName() + " is starting at ";
-			message += new SimpleDateFormat("HH:mm").format(new Date(appt.getStartTime()));
-			message += " in " + VenueCollection.getInstance().getVenue(appt.getVenueId()).getName() + ".";
-			DesktopNotificationController.getInstance().pushNotification(
-					"DCalendar notification", message, "bell.png", new GenListener<NotificationItemViewEvent>() {
-
-						@Override
-						public void fireEvent(NotificationItemViewEvent e) {
-							ViewManager viewManager = DCalendarApp.getApp().getViewManager();
-							switch(e.getCommand()) {
-							case ACTIVATE:
-
-								DetailsController dom = new DetailsController(viewManager.getDetailsView());
-								dom.setAppt(appt);
-								dom.start();
-								break;
-							}
-							
-						}
-						
-					});
+			NotificationCollection.getInstance().pushNotification(new Notification("ReminderArrived", appt));
 			
 		} catch(NumberFormatException ex) {
 			ex.printStackTrace();

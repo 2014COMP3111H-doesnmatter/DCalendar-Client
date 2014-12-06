@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +31,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 
@@ -43,6 +45,7 @@ import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseMonthSelectorView;
+import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.utils.ImagePool;
 
 /**
@@ -77,6 +80,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 	private JPanel functionPanel, adminFunctionPanel, userPanel, notificationPanel;
 	
 	private JButton timeMachineBtn;
+	private JButton scheduleBtn;
 	private JButton logoutBtn;
 	private JButton exitBtn;
 	private JLabel usernameLabel;
@@ -135,6 +139,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		functionButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		functionButton.setOpaque(false);
 		functionButton.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
+		functionButton.addActionListener(this);
 		
 		notificationButton = new JButton();
 		notificationButton.setUI(new ToolBarButtonUI("notification.png", "notificationBadging.png"));
@@ -190,6 +195,35 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		
 		userPanel.add(upperP);
 		userPanel.add(lowerP);
+		
+		functionPanel = new JPanel();
+		functionPanel.setLayout(new GridLayout(0, 3, 5, 5));
+		functionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		functionPanel.setBackground(Color.WHITE);
+		
+		timeMachineBtn = createFunctionBtn("timemachine.png");
+		timeMachineBtn.setToolTipText("Tune Time");
+		timeMachineBtn.setText("Time Machine");
+		
+		scheduleBtn = createFunctionBtn("add.png");
+		scheduleBtn.setToolTipText("Add Appointment");
+		scheduleBtn.setText("Mannual Schedule");
+		
+		functionPanel.add(timeMachineBtn);
+		functionPanel.add(scheduleBtn);
+	}
+	
+	private JButton createFunctionBtn(String filename) {
+		ImageIcon scheduleIcon = new ImageIcon(ImagePool.getInstance().getImage(filename).getScaledInstance(60, 60, BufferedImage.SCALE_SMOOTH));
+		JButton btn = new JButton(scheduleIcon);
+		btn.setUI(new BasicButtonUI());
+		btn.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btn.addActionListener(this);
+		btn.setOpaque(false);
+		
+		return btn;
 	}
 
 	@Override
@@ -197,6 +231,9 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		Object obj = e.getSource();
 		if(obj == userButton) {
 			new PopupPanel((Component)obj, userPanel);
+		}
+		else if(obj == functionButton) {
+			new PopupPanel((Component)obj, functionPanel);
 		}
 		else if(obj == logoutBtn) {
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.LOGOUT);
@@ -206,21 +243,29 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.EXIT);
 			triggerCalMainViewEvent(ev);
 		}
+		else if(obj == scheduleBtn) {
+			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.MANUAL_SCHEDULE);
+			triggerCalMainViewEvent(ev);
+		}
+		else if(obj == timeMachineBtn) {
+			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.TIME_MACHINE);
+			triggerCalMainViewEvent(ev);
+		}
 	}
 
 	@Override
 	public void fireEvent(CalMainControllerEvent e) {
 		CalMainControllerEvent.Command command = e.getCommand();
 		if(command == CalMainControllerEvent.Command.UPDATE_INFO) {
-			String username = e.getUsername();
+			User user = e.getUser();
 			long selectedStamp = e.getSelectedDay();
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			
-			setTitle("DCalendar - " + username + " - " + format.format(new Date(selectedStamp)));
+			setTitle("DCalendar - " + user.getUsername() + " - " + format.format(new Date(selectedStamp)));
 			
-			userButton.setText(username);
-			usernameLabel.setText(username);
+			userButton.setText(user.getUsername());
+			usernameLabel.setText(user.getUsername());
 		}
 		else if(command == CalMainControllerEvent.Command.START) {
 			setVisible(true);

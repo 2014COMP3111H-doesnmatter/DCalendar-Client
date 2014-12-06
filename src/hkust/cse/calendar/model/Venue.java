@@ -5,10 +5,12 @@ import org.json.JSONObject;
 
 public class Venue extends BaseModel {
 	private String name;
+	private int capacity;
 	
 	public Venue(JSONObject json) throws JSONException {
 		id = json.getInt("id");
 		name = json.getString("name");
+		// capacity = json.getInt("capacity");
 	}
 
 	public String getName() {
@@ -22,6 +24,14 @@ public class Venue extends BaseModel {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
 	
 }

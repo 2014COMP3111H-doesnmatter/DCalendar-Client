@@ -1,5 +1,7 @@
 package hkust.cse.calendar.gui.controller;
 
+import hkust.cse.calendar.model.User;
+
 import java.util.EventObject;
 
 public class CalMainControllerEvent extends EventObject {
@@ -9,6 +11,7 @@ public class CalMainControllerEvent extends EventObject {
 	};
 	private Command command;
 	private String username;
+	private User user;
 	private long selectedDay;
 	
 	CalMainControllerEvent(Object source) {
@@ -42,6 +45,14 @@ public class CalMainControllerEvent extends EventObject {
 
 	public void setSelectedDay(long selectedDay) {
 		this.selectedDay = selectedDay;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 }

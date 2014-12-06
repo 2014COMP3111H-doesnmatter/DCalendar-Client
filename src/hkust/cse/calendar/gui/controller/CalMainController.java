@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.collection.AppointmentCollection;
+import hkust.cse.calendar.collection.NotificationCollection;
 import hkust.cse.calendar.collection.VenueCollection;
 import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
@@ -38,6 +39,8 @@ extends EventSource implements Controller {
 	private VenueCollection aVenue;
 	private TimeMachine timeMachine;
 	private NotificationController notifyController;
+	private NotificationCollection aNotification;
+	private DesktopNotificationController desktopCtrler;
 	
 	private boolean isStarted = false;
 	private boolean isVenueLoaded = false;
@@ -92,7 +95,7 @@ extends EventSource implements Controller {
 				CalMainControllerEvent ev = new CalMainControllerEvent(this, CalMainControllerEvent.Command.UPDATE_INFO);
 				ev.setSelectedDay(today);
 				aAppt.setMonthStart(today);
-				ev.setUsername(user.getUsername());
+				ev.setUser(user);
 				fireList(nListener, ev);
 			}
 			
@@ -133,6 +136,9 @@ extends EventSource implements Controller {
 		timeMachine.load();
 		
 		aAppt = new AppointmentCollection(0);
+		aNotification = new NotificationCollection();
+
+		desktopCtrler = new DesktopNotificationController(manager.getNotificationContainerView());
 		
 		// month view
 		monthController = new CalMonthController(manager.getCalMonthView());
@@ -160,6 +166,8 @@ extends EventSource implements Controller {
 		model.setSelectedDay(timeMachine.getNow());
 		notifyController = new NotificationController();
 		notifyController.start();
+		desktopCtrler.start();
+		aNotification.load();
 		
 		CalMainControllerEvent e = new CalMainControllerEvent(this, CalMainControllerEvent.Command.START);
 		fireList(nListener, e);

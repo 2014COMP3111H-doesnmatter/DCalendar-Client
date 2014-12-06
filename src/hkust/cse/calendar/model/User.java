@@ -14,7 +14,14 @@ import org.json.JSONObject;
 public class User extends BaseModel {
 	private String username;
 
-	public User() { }
+	public User() {
+		
+	}
+	
+	public User(JSONObject json) throws JSONException {
+		id = json.getLong("id");
+		username = json.getString("username");
+	}
 
 	public String getUsername() {
 		return username;

@@ -2,19 +2,28 @@ package hkust.cse.calendar.gui.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Timer;
 
 import hkust.cse.calendar.Main.DCalendarApp;
+import hkust.cse.calendar.collection.NotificationCollection;
+import hkust.cse.calendar.collection.VenueCollection;
 import hkust.cse.calendar.gui.view.PrimNotificationItemView;
+import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseNotificationContainerView;
 import hkust.cse.calendar.gui.view.base.BaseNotificationItemView;
 import hkust.cse.calendar.gui.view.base.BaseNotificationItemView.NotificationItemViewEvent;
+import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.Notification;
+import hkust.cse.calendar.model.Venue;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.Updatable.UpdatableEvent;
 
 public class DesktopNotificationController extends EventSource implements Controller {
 	final static private int MAX_ITEM = 4;
@@ -24,7 +33,72 @@ public class DesktopNotificationController extends EventSource implements Contro
 	private BaseNotificationContainerView view;
 	private List<GenListener<DesktopNotificationControllerEvent>> aListener = new ArrayList<GenListener<DesktopNotificationControllerEvent>>();
 	
+	private GenListener<UpdatableEvent> notifyListener = new GenListener<UpdatableEvent>() {
+
+		@Override
+		public void fireEvent(UpdatableEvent e) {
+			int i;
+			switch(e.getCommand()) {
+			case INFO_UPDATE:
+				List<Notification> aNew = (List<Notification>)e.getNewVal();
+				for(i = 0; i < aNew.size(); i++) {
+					pushNotification(aNew.get(i));
+				}
+				break;
+			}
+		}
+		
+	};
+	
 	private List<BaseNotificationItemView> itemList = new ArrayList<BaseNotificationItemView>();
+	
+	public void pushNotification(Notification n) {
+		String message;
+		switch(n.getType()) {
+		case "ReminderArrived":
+			final Appointment appt = (Appointment)n.getBody();
+
+			message = appt.getName() + " is starting at ";
+			message += new SimpleDateFormat("HH:mm").format(new Date(appt.getStartTime()));
+			message += " in " + VenueCollection.getInstance().getVenue(appt.getVenueId()).getName() + ".";
+			pushNotification("DCalendar notification", message, "bell.png", new GenListener<NotificationItemViewEvent>() {
+
+						@Override
+						public void fireEvent(NotificationItemViewEvent ev) {
+							ViewManager viewManager = DCalendarApp.getApp().getViewManager();
+							switch(ev.getCommand()) {
+							case ACTIVATE:
+
+								DetailsController dom = new DetailsController(viewManager.getDetailsView());
+								dom.setAppt(appt);
+								dom.start();
+								break;
+							}
+							
+						}
+						
+			});
+			break;
+		case "VenueRemovalInitiated":
+			final Venue venue = (Venue)n.getBody();
+			
+			message = "Venue " + venue.getName() + "is to be removed. All appointmnet at the venue will be removed together.";
+			pushNotification("Removal of Venue", message, "bell.png", new GenListener<NotificationItemViewEvent>() {
+
+				@Override
+				public void fireEvent(NotificationItemViewEvent ev) {
+					switch(ev.getCommand()) {
+					case ACTIVATE:
+						break;
+					}
+					
+				}
+				
+			});
+			break;
+		default:
+		}
+	}
 	
 	public void pushNotification(String title, String content, String icon, GenListener<NotificationItemViewEvent> listener) {
 		final BaseNotificationItemView v = new PrimNotificationItemView(title, content, icon);
@@ -97,7 +171,8 @@ public class DesktopNotificationController extends EventSource implements Contro
 		fireList(aListener, e);
 	}
 	
-	private DesktopNotificationController(BaseNotificationContainerView view) {
+	public DesktopNotificationController(BaseNotificationContainerView view) {
+		instance = this;
 		setView(view);
 	}
 	
@@ -116,7 +191,7 @@ public class DesktopNotificationController extends EventSource implements Contro
 	
 	@Override
 	public void start() {
-		
+		NotificationCollection.getInstance().addColEventListener(notifyListener);
 	}
 
 }
