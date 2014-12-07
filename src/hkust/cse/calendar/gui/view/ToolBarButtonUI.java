@@ -33,7 +33,14 @@ public class ToolBarButtonUI extends BasicButtonUI {
 		public void propertyChange(PropertyChangeEvent e) {
 			if(e.getPropertyName().equals(AbstractButton.TEXT_CHANGED_PROPERTY)) {
 				String text = (String)e.getNewValue();
-				if(text.length() > 0) {
+				int n = 0;
+				try {
+					n = Integer.parseInt(text);
+				}
+				catch(NumberFormatException ex) {
+					
+				}
+				if(text.length() > 0 && n > 0) {
 					((AbstractButton)e.getSource()).setIcon(badging);
 				}
 				else {
@@ -64,8 +71,15 @@ public class ToolBarButtonUI extends BasicButtonUI {
 		JButton btn = (JButton)c;
 		
 		String text = btn.getText();
+		int n = 0;
+		try {
+			n = Integer.parseInt(text);
+		}
+		catch(NumberFormatException ex) {
+			
+		}
 		
-		if(text.length() > 0) {
+		if(text.length() > 0 && n > 0) {
 			
 			double baseX = c.getWidth() * 0.5;
 			double baseY = c.getHeight() * 0.2;

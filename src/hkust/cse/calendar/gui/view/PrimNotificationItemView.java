@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -34,6 +35,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
 
 public class PrimNotificationItemView extends BaseNotificationItemView implements ActionListener {
 	private JButton closeBtn;
+	private boolean isClose = true;
 	
 	public PrimNotificationItemView(String title, String content) {
 		super(title, content);
@@ -42,6 +44,18 @@ public class PrimNotificationItemView extends BaseNotificationItemView implement
 	
 	public PrimNotificationItemView(String title, String content, String iconFile) {
 		super(title, content, iconFile);
+		initView(title, content, iconFile);
+	}
+	
+	public PrimNotificationItemView(String title, String content, boolean isClose) {
+		super(title, content);
+		this.isClose = isClose;
+		initView(title, content, null);
+	}
+	
+	public PrimNotificationItemView(String title, String content, String iconFile, boolean isClose) {
+		super(title, content, iconFile);
+		this.isClose = isClose;
 		initView(title, content, iconFile);
 	}
 	
@@ -96,7 +110,12 @@ public class PrimNotificationItemView extends BaseNotificationItemView implement
 		closeBtn.setRolloverIcon(hover);
 		closeBtn.setPressedIcon(hover);
 		closeBtn.setSize(15, 15);
-		layeredPane.add(closeBtn, Integer.valueOf(1));
+		if(isClose) {
+			layeredPane.add(closeBtn, Integer.valueOf(1));
+		}
+		else{
+			this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		}
 		closeBtn.setLocation(310, 5);
 		closeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		closeBtn.addActionListener(this);
@@ -104,7 +123,10 @@ public class PrimNotificationItemView extends BaseNotificationItemView implement
 		bottom.add(left, BorderLayout.WEST);
 		bottom.add(right, BorderLayout.EAST);
 		bottom.setLocation(0, 0);
-		bottom.setSize(350, 90);
+		if(isClose)
+			bottom.setSize(350, 90);
+		else
+			bottom.setSize(350, 87);
 		bottom.addMouseListener(new MouseAdapter() {
 
 			@Override
@@ -118,12 +140,22 @@ public class PrimNotificationItemView extends BaseNotificationItemView implement
 		});
 		layeredPane.add(bottom, Integer.valueOf(0));
 		this.setLayout(null);
-		layeredPane.setLocation(2, 16);
+		if(isClose)
+			layeredPane.setLocation(2, 16);
+		else
+			layeredPane.setLocation(2,2);
 		this.add(layeredPane);
-		CompoundBorder bder = new CompoundBorder(new EmptyBorder(new Insets(15, 0, 0, 0)), new LineBorder(Color.LIGHT_GRAY));
+		Border bder;
+		if(isClose)
+			bder = new CompoundBorder(new EmptyBorder(new Insets(15, 0, 0, 0)), new LineBorder(Color.LIGHT_GRAY));
+		else
+			bder = new LineBorder(Color.LIGHT_GRAY);
 		this.setBorder(bder);
 		this.setOpaque(false);
-		this.setPreferredSize(new Dimension(333, 97));
+		if(isClose)
+			this.setPreferredSize(new Dimension(333, 97));
+		else
+			this.setPreferredSize(new Dimension(330, 62));
 	}
 
 	@Override

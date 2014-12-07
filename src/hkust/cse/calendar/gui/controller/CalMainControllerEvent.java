@@ -57,5 +57,13 @@ public class CalMainControllerEvent extends EventObject {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public List<Notification> getaNotification() {
+		return aNotification;
+	}
+
+	public void setaNotification(List<Notification> aNotification) {
+		this.aNotification = aNotification;
+	}
 	
 }

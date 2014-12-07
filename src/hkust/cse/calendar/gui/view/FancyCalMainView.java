@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -29,6 +30,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -37,15 +39,26 @@ import javax.swing.plaf.basic.BasicButtonUI;
 
 import org.jdesktop.swingx.HorizontalLayout;
 
+import hkust.cse.calendar.Main.DCalendarApp;
+import hkust.cse.calendar.collection.VenueCollection;
 import hkust.cse.calendar.gui.controller.CalMainControllerEvent;
+import hkust.cse.calendar.gui.controller.DetailsController;
 import hkust.cse.calendar.gui.controller.LoginControllerEvent;
+import hkust.cse.calendar.gui.controller.UserRemovalController;
+import hkust.cse.calendar.gui.controller.VenueRemovalController;
 import hkust.cse.calendar.gui.view.base.BaseApptListView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
 import hkust.cse.calendar.gui.view.base.BaseCalMonthView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
+import hkust.cse.calendar.gui.view.base.BaseNotificationItemView.NotificationItemViewEvent;
 import hkust.cse.calendar.gui.view.base.BaseMonthSelectorView;
+import hkust.cse.calendar.gui.view.base.BaseNotificationItemView;
+import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.Notification;
 import hkust.cse.calendar.model.User;
+import hkust.cse.calendar.model.Venue;
+import hkust.cse.calendar.utils.GenListener;
 import hkust.cse.calendar.utils.ImagePool;
 
 /**
@@ -78,6 +91,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 	private JButton userButton, functionButton, notificationButton;
 	
 	private JPanel functionPanel, adminFunctionPanel, userPanel, notificationPanel;
+	private JPanel notificationWrapper;
 	
 	private JButton timeMachineBtn;
 	private JButton scheduleBtn;
@@ -146,6 +160,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		notificationButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		notificationButton.setOpaque(false);
 		notificationButton.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
+		notificationButton.setText("0");
 		notificationButton.addActionListener(this);
 		
 		panel.add(logoLabel);
@@ -197,9 +212,14 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		userPanel.add(lowerP);
 		
 		functionPanel = new JPanel();
-		functionPanel.setLayout(new GridLayout(0, 3, 5, 5));
+		functionPanel.setLayout(new GridLayout(0, 2, 5, 5));
 		functionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		functionPanel.setBackground(Color.WHITE);
+
+		adminFunctionPanel = new JPanel();
+		adminFunctionPanel.setLayout(new GridLayout(0, 2, 5, 5));
+		adminFunctionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		adminFunctionPanel.setBackground(Color.WHITE);
 		
 		timeMachineBtn = createFunctionBtn("timemachine.png");
 		timeMachineBtn.setToolTipText("Tune Time");
@@ -211,6 +231,20 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		
 		functionPanel.add(timeMachineBtn);
 		functionPanel.add(scheduleBtn);
+		//adminFunctionPanel.add(timeMachineBtn);
+		//adminFunctionPanel.add(scheduleBtn);
+
+		notificationPanel = new JPanel();
+		notificationPanel.setOpaque(true);
+		notificationPanel.setLayout(new GridLayout(1, 1));
+		notificationPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		notificationWrapper = new JPanel();
+		notificationWrapper.setLayout(new GridLayout(0, 1, 0, 10));
+		JScrollPane scrollPane = new JScrollPane(notificationWrapper);
+		scrollPane.setMaximumSize(new Dimension(350, 300));
+		scrollPane.setBorder(null);
+		notificationPanel.add(scrollPane);
+		
 	}
 	
 	private JButton createFunctionBtn(String filename) {
@@ -225,6 +259,66 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		
 		return btn;
 	}
+	
+	private void setUserInfo(User user) {
+		userButton.setText(user.getUsername());
+		usernameLabel.setText(user.getUsername());
+	}
+	
+	private void generateNotificationList(List<Notification> aNotification) {
+		int i;
+		notificationWrapper.removeAll();
+		for(i = 0; i < aNotification.size(); i++) {
+			notificationWrapper.add(generateNotificationItem(aNotification.get(i)));
+		}
+		notificationButton.setText(String.valueOf(aNotification.size()));
+	}
+	
+	private BaseNotificationItemView generateNotificationItem(Notification n) {
+		String message;
+		BaseNotificationItemView v;
+		switch(n.getType()) {
+		case "VenueRemovalInitiated":
+			final Venue venue = (Venue)n.getBody();
+			
+			message = "Venue " + venue.getName() + " is to be removed";
+			v = new PrimNotificationItemView("Removal of Venue", message, "venueremove.png", false);
+			v.addNotificationItemEventListener(new GenListener<NotificationItemViewEvent>() {
+
+				@Override
+				public void fireEvent(NotificationItemViewEvent ev) {
+					switch(ev.getCommand()) {
+					case ACTIVATE:
+						VenueRemovalController vCtrl = new VenueRemovalController(venue);
+						vCtrl.start();
+						break;
+					}
+				}
+			});
+			break;
+		case "UserRemovalInitiated":
+			final User user = (User)n.getBody();
+			
+			message = "You are to be removed.";
+			v = new PrimNotificationItemView("Removal of User", message, "userremove.png", false);
+			v.addNotificationItemEventListener(new GenListener<NotificationItemViewEvent>() {
+
+					@Override
+					public void fireEvent(NotificationItemViewEvent ev) {
+						switch(ev.getCommand()) {
+						case ACTIVATE:
+							UserRemovalController vCtrl = new UserRemovalController(user);
+							vCtrl.start();
+							break;
+						}
+					}
+			});
+			break;
+		default:
+			v = null;
+		}
+		return v;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -233,7 +327,20 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 			new PopupPanel((Component)obj, userPanel);
 		}
 		else if(obj == functionButton) {
+			//TODO: admin or user
 			new PopupPanel((Component)obj, functionPanel);
+		}
+		else if(obj == notificationButton) {
+			String text = notificationButton.getText();
+			int n = 0;
+			try {
+				n = Integer.parseInt(text);
+			}
+			catch(NumberFormatException ex) {
+				
+			}
+			if(text.length() > 0 && n > 0)
+				new PopupPanel((Component)obj, notificationPanel);
 		}
 		else if(obj == logoutBtn) {
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.LOGOUT);
@@ -263,9 +370,8 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			
 			setTitle("DCalendar - " + user.getUsername() + " - " + format.format(new Date(selectedStamp)));
-			
-			userButton.setText(user.getUsername());
-			usernameLabel.setText(user.getUsername());
+			setUserInfo(user);
+			generateNotificationList(e.getaNotification());
 		}
 		else if(command == CalMainControllerEvent.Command.START) {
 			setVisible(true);

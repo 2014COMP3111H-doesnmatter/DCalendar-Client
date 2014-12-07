@@ -83,7 +83,7 @@ public class DesktopNotificationController extends EventSource implements Contro
 		case "VenueRemovalInitiated":
 			final Venue venue = (Venue)n.getBody();
 			
-			message = "Venue " + venue.getName() + "is to be removed. All appointmnet at the venue will be removed together.";
+			message = "Venue " + venue.getName() + " is to be removed. All appointmnet at the venue will be removed together.";
 			pushNotification("Removal of Venue", message, "venueremove.png", new GenListener<NotificationItemViewEvent>() {
 
 				@Override

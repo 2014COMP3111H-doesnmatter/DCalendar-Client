@@ -99,6 +99,7 @@ extends EventSource implements Controller {
 				ev.setSelectedDay(today);
 				aAppt.setMonthStart(today);
 				ev.setUser(user);
+				ev.setaNotification(filterConcerned());
 				fireList(nListener, ev);
 			}
 			
@@ -112,23 +113,18 @@ extends EventSource implements Controller {
 			int i;
 			switch(e.getCommand()) {
 			case INFO_UPDATE:
-				List<Notification> aNew = (List<Notification>)e.getNewVal();
-				List<Notification> aConcern = new ArrayList<Notification>();
-				for(i = 0; i < aNew.size(); i++) {
-					Notification n = aNew.get(i);
-					switch(n.getType()) {
-					case "VenueRemovalInitiated":
-					case "UserRemovalInitiated":
-						aConcern.add(n);
-						break;
-					case "VenueRemovalFinalized":
-						aVenue.load();
-						break;
-					}
-				}
+				List<Notification> aConcern = filterConcerned();
+				User user = DCalendarApp.getApp().getCurrentUser();
+				
+				long today = model.getSelectedDayStamp();
+				
+				CalMainControllerEvent ev = new CalMainControllerEvent(this, CalMainControllerEvent.Command.UPDATE_INFO);
+				ev.setSelectedDay(today);
+				ev.setUser(user);
+				ev.setaNotification(aConcern);
+				fireList(nListener, ev);
 				break;
 			}
-			// TODO: notify view to update notification
 		}
 		
 	};
@@ -188,6 +184,25 @@ extends EventSource implements Controller {
 	
 	static public CalMainController getInstance() {
 		return instance;
+	}
+	
+	private List<Notification> filterConcerned() {
+		int i;
+		List<Notification> aNew = NotificationCollection.getInstance().getaNotification();
+		List<Notification> aConcern = new ArrayList<Notification>();
+		for(i = 0; i < aNew.size(); i++) {
+			Notification n = aNew.get(i);
+			switch(n.getType()) {
+			case "VenueRemovalInitiated":
+			case "UserRemovalInitiated":
+				aConcern.add(n);
+				break;
+			case "VenueRemovalFinalized":
+				aVenue.load();
+				break;
+			}
+		}
+		return aConcern;
 	}
 	
 	
