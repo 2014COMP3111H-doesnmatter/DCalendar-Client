@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -95,9 +96,14 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 	
 	private JButton timeMachineBtn;
 	private JButton scheduleBtn;
+	private JButton venueBtn;
+	private JButton userBtn;
+	private JButton profileBtn;
 	private JButton logoutBtn;
 	private JButton exitBtn;
 	private JLabel usernameLabel;
+	private JLabel roleLabel;
+	private JLabel emailLabel;
 	
 	public FancyCalMainView() {
 		super();
@@ -177,12 +183,13 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 	
 	private void initMenuPanels() {
 		userPanel = new JPanel();
-		userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.PAGE_AXIS));
+		userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
 		userPanel.setBackground(Color.WHITE);
 		
 		//userPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		JPanel upperP = new JPanel();
+		upperP.setLayout(new BoxLayout(upperP, BoxLayout.Y_AXIS));
 		upperP.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 		upperP.setOpaque(false);
 		usernameLabel = new JLabel("username");
@@ -191,6 +198,18 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		upperP.setPreferredSize(new Dimension(120, 80));
 		upperP.add(usernameLabel);
 		upperP.setAlignmentX(LEFT_ALIGNMENT);
+		emailLabel = new JLabel("email");
+		emailLabel.setForeground(Color.GRAY);
+		upperP.add(emailLabel);
+		
+		roleLabel = new JLabel("role");
+		roleLabel.setFont(roleLabel.getFont().deriveFont(Font.ITALIC));
+		upperP.add(roleLabel);
+		
+		profileBtn = new JButton("Change Profile");
+		profileBtn.addActionListener(this);
+		upperP.add(Box.createGlue());
+		upperP.add(profileBtn);
 		
 		JPanel lowerP = new JPanel();
 		lowerP.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -209,6 +228,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		lowerP.setAlignmentX(LEFT_ALIGNMENT);
 		
 		userPanel.add(upperP);
+		userPanel.add(Box.createGlue());
 		userPanel.add(lowerP);
 		
 		functionPanel = new JPanel();
@@ -229,10 +249,13 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 		scheduleBtn.setToolTipText("Add Appointment");
 		scheduleBtn.setText("Mannual Schedule");
 		
-		functionPanel.add(timeMachineBtn);
-		functionPanel.add(scheduleBtn);
-		//adminFunctionPanel.add(timeMachineBtn);
-		//adminFunctionPanel.add(scheduleBtn);
+		userBtn = createFunctionBtn("manageuser.png");
+		userBtn.setToolTipText("Change Users");
+		userBtn.setText("User Management");
+		
+		venueBtn = createFunctionBtn("managevenue.png");
+		venueBtn.setToolTipText("Change Venues");
+		venueBtn.setText("Venue Management");
 
 		notificationPanel = new JPanel();
 		notificationPanel.setOpaque(true);
@@ -261,8 +284,22 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 	}
 	
 	private void setUserInfo(User user) {
-		userButton.setText(user.getUsername());
+		userButton.setText(user.getFullname().length() == 0?user.getUsername():user.getFullname());
 		usernameLabel.setText(user.getUsername());
+		roleLabel.setText(user.isAdmin()?"Administrator":"Regular User");
+		emailLabel.setText(user.getEmail());
+
+		functionPanel.removeAll();
+		if(user.isAdmin()) {
+			functionPanel.add(timeMachineBtn);
+			functionPanel.add(scheduleBtn);
+			functionPanel.add(userBtn);
+			functionPanel.add(venueBtn);
+		}
+		else {
+			functionPanel.add(timeMachineBtn);
+			functionPanel.add(scheduleBtn);
+		}
 	}
 	
 	private void generateNotificationList(List<Notification> aNotification) {
@@ -327,7 +364,6 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 			new PopupPanel((Component)obj, userPanel);
 		}
 		else if(obj == functionButton) {
-			//TODO: admin or user
 			new PopupPanel((Component)obj, functionPanel);
 		}
 		else if(obj == notificationButton) {
@@ -354,8 +390,16 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.MANUAL_SCHEDULE);
 			triggerCalMainViewEvent(ev);
 		}
+		else if(obj == profileBtn) {
+			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.CHANGE_PROFILE);
+			triggerCalMainViewEvent(ev);
+		}
 		else if(obj == timeMachineBtn) {
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.TIME_MACHINE);
+			triggerCalMainViewEvent(ev);
+		}
+		else if(obj == venueBtn) {
+			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.VENUE);
 			triggerCalMainViewEvent(ev);
 		}
 	}

@@ -301,7 +301,10 @@ public class FancyLoginView extends BaseLoginView implements ActionListener{
 		else if(e.getSource() == signupButton)
 		{
 			errorText.setText("");
-			// Create a new account
+			ev.setCommand(LoginViewEvent.Command.SIGNUP);
+			
+			triggerLoginViewEvent(ev);
+			
 			
 		}
 		else if(e.getSource() == closeButton)

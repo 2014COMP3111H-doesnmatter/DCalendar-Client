@@ -14,6 +14,7 @@ import hkust.cse.calendar.gui.domainModel.CalMainModel.CalMainModelEvent;
 import hkust.cse.calendar.gui.view.PrimApptListView;
 import hkust.cse.calendar.gui.view.PrimApptSchedulerView;
 import hkust.cse.calendar.gui.view.PrimCalMonthView;
+import hkust.cse.calendar.gui.view.PrimEditUserView;
 import hkust.cse.calendar.gui.view.PrimTimeMachineView;
 import hkust.cse.calendar.gui.view.PrimVenueManagerView;
 import hkust.cse.calendar.gui.view.ViewManager;
@@ -79,6 +80,20 @@ extends EventSource implements Controller {
 			case VENUE:
 				VenueManagerController venueCtrl = new VenueManagerController(new PrimVenueManagerView());
 				venueCtrl.start();
+				break;
+			case CHANGE_PROFILE:
+				EditUserController userCtrl = new EditUserController(app.getCurrentUser(), new PrimEditUserView());
+				userCtrl.start();
+				List<Notification> aConcern = filterConcerned();
+				User user = DCalendarApp.getApp().getCurrentUser();
+				
+				long today = model.getSelectedDayStamp();
+				
+				CalMainControllerEvent ev = new CalMainControllerEvent(this, CalMainControllerEvent.Command.UPDATE_INFO);
+				ev.setSelectedDay(today);
+				ev.setUser(user);
+				ev.setaNotification(aConcern);
+				fireList(nListener, ev);
 				break;
 			}
 		}

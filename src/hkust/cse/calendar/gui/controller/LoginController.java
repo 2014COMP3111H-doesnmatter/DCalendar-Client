@@ -1,6 +1,7 @@
 package hkust.cse.calendar.gui.controller;
 
 import hkust.cse.calendar.Main.DCalendarApp;
+import hkust.cse.calendar.gui.view.PrimCreateUserView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
 import hkust.cse.calendar.model.User;
@@ -47,7 +48,8 @@ extends EventSource implements Controller {
 				fireList(nListener, ev);
 			}
 			else if(command == LoginViewEvent.Command.SIGNUP) {
-				
+				CreateUserController ctrl = new CreateUserController(new PrimCreateUserView());
+				ctrl.start();
 			}
 			else if(command == LoginViewEvent.Command.EXIT) {
 				DCalendarApp.getApp().exitApp();

@@ -13,6 +13,9 @@ import org.json.JSONObject;
 
 public class User extends BaseModel {
 	private String username;
+	private String fullname;
+	private String email;
+	private boolean isAdmin;
 
 	public User() {
 		
@@ -21,10 +24,17 @@ public class User extends BaseModel {
 	public User(JSONObject json) throws JSONException {
 		id = json.getLong("id");
 		username = json.getString("username");
+		fullname = json.getString("fullName");
+		email = json.getString("email");
+		isAdmin = json.getBoolean("isAdmin");
 	}
 
 	public String getUsername() {
 		return username;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	static public void authUser(final String username, final String password, final GenListener<UserQuery> listener) {
@@ -40,10 +50,8 @@ public class User extends BaseModel {
 					int rtnCode = json.getInt("rtnCode");
 					if(rtnCode == 200) {
 						qry.setRtnValue(UserQuery.RtnValue.AUTH_OK);
-						User user = new User();
 						JSONObject userJson = json.getJSONObject("user");
-						user.id = userJson.getLong("id");
-						user.username = userJson.getString("username");
+						User user = new User(userJson);
 						qry.setUser(user);
 					}
 					else if(rtnCode == 201 || rtnCode == 202) {
@@ -66,6 +74,35 @@ public class User extends BaseModel {
 		thrd.start();
 	}
 	
+	public String getFullname() {
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+	
+	@Override
+	public String toString() {
+		return this.username;
+	}
+
 	static public class UserQuery extends EventObject {
 		public enum RtnValue {
 			AUTH_OK,
