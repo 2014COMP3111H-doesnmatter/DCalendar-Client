@@ -77,6 +77,8 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 	private JCheckBox isJointC;
 	private DualListBox userSeleB;
 	
+	private JButton recBtn;
+	
 	private final static String[] months = { "Jan", "Feb", "Mar", "Apr",
 		"May", "Jun", "Jul", "Aug", "Sep", "Oct",
 		"Nov", "Dec" };
@@ -235,6 +237,11 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
+		recBtn = new JButton("Recommend");
+		recBtn.addActionListener(this);
+		recBtn.setEnabled(false);
+		panel2.add(recBtn);
+		
 		saveBtn = new JButton("Save");
 		saveBtn.addActionListener(this);
 		panel2.add(saveBtn);
@@ -342,6 +349,7 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 			needReminder.setSelected(isReminded);
 			isJointC.setSelected(appt.isJoint());
 			userSeleB.setEnabled(appt.isJoint());
+			recBtn.setEnabled(appt.isJoint());
 			reminderF.setEnabled(isReminded);
 			reminderF.setText(isReminded ? String.valueOf(appt.getReminderAhead() / MS_IN_SECOND) : "");
 			venueBox.setSelectedItem(aVenue.get(appt.getVenueId()));
@@ -506,6 +514,17 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 		}
 		else if(obj == isJointC) {
 			userSeleB.setEnabled(isJointC.isSelected());
+			recBtn.setEnabled(isJointC.isSelected());
+		}
+		else if(obj == recBtn) {
+			ApptSchedulerViewEvent ev = new ApptSchedulerViewEvent(this, ApptSchedulerViewEvent.Command.RECOMMEND);
+			List<User> invited = new ArrayList<User>();
+			Iterator<User> itr =  userSeleB.<User>destinationIterator();
+			while(itr.hasNext()) {
+				invited.add(itr.next());
+			}
+			ev.setaUser(invited);
+			this.triggerApptSchedulerViewEvent(ev);
 		}
 		else if(obj == saveBtn) {
 			Appointment newAppt = collectAppointment();

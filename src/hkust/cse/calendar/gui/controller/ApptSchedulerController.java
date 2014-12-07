@@ -3,6 +3,11 @@ package hkust.cse.calendar.gui.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JDialog;
+
+import org.json.JSONObject;
+
+import hkust.cse.calendar.api.appointment.GetAvailableTimeSlot;
 import hkust.cse.calendar.collection.AppointmentCollection;
 import hkust.cse.calendar.collection.AppointmentCollection.AddAppointmentQuery;
 import hkust.cse.calendar.collection.AppointmentCollection.EditAppointmentQuery;
@@ -15,6 +20,9 @@ import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.model.User.UserListQuery;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.network.APIRequestEvent;
+import hkust.cse.calendar.Main.DCalendarApp;
+import javax.swing.JTextArea;
 
 public class ApptSchedulerController extends EventSource implements Controller {
 	private BaseApptSchedulerView view;
@@ -30,6 +38,7 @@ public class ApptSchedulerController extends EventSource implements Controller {
 		public void fireEvent(ApptSchedulerViewEvent e) {
 			ApptSchedulerViewEvent.Command command = e.getCommand();
 			Appointment appt = e.getAppt();
+			List<User> aUser = e.getaUser();
 			switch(command) {
 			case SAVE:
 				if(appt.getId() == 0L) {
@@ -123,6 +132,27 @@ public class ApptSchedulerController extends EventSource implements Controller {
 				break;
 			case CLOSE:
 				view.dispose();
+				break;
+			case RECOMMEND:
+				aUser.add(DCalendarApp.getApp().getCurrentUser());
+				GetAvailableTimeSlot gapi = new GetAvailableTimeSlot(aUser);
+				gapi.addDoneListener(new GenListener<APIRequestEvent>() {
+
+					@Override
+					public void fireEvent(APIRequestEvent e) {
+						JSONObject json = e.getJSON();
+						try{
+							final JDialog dialog = new JDialog();
+							dialog.setModal(true);
+							dialog.add(new JTextArea(json.getString("msg")));
+						}
+						catch(Exception ex) {
+							
+						}
+						
+					}
+					
+				});
 			}
 			
 		}

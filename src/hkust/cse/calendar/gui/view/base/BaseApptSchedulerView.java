@@ -53,10 +53,12 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 	public static class ApptSchedulerViewEvent extends EventObject {
 		public enum Command {
 			SAVE,
+			RECOMMEND,
 			CLOSE,
 		};
 		private Command command;
 		private Appointment appt;
+		private List<User> aUser;
 		public ApptSchedulerViewEvent(Object source) {
 			super(source);
 		}
@@ -79,6 +81,14 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 
 		public void setAppt(Appointment appt) {
 			this.appt = appt;
+		}
+
+		public List<User> getaUser() {
+			return aUser;
+		}
+
+		public void setaUser(List<User> aUser) {
+			this.aUser = aUser;
 		}
 	}
 

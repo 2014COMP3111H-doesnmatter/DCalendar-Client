@@ -1,7 +1,9 @@
 package hkust.cse.calendar.model;
 
+import hkust.cse.calendar.api.welcome.InitiateRemovalAPI;
 import hkust.cse.calendar.api.welcome.ListUserAPI;
 import hkust.cse.calendar.api.welcome.LoginAPI;
+import hkust.cse.calendar.api.welcome.LogoutAPI;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 import hkust.cse.calendar.utils.network.APIHandler;
@@ -39,6 +41,42 @@ public class User extends BaseModel implements Comparable<User> {
 	
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public void logout() {
+		LogoutAPI api = new LogoutAPI();
+		Thread thrd = new Thread(new APIHandler(api));
+		thrd.start();
+	}
+	
+	public void remove(final GenListener<UserRemoveQuery> listener) {
+		InitiateRemovalAPI api = new InitiateRemovalAPI(this);
+		api.addDoneListener(new GenListener<APIRequestEvent>() {
+
+			@Override
+			public void fireEvent(APIRequestEvent e) {
+				JSONObject json = e.getJSON();
+				UserRemoveQuery qry = new UserRemoveQuery(this);
+				try {
+					int rtnCode = json.getInt("rtnCode");
+					if(rtnCode == 200) {
+						qry.setRtnValue(UserRemoveQuery.RtnValue.OK);
+					}
+					else if(rtnCode == -1) {
+						qry.setRtnValue(UserRemoveQuery.RtnValue.NETWORK_ERR);
+					}
+					else {
+						qry.setRtnValue(UserRemoveQuery.RtnValue.UNKNOWN_ERR);
+					}
+					fireTo(listener, qry);
+				} catch(JSONException ex) {
+					ex.printStackTrace();
+				}
+			}
+			
+		});
+		Thread thrd = new Thread(new APIHandler(api));
+		thrd.start();
 	}
 	
 	static public List<User> fromJSONArray(JSONArray arr) throws JSONException {
@@ -196,6 +234,42 @@ public class User extends BaseModel implements Comparable<User> {
 		
 	}
 
+	static public class UserRemoveQuery extends EventObject {
+		public enum RtnValue {
+			OK,
+			NETWORK_ERR,
+			UNKNOWN_ERR
+		};
+		private RtnValue rtnValue;
+		private User user;
+		
+		public UserRemoveQuery(Object source) {
+			super(source);
+		}
+		
+		public UserRemoveQuery(Object source, RtnValue rtnValue) {
+			super(source);
+			this.setRtnValue(rtnValue);
+		}
+
+		public RtnValue getRtnValue() {
+			return rtnValue;
+		}
+
+		public void setRtnValue(RtnValue rtnValue) {
+			this.rtnValue = rtnValue;
+		}
+
+		public User getUser() {
+			return user;
+		}
+
+		public void setUser(User user) {
+			this.user = user;
+		}
+		
+	}
+	
 	static public class UserListQuery extends EventObject {
 		public enum RtnValue {
 			LIST_OK,

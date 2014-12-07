@@ -30,6 +30,6 @@ public class ConfirmVenueRemovalAPI extends BaseAPI {
 	
 	@Override
 	public String getRequestMethod() {
-		return "PUT";
+		return "POST";
 	}
 }

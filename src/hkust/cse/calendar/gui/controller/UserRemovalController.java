@@ -43,6 +43,7 @@ public class UserRemovalController implements Controller {
 							APIHandler.resetCookie();
 							BaseLoginView loginView = app.getViewManager().getLoginView();
 							app.switchController(new LoginController(loginView));
+							app.getCurrentUser().logout();
 							CalMainController.getInstance().getView().dispose();
 						}
 					}

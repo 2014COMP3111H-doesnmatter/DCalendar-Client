@@ -36,6 +36,7 @@ abstract public class BaseCalMainView extends JFrame implements GenListener<CalM
 			TIME_MACHINE,
 			VENUE,
 			CHANGE_PROFILE,
+			USER,
 		};
 		private Command command;
 		

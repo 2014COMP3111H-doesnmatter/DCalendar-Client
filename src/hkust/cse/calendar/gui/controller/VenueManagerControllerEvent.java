@@ -1,14 +1,18 @@
 package hkust.cse.calendar.gui.controller;
 
+import hkust.cse.calendar.model.Venue;
+
 import java.util.EventObject;
+import java.util.List;
 
 public class VenueManagerControllerEvent extends EventObject {
 	static public enum Command {
 		// TODO Auto-generated enum
-		REFRESH,
+		START,
+		INFO_UPDATE,
 	};
 	private Command command;
-	public String[] aVenueName;
+	private List<Venue> aVenue;
 	
 	public VenueManagerControllerEvent(final Object source) {
 		super(source);
@@ -25,6 +29,14 @@ public class VenueManagerControllerEvent extends EventObject {
 
 	public void setCommand(Command command) {
 		this.command = command;
+	}
+
+	public List<Venue> getaVenue() {
+		return aVenue;
+	}
+
+	public void setaVenue(List<Venue> aVenue) {
+		this.aVenue = aVenue;
 	}
 
 }

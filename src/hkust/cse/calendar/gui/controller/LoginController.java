@@ -67,7 +67,6 @@ extends EventSource implements Controller {
 				app.setCurrentUser(user);
 				
 				// Pass control to another controller
-				//System.out.println("hey~");
 				app.switchController(new CalMainController(app.getViewManager().getCalMainView()));
 				view.dispose();
 				

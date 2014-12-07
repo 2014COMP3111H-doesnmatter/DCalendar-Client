@@ -114,6 +114,7 @@ public class AppointmentCollection extends Updatable {
 			@Override
 			public void fireEvent(APIRequestEvent e) {
 				JSONObject json = e.getJSON();
+				System.out.println(json);
 				AddAppointmentQuery qry = new AddAppointmentQuery(this);
 				
 				try {

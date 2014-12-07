@@ -1,10 +1,9 @@
 package hkust.cse.calendar.gui.view;
 
-import hkust.cse.calendar.gui.controller.VenueManagerControllerEvent;
-import hkust.cse.calendar.gui.view.base.BaseVenueManagerView;
+import hkust.cse.calendar.gui.controller.UserManagerControllerEvent;
+import hkust.cse.calendar.gui.view.base.BaseUserManagerView;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView.CalMainViewEvent;
-import hkust.cse.calendar.gui.view.base.BaseVenueManagerView;
-import hkust.cse.calendar.model.Venue;
+import hkust.cse.calendar.model.User;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -21,27 +20,25 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-public class PrimVenueManagerView extends BaseVenueManagerView implements ActionListener {
+public class PrimUserManagerView extends BaseUserManagerView implements ActionListener {
 	
-	private JList<Venue> userList;
-	private DefaultListModel<Venue> listModel;
+	private JList<User> userList;
+	private DefaultListModel<User> listModel;
 	
-	private JButton addBtn, changeBtn, cancelBtn, deleteBtn;
+	private JButton changeBtn, cancelBtn, deleteBtn;
 	
-	public PrimVenueManagerView() {
-		setTitle("Venue Management");
+	public PrimUserManagerView() {
+		setTitle("User Management");
 		setLayout(new BorderLayout());
-		listModel = new DefaultListModel<Venue>();
+		listModel = new DefaultListModel<User>();
 		
-		userList = new JList<Venue>(listModel);
+		userList = new JList<User>(listModel);
 		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		userList.setSelectedIndex(0);
 		userList.setVisibleRowCount(8);
 		
 		JScrollPane listScrollPane = new JScrollPane(userList);
 		
-		addBtn = new JButton("Create");
-		addBtn.addActionListener(this);
 		
 		changeBtn = new JButton("Modify");
 		changeBtn.addActionListener(this);
@@ -57,8 +54,6 @@ public class PrimVenueManagerView extends BaseVenueManagerView implements Action
                                            BoxLayout.LINE_AXIS));
 		
         buttonPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        buttonPane.add(addBtn);
-        buttonPane.add(Box.createHorizontalStrut(10));
         buttonPane.add(changeBtn);
         buttonPane.add(Box.createHorizontalStrut(10));
         buttonPane.add(deleteBtn);
@@ -76,41 +71,35 @@ public class PrimVenueManagerView extends BaseVenueManagerView implements Action
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if(obj == addBtn) {
-			VenueManagerViewEvent ev = new VenueManagerViewEvent(this, VenueManagerViewEvent.Command.CREATE);
-			ev.setVenue((Venue)userList.getSelectedValue());
-			triggerVenueManagerViewEvent(ev);
-		}
 		if(obj == changeBtn) {
-			VenueManagerViewEvent ev = new VenueManagerViewEvent(this, VenueManagerViewEvent.Command.EDIT);
-			ev.setVenue((Venue)userList.getSelectedValue());
-			triggerVenueManagerViewEvent(ev);
+			UserManagerViewEvent ev = new UserManagerViewEvent(this, UserManagerViewEvent.Command.EDIT);
+			ev.setUser((User)userList.getSelectedValue());
+			triggerUserManagerViewEvent(ev);
 		}
 		else if(obj == cancelBtn) {
-			VenueManagerViewEvent ev = new VenueManagerViewEvent(this, VenueManagerViewEvent.Command.CLOSE);
-			triggerVenueManagerViewEvent(ev);
+			UserManagerViewEvent ev = new UserManagerViewEvent(this, UserManagerViewEvent.Command.CLOSE);
+			triggerUserManagerViewEvent(ev);
 		}
 		else if(obj == deleteBtn) {
-			VenueManagerViewEvent ev = new VenueManagerViewEvent(this, VenueManagerViewEvent.Command.DELETE);
-			ev.setVenue((Venue)userList.getSelectedValue());
-			triggerVenueManagerViewEvent(ev);
+			UserManagerViewEvent ev = new UserManagerViewEvent(this, UserManagerViewEvent.Command.DELETE);
+			ev.setUser((User)userList.getSelectedValue());
+			triggerUserManagerViewEvent(ev);
 		}
 
 	}
 
 	@Override
-	public void fireEvent(VenueManagerControllerEvent e) {
-		VenueManagerControllerEvent.Command command = e.getCommand();
+	public void fireEvent(UserManagerControllerEvent e) {
+		UserManagerControllerEvent.Command command = e.getCommand();
 		switch(command) {
 		case START:
 			this.setVisible(true);
 			break;
 		case INFO_UPDATE:
 			listModel.clear();
-			for(Venue u:e.getaVenue()) {
+			for(User u:e.getaUser()) {
 				listModel.addElement(u);
 			}
-			repaint();
 			break;
 		}
 

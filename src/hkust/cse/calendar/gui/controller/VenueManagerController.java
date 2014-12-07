@@ -1,12 +1,14 @@
 package hkust.cse.calendar.gui.controller;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
+import javax.swing.JOptionPane;
+
+import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.collection.VenueCollection;
+import hkust.cse.calendar.gui.view.PrimCreateVenueView;
+import hkust.cse.calendar.gui.view.PrimEditVenueView;
 import hkust.cse.calendar.gui.view.base.BaseVenueManagerView;
 import hkust.cse.calendar.gui.view.base.BaseVenueManagerView.VenueManagerViewEvent;
 import hkust.cse.calendar.model.Venue;
@@ -16,28 +18,36 @@ import hkust.cse.calendar.utils.Updatable.UpdatableEvent;
 
 public class VenueManagerController extends EventSource implements Controller {
 	private BaseVenueManagerView view;
-	private String[] aName;
 	private List<GenListener<VenueManagerControllerEvent>> aListener = new ArrayList<GenListener<VenueManagerControllerEvent>>();
-	private GenListener<VenueManagerViewEvent> venueManagerViewListener = new GenListener<VenueManagerViewEvent>() {
+	private GenListener<VenueManagerViewEvent> userManagerViewListener = new GenListener<VenueManagerViewEvent>() {
 
 		@Override
 		public void fireEvent(VenueManagerViewEvent e) {
+			Venue u;
 			switch(e.getCommand()) {
-			case ADD_VENUE:
-				if(venueExists(e.name)) return;
-				VenueCollection.getInstance().addVenue(e.name);
-			}
-		}
-		
-	};
-	
-	private GenListener<UpdatableEvent> venueListListener = new GenListener<UpdatableEvent> () {
+			case CREATE:
+				CreateVenueController createCtrl = new CreateVenueController(new PrimCreateVenueView());
+				createCtrl.start();
+				break;
+			case EDIT:
+				u = e.getVenue();
 
-		@Override
-		public void fireEvent(UpdatableEvent e) {
-			switch(e.getCommand()) {
-			case INFO_UPDATE:
-				refresh();
+				EditVenueController editCtrl = new EditVenueController(u, new PrimEditVenueView());
+				editCtrl.start();
+				break;
+			case DELETE:
+				u = e.getVenue();
+				int n = JOptionPane.showConfirmDialog(view, "Remove Venue " + u + " ?\n" + 
+				"Deletion will finish after affected user confirms.",
+						"Confirm", JOptionPane.YES_NO_OPTION);
+				if(n == JOptionPane.YES_OPTION) {
+					VenueCollection.getInstance().removeVenue(u);
+				}
+				break;
+			case CLOSE:
+				view.dispose();
+				view = null;
+				break;
 			}
 			
 		}
@@ -54,9 +64,8 @@ public class VenueManagerController extends EventSource implements Controller {
 	
 	public void setView(BaseVenueManagerView view) {
 		this.view = view;
-		this.view.addVenueManagerEventListener(venueManagerViewListener);
+		this.view.addVenueManagerEventListener(userManagerViewListener);
 		addVenueManagerControllerEventListener(view);
-		VenueCollection.getInstance().addColEventListener(venueListListener);
 	}
 	
 	public void addVenueManagerControllerEventListener(GenListener<VenueManagerControllerEvent> listener) {
@@ -65,30 +74,30 @@ public class VenueManagerController extends EventSource implements Controller {
 	
 	@Override
 	public void start() {
-		refresh();
-	}
-	
-	private void refresh() {
-		Map<Long,Venue> venues = VenueCollection.getInstance().getVenueList();
-		String[] aVenueName = new String[venues.size()];
-		Iterator<Entry<Long, Venue>> itr = venues.entrySet().iterator();
-		for(int i=0;itr.hasNext();i++) {
-			Entry<Long, Venue> pair = itr.next();
-			aVenueName[i] = pair.getValue().getName();
-		}
-		this.aName = aVenueName;
+		
+		VenueManagerControllerEvent ev = new VenueManagerControllerEvent(VenueManagerController.this);
+		ev.setCommand(VenueManagerControllerEvent.Command.INFO_UPDATE);
+		ev.setaVenue(new ArrayList<Venue>(VenueCollection.getInstance().getVenueList().values()));
+		fireList(aListener, ev);
 		
 		VenueManagerControllerEvent e = new VenueManagerControllerEvent(this);
-		e.aVenueName = aVenueName;
-		e.setCommand(VenueManagerControllerEvent.Command.REFRESH);
+		e.setCommand(VenueManagerControllerEvent.Command.START);
 		fireList(aListener, e);
-	}
-	
-	private boolean venueExists(String name) {
-		for(String iName:this.aName) {
-			if(iName.equals(name)) return true;
-		}
-		return false;
+		
+		VenueCollection.getInstance().addColEventListener(new GenListener<UpdatableEvent>() {
+
+			@Override
+			public void fireEvent(UpdatableEvent e) {
+				if(view == null) {
+					return;
+				}
+				VenueManagerControllerEvent ev = new VenueManagerControllerEvent(VenueManagerController.this);
+				ev.setCommand(VenueManagerControllerEvent.Command.INFO_UPDATE);
+				ev.setaVenue(new ArrayList<Venue>(VenueCollection.getInstance().getVenueList().values()));
+				fireList(aListener, ev);
+			}
+			
+		});
 	}
 
 }

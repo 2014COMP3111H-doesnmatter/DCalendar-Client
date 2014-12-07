@@ -16,6 +16,7 @@ import hkust.cse.calendar.gui.view.PrimApptSchedulerView;
 import hkust.cse.calendar.gui.view.PrimCalMonthView;
 import hkust.cse.calendar.gui.view.PrimEditUserView;
 import hkust.cse.calendar.gui.view.PrimTimeMachineView;
+import hkust.cse.calendar.gui.view.PrimUserManagerView;
 import hkust.cse.calendar.gui.view.PrimVenueManagerView;
 import hkust.cse.calendar.gui.view.ViewManager;
 import hkust.cse.calendar.gui.view.base.BaseCalMainView;
@@ -67,6 +68,8 @@ extends EventSource implements Controller {
 				APIHandler.resetCookie();
 				BaseLoginView loginView = app.getViewManager().getLoginView();
 				app.switchController(new LoginController(loginView));
+				desktopCtrler.getView().dispose();
+				app.getCurrentUser().logout();
 				view.dispose();
 				break;
 			case MANUAL_SCHEDULE:
@@ -95,6 +98,9 @@ extends EventSource implements Controller {
 				ev.setaNotification(aConcern);
 				fireList(nListener, ev);
 				break;
+			case USER:
+				UserManagerController userManager = new UserManagerController(new PrimUserManagerView());
+				userManager.start();
 			}
 		}
 		

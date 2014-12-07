@@ -7,11 +7,11 @@ import hkust.cse.calendar.utils.network.BaseAPI;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConfirmUserRemovalAPI extends BaseAPI {
-	static String baseURL = "/welcome/confirmRemoval";
+public class InitiateRemovalAPI extends BaseAPI {
+	static String baseURL = "/welcome/initiateRemoval";
 	private User user;
 	
-	public ConfirmUserRemovalAPI(User user) {
+	public InitiateRemovalAPI(User user) {
 		this.user = user;
 	}
 	

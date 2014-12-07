@@ -424,6 +424,10 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.VENUE);
 			triggerCalMainViewEvent(ev);
 		}
+		else if(obj == userBtn) {
+			CalMainViewEvent ev = new CalMainViewEvent(this, CalMainViewEvent.Command.USER);
+			triggerCalMainViewEvent(ev);
+		}
 	}
 
 	@Override
