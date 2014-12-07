@@ -20,9 +20,12 @@ import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.model.User.UserListQuery;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.network.APIHandler;
 import hkust.cse.calendar.utils.network.APIRequestEvent;
 import hkust.cse.calendar.Main.DCalendarApp;
+
 import javax.swing.JTextArea;
+import javax.swing.JOptionPane;
 
 public class ApptSchedulerController extends EventSource implements Controller {
 	private BaseApptSchedulerView view;
@@ -142,9 +145,15 @@ public class ApptSchedulerController extends EventSource implements Controller {
 					public void fireEvent(APIRequestEvent e) {
 						JSONObject json = e.getJSON();
 						try{
-							final JDialog dialog = new JDialog();
-							dialog.setModal(true);
-							dialog.add(new JTextArea(json.getString("msg")));
+							JTextArea textArea = new JTextArea(json.getString("msg"));
+							textArea.setOpaque(false);
+							  textArea.setColumns(30);
+							  textArea.setLineWrap( true );
+							  textArea.setWrapStyleWord( true );
+							  textArea.setEditable(false);
+							  textArea.setSize(textArea.getPreferredSize().width, 1);
+							  JOptionPane.showMessageDialog(
+							   view, textArea, "Recommend", JOptionPane.PLAIN_MESSAGE);
 						}
 						catch(Exception ex) {
 							
@@ -153,6 +162,9 @@ public class ApptSchedulerController extends EventSource implements Controller {
 					}
 					
 				});
+				Thread thrd = new Thread(new APIHandler(gapi));
+				thrd.start();
+				break;
 			}
 			
 		}
