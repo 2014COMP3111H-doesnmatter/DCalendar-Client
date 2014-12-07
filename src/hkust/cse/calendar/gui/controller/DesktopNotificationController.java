@@ -121,6 +121,26 @@ public class DesktopNotificationController extends EventSource implements Contro
 				
 			});
 			break;
+		case "JointAppointmentInitiated":
+			final Appointment iAppt = (Appointment)n.getBody();
+			
+			message = "You are invited to join " + iAppt.getName() + ".";
+			pushNotification("Invitation of Appointment", message, "invitation.png", new GenListener<NotificationItemViewEvent>() {
+
+				@Override
+				public void fireEvent(NotificationItemViewEvent ev) {
+					switch(ev.getCommand()) {
+					case ACTIVATE:
+						DetailsController vCtrl = new DetailsController(DCalendarApp.getApp().getViewManager().getDetailsView());
+						vCtrl.setAppt(iAppt);
+						vCtrl.start();
+						break;
+					}
+					
+				}
+				
+			});
+			break;
 		default:
 		}
 	}

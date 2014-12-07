@@ -32,15 +32,15 @@ public class EditUserController extends EventSource implements Controller {
 			case EDIT:
 				User u = e.getUser();
 				if(u.getUsername().length() == 0) {
-					JOptionPane.showMessageDialog(null, "Please fill in username", "Missing Field", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(view, "Please fill in username", "Missing Field", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				if(u.getEmail().length() == 0) {
-					JOptionPane.showMessageDialog(null, "Please fill in email", "Missing Field", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(view, "Please fill in email", "Missing Field", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				if(u.getFullname().length() == 0) {
-					JOptionPane.showMessageDialog(null, "Please fill in full name", "Missing Field", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(view, "Please fill in full name", "Missing Field", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				EditUserAPI api = new EditUserAPI(user, u, e.getPassword());
@@ -52,13 +52,13 @@ public class EditUserController extends EventSource implements Controller {
 						try {
 							int rtnCode = json.getInt("rtnCode");
 							if(rtnCode == 200) {
-								JOptionPane.showMessageDialog(null, "User changed.");
+								JOptionPane.showMessageDialog(view, "User changed.");
 								User u = new User(json.getJSONObject("user"));
 								DCalendarApp.getApp().setCurrentUser(u);
 								view.dispose();
 							}
 							else if(rtnCode == 201) {
-								JOptionPane.showMessageDialog(null, "Username already exists!", "Duplicate Username", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(view, "Username already exists!", "Duplicate Username", JOptionPane.ERROR_MESSAGE);
 							}
 						}
 						catch(JSONException ex) {

@@ -85,7 +85,8 @@ public class AppointmentCollection extends Updatable {
 						for(i = 0, size = aJson.length(); i < size; i++) {
 							JSONObject apptJson = aJson.getJSONObject(i);
 							Appointment appt = new Appointment(apptJson);
-							aAppt.put(appt.getId(), appt);
+							if(appt.isScheduled())
+								aAppt.put(appt.getId(), appt);
 						}
 						flagHasEvent();
 						state = CLEAN;

@@ -40,6 +40,9 @@ public class NotificationCollection extends Updatable {
 				JSONObject json = e.getJSON();
 				try {
 					int rtnCode = json.getInt("rtnCode");
+					if(rtnCode != 200) {
+						return;
+					}
 					
 					JSONArray arr = json.getJSONArray("aNotification");
 					if(arr.length() > 0) {

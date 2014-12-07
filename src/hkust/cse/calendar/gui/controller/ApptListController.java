@@ -49,7 +49,7 @@ public class ApptListController extends EventSource implements Controller
 				scheduler.start();
 				break;
 			case DELETE_APPOITNMENT:
-				int n = JOptionPane.showConfirmDialog(null, "Delete Appointment " + e.appt + " ?",
+				int n = JOptionPane.showConfirmDialog(view, "Delete Appointment " + e.appt + " ?",
 						"Confirm", JOptionPane.YES_NO_OPTION);
 				if(n == JOptionPane.NO_OPTION) break;
 				aAppt.removeAppt(e.appt, new GenListener<RemoveAppointmentQuery>() {
@@ -57,7 +57,7 @@ public class ApptListController extends EventSource implements Controller
 					public void fireEvent(RemoveAppointmentQuery e) {
 						switch(e.getCommand()) {
 						case ILLEGAL_TIME:
-							JOptionPane.showMessageDialog(null, "Cannot delete appointment in the past.");
+							JOptionPane.showMessageDialog(view, "Cannot delete appointment in the past.");
 						}
 					}
 					

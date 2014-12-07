@@ -28,19 +28,19 @@ public class CreateUserController extends EventSource implements Controller {
 			case CREATE:
 				User u = e.getUser();
 				if(u.getUsername().length() == 0) {
-					JOptionPane.showMessageDialog(null, "Please fill in username", "Missing Field", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(view, "Please fill in username", "Missing Field", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				if(u.getEmail().length() == 0) {
-					JOptionPane.showMessageDialog(null, "Please fill in email", "Missing Field", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(view, "Please fill in email", "Missing Field", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				if(u.getFullname().length() == 0) {
-					JOptionPane.showMessageDialog(null, "Please fill in full name", "Missing Field", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(view, "Please fill in full name", "Missing Field", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				if(e.getPassword().length() == 0) {
-					JOptionPane.showMessageDialog(null, "Please fill in password", "Missing Field", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(view, "Please fill in password", "Missing Field", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				SignUpAPI api = new SignUpAPI(u, e.getPassword());
@@ -52,11 +52,11 @@ public class CreateUserController extends EventSource implements Controller {
 						try {
 							int rtnCode = json.getInt("rtnCode");
 							if(rtnCode == 200) {
-								JOptionPane.showMessageDialog(null, "User created");
+								JOptionPane.showMessageDialog(view, "User created");
 								view.dispose();
 							}
 							else if(rtnCode == 201) {
-								JOptionPane.showMessageDialog(null, "User already exists!", "Duplicate User", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(view, "User already exists!", "Duplicate User", JOptionPane.ERROR_MESSAGE);
 							}
 						}
 						catch(JSONException ex) {

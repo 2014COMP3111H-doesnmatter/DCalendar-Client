@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import hkust.cse.calendar.api.appointment.AcceptAPI;
+import hkust.cse.calendar.api.appointment.RejectAPI;
 import hkust.cse.calendar.collection.VenueCollection;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView.DetailsViewEvent;
@@ -13,6 +19,8 @@ import hkust.cse.calendar.gui.view.base.BaseLoginView.LoginViewEvent;
 import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
+import hkust.cse.calendar.utils.network.APIHandler;
+import hkust.cse.calendar.utils.network.APIRequestEvent;
 
 public class DetailsController 
 extends EventSource implements Controller {
@@ -26,9 +34,62 @@ extends EventSource implements Controller {
 		@Override
 		public void fireEvent(DetailsViewEvent e) {
 			DetailsViewEvent.Command command = e.getCommand();
-			if(command == DetailsViewEvent.Command.EXIT) {
+			switch(command) {
+			case ACCEPT:
+				AcceptAPI accAPI = new AcceptAPI(appt);
+				accAPI.addDoneListener(new GenListener<APIRequestEvent>() {
+
+					@Override
+					public void fireEvent(APIRequestEvent e) {
+						JSONObject json = e.getJSON();
+						try {
+							int rtnCode = json.getInt("rtnCode");
+							if(rtnCode == 200) {
+								view.dispose();
+							}
+							else if(rtnCode == 406) {
+								JOptionPane.showMessageDialog(view,
+										"This appointment is conflict with your schedule",
+										"Illegal time", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+						catch(JSONException ex) {
+							
+						}
+						
+					}
+					
+				});
+				Thread accthrd = new Thread(new APIHandler(accAPI));
+				accthrd.start();
+				break;
+			case REJECT:
+				RejectAPI rejAPI = new RejectAPI(appt);
+				rejAPI.addDoneListener(new GenListener<APIRequestEvent>() {
+
+					@Override
+					public void fireEvent(APIRequestEvent e) {
+						JSONObject json = e.getJSON();
+						try {
+							int rtnCode = json.getInt("rtnCode");
+							if(rtnCode == 200) {
+								view.dispose();
+							}
+						}
+						catch(JSONException ex) {
+							
+						}
+					}
+					
+				});
+				Thread rejthrd = new Thread(new APIHandler(rejAPI));
+				rejthrd.start();
+				break;
+			case EXIT:
 				view.dispose();
+				break;
 			}
+			
 		}
 		
 	};

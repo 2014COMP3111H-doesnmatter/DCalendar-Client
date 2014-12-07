@@ -81,6 +81,10 @@ public class NotificationController implements Controller, ActionListener {
 							if(appt.getReminderAhead() <= 0) {
 								continue;
 							}
+							//Test if scheduled
+							if(appt.isJoint() && (!appt.getaRejected().isEmpty() || !appt.getaWaiting().isEmpty())) {
+								continue;
+							}
 							long toNotify = appt.getStartTime() - appt.getReminderAhead();
 							Date notifyD = new Date(toNotify);
 							notifyD.setYear(nowDate.getYear());

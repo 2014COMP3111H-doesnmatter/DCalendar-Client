@@ -210,6 +210,7 @@ extends EventSource implements Controller {
 			switch(n.getType()) {
 			case "VenueRemovalInitiated":
 			case "UserRemovalInitiated":
+			case "JointAppointmentInitiated":
 				aConcern.add(n);
 				break;
 			case "VenueRemovalFinalized":

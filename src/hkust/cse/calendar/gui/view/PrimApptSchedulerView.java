@@ -1,8 +1,10 @@
 package hkust.cse.calendar.gui.view;
 
+import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.gui.controller.ApptSchedulerControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseApptSchedulerView;
 import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.model.Venue;
 import hkust.cse.calendar.utils.DateTimeHelper;
 
@@ -15,11 +17,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -68,6 +73,9 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 	private JButton cancelBtn;
 
 	private JTextArea detailArea;
+	
+	private JCheckBox isJointC;
+	private DualListBox userSeleB;
 	
 	private final static String[] months = { "Jan", "Feb", "Mar", "Apr",
 		"May", "Jun", "Jul", "Aug", "Sep", "Oct",
@@ -237,6 +245,26 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 
 		contentPane.add("South", panel2);
 		
+		JPanel rightP = new JPanel();
+		rightP.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+		rightP.setLayout(new BoxLayout(rightP, BoxLayout.Y_AXIS));
+		JPanel pJoint = new JPanel();
+		isJointC = new JCheckBox();
+		isJointC.addActionListener(this);
+		pJoint.add(isJointC);
+		pJoint.add(new JLabel("This appointment is a joint appointment"));
+		
+		rightP.add(pJoint);
+		
+		userSeleB = new DualListBox();
+		userSeleB.setDestinationChoicesTitle("Invited User");
+		userSeleB.setSourceChoicesTitle("Available User");
+		userSeleB.setEnabled(false);
+		rightP.add(userSeleB);
+		contentPane.add("East", rightP);
+		
+		rightP.setPreferredSize(new Dimension(400, 300));
+		
 		resetDefault();
 		pack();
 		
@@ -312,6 +340,8 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 			
 			boolean isReminded = appt.getReminderAhead() > 0;
 			needReminder.setSelected(isReminded);
+			isJointC.setSelected(appt.isJoint());
+			userSeleB.setEnabled(appt.isJoint());
 			reminderF.setEnabled(isReminded);
 			reminderF.setText(isReminded ? String.valueOf(appt.getReminderAhead() / MS_IN_SECOND) : "");
 			venueBox.setSelectedItem(aVenue.get(appt.getVenueId()));
@@ -390,11 +420,22 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 					throw new ParseException("", 0);
 				}
 			} catch(ParseException e) {
-				JOptionPane.showMessageDialog(null, "Invalid reminder settings.\nPlease check again.",
+				JOptionPane.showMessageDialog(this, "Invalid reminder settings.\nPlease check again.",
 						"Invalid Input", JOptionPane.ERROR_MESSAGE);
 				return null;
 			}
 		}
+
+		doneAppt.setJoint(isJointC.isSelected());
+		if(isJointC.isSelected()) {
+			List<User> invited = new ArrayList<User>();
+			Iterator<User> itr =  userSeleB.<User>destinationIterator();
+			while(itr.hasNext()) {
+				invited.add(itr.next());
+			}
+			doneAppt.setaWaiting(invited);
+		}
+		
 		//Now we don't need to parse anything. So just copy data to appointment object
 		doneAppt.setId(this.appt.getId());
 		doneAppt.setStartTime(startTime.getTime());
@@ -463,6 +504,9 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 		else if(obj == needReminder) {
 			reminderF.setEnabled(needReminder.isSelected());
 		}
+		else if(obj == isJointC) {
+			userSeleB.setEnabled(isJointC.isSelected());
+		}
 		else if(obj == saveBtn) {
 			Appointment newAppt = collectAppointment();
 			if(newAppt != null) {
@@ -493,7 +537,7 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 			saveBtn.setText("Save");
 			String errTitle = e.getErrTitle();
 			String errText = e.getErrText();
-			JOptionPane.showMessageDialog(null, errText, errTitle, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, errText, errTitle, JOptionPane.ERROR_MESSAGE);
 			break;
 		}
 
@@ -513,7 +557,37 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 
 	@Override
 	protected void updateAppt() {
+		if(this.appt.isJoint()) {
+			this.appt.getaWaiting().addAll(this.appt.getaAccepted());
+			this.appt.getaWaiting().addAll(this.appt.getaRejected());
+			this.appt.getaWaiting().remove(DCalendarApp.getApp().getCurrentUser());
+			this.appt.getaAccepted().clear();
+			this.appt.getaRejected().clear();
+			updateUserList();
+		}
 		setToAppt(this.appt);
+		
+	}
+
+	@Override
+	protected void updateUserList() {
+		userSeleB.clearSourceListModel();
+		userSeleB.clearDestinationListModel();
+		
+		if(this.aUser == null) {
+			return;
+		}
+		
+		List<User> full = new ArrayList<User>(this.aUser);
+		full.remove(DCalendarApp.getApp().getCurrentUser());
+		
+		if(this.appt.getaWaiting() != null)
+			full.removeAll(this.appt.getaWaiting());
+		
+		userSeleB.addSourceElements(full.toArray());
+
+		if(this.appt.getaWaiting() != null)
+			userSeleB.addDestinationElements(this.appt.getaWaiting().toArray());
 	}
 	
 }

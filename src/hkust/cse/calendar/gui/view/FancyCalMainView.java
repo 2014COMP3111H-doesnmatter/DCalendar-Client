@@ -314,6 +314,7 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 	private BaseNotificationItemView generateNotificationItem(Notification n) {
 		String message;
 		BaseNotificationItemView v;
+
 		switch(n.getType()) {
 		case "VenueRemovalInitiated":
 			final Venue venue = (Venue)n.getBody();
@@ -349,6 +350,27 @@ public class FancyCalMainView extends BaseCalMainView implements ActionListener 
 							break;
 						}
 					}
+			});
+			break;
+		case "JointAppointmentInitiated":
+			final Appointment iAppt = (Appointment)n.getBody();
+
+			message = "You are invited to join " + iAppt.getName() + ".";
+			v = new PrimNotificationItemView("Invitation of Appointment", message, "invitation.png", false);
+			v.addNotificationItemEventListener(new GenListener<NotificationItemViewEvent>() {
+
+				@Override
+				public void fireEvent(NotificationItemViewEvent ev) {
+					switch(ev.getCommand()) {
+					case ACTIVATE:
+						DetailsController vCtrl = new DetailsController(DCalendarApp.getApp().getViewManager().getDetailsView());
+						vCtrl.setAppt(iAppt);
+						vCtrl.start();
+						break;
+					}
+					
+				}
+				
 			});
 			break;
 		default:

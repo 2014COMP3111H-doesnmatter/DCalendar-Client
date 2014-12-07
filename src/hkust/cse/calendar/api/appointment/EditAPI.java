@@ -1,8 +1,10 @@
 package hkust.cse.calendar.api.appointment;
 
 import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.utils.network.BaseAPI;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +33,14 @@ public class EditAPI extends BaseAPI {
 		params.put("lastDay", String.valueOf(appt.getLastDay()));
 		params.put("reminderAhead", String.valueOf(appt.getReminderAhead()));
 		params.put("info", appt.getInfo());
-		
+		if(appt.isJoint()) {
+			long[] aWaitingId = new long[appt.getaWaiting().size()];
+			int i = 0;
+			for(User u: appt.getaWaiting()) {
+				aWaitingId[i++] = u.getId();
+			}
+			params.put("aWaitingId", Arrays.toString(aWaitingId));
+		}
 		return params;
 	}
 	

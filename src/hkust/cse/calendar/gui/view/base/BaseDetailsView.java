@@ -25,6 +25,8 @@ abstract public class BaseDetailsView extends JFrame implements GenListener<Deta
 	
 	static public class DetailsViewEvent extends EventObject {
 		public enum Command {
+			ACCEPT,
+			REJECT,
 			EXIT
 		};
 		private Command command;

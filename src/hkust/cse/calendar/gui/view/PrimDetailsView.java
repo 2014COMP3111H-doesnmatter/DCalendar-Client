@@ -1,11 +1,13 @@
 package hkust.cse.calendar.gui.view;
 
+import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.gui.controller.DetailsControllerEvent;
 import hkust.cse.calendar.gui.view.base.BaseDetailsView;
 import hkust.cse.calendar.model.Appointment;
 import hkust.cse.calendar.model.Venue;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,12 +29,15 @@ import javax.swing.border.TitledBorder;
 public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 	private JButton exitBut;
 	private JTextArea area;
+	private JButton acceptBut;
+	private JButton rejectBut;
 	
 	final static private String[] aFrequency = {"Once", "Daily", "Weekly", "Monthly"};
 
 	public PrimDetailsView() {
 		paintContent();
 		this.setSize(500, 350);
+		this.setLocationRelativeTo(null);
 		pack();
 
 	}
@@ -50,16 +58,30 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 
 		exitBut = new JButton("Exit");
 		exitBut.addActionListener(this);
+		
+		acceptBut = new JButton("Accept");
+		acceptBut.addActionListener(this);
+		
+		rejectBut = new JButton("Reject");
+		rejectBut.addActionListener(this);
 
 		JPanel p2 = new JPanel();
-		p2.setLayout(new FlowLayout(FlowLayout.CENTER));
+		p2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		p2.setLayout(new BoxLayout(p2, BoxLayout.X_AXIS));
 
+		p2.add(acceptBut);
+		p2.add(Box.createRigidArea(new Dimension(20, 1)));
+		p2.add(rejectBut);
+		
+		p2.add(Box.createGlue());
+		
 		p2.add(exitBut);
 
 		content.add("Center", panel);
 		content.add("South", p2);
 		
 		this.setVisible(false);
+		
 
 	}
 
@@ -84,11 +106,30 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 		area.setText("Appointment Information \n");
 		area.append("Title: " + appt.getName() + "\n");
 		area.append("Time: " + time + "\n");
+		area.append("Start From: " + new SimpleDateFormat("yyyy-MM-dd").format(startTime) + "\n");
 		area.append("Repeat: " + aFrequency[appt.getFrequency()] + " till " + endDay + "\n");
 		area.append("Reminder: " + (reminderAhead == 0 ? "No": (reminderAhead + " minutes ahead")) + "\n");
 		area.append("Venue: " + aVenue.get(appt.getVenueId()) + "\n");
+		area.append("Initiated By: " + appt.getInitiator().getUsername() + "\n");
+		if(appt.isJoint()) {
+			String s = appt.getaAccepted().toString();
+			area.append("Accepted By: " + s.substring(1, s.length() - 1) + "\n");
+			s = appt.getaRejected().toString();
+			area.append("Rejected By: " + s.substring(1, s.length() - 1) + "\n");
+			s = appt.getaWaiting().toString();
+			area.append("Pending: " + s.substring(1, s.length() - 1) + "\n");
+		}
 		area.append("\nDescription: \n" + appt.getInfo());
 		area.setEditable(false);
+		
+		if(appt.isJoint() && appt.getaWaiting().contains(DCalendarApp.getApp().getCurrentUser())) {
+			acceptBut.setEnabled(true);
+			rejectBut.setEnabled(true);
+		}
+		else {
+			acceptBut.setEnabled(false);
+			rejectBut.setEnabled(false);
+		}
 	}
 
 	@Override
@@ -107,6 +148,14 @@ public class PrimDetailsView extends BaseDetailsView implements ActionListener {
 
 		if (e.getSource() == exitBut) {
 			DetailsViewEvent ev = new DetailsViewEvent(this, DetailsViewEvent.Command.EXIT);
+			triggerDetailsViewEvent(ev);
+		}
+		else if(e.getSource() == acceptBut) {
+			DetailsViewEvent ev = new DetailsViewEvent(this, DetailsViewEvent.Command.ACCEPT);
+			triggerDetailsViewEvent(ev);
+		}
+		else if(e.getSource() == rejectBut) {
+			DetailsViewEvent ev = new DetailsViewEvent(this, DetailsViewEvent.Command.REJECT);
 			triggerDetailsViewEvent(ev);
 		}
 	}

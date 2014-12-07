@@ -1,5 +1,7 @@
 package hkust.cse.calendar.model;
 
+import hkust.cse.calendar.Main.DCalendarApp;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +25,16 @@ public class Appointment extends BaseModel {
 	private List<User> aRejected;
 	private List<User> aWaiting;
 	
+	private boolean isJoint;
+	
+	public boolean isJoint() {
+		return isJoint;
+	}
+
+	public void setJoint(boolean isJoint) {
+		this.isJoint = isJoint;
+	}
+
 	public Appointment() {
 		name = "Untitled";
 	}
@@ -37,6 +49,23 @@ public class Appointment extends BaseModel {
 		frequency = json.getInt("frequency");
 		lastDay = json.getLong("lastDay");
 		reminderAhead = json.getLong("reminderAhead");
+		initiator = new User(json.getJSONObject("initiator"));
+		isJoint = json.getBoolean("isJoint");
+		
+		if(isJoint) {
+			aAccepted = User.fromJSONArray(json.getJSONArray("aAccepted"));
+			aRejected = User.fromJSONArray(json.getJSONArray("aRejected"));
+			aWaiting = User.fromJSONArray(json.getJSONArray("aWaiting"));
+		}
+	}
+	
+	public boolean isScheduled() {
+		if(isJoint 
+				&& (!aRejected.isEmpty() || !aWaiting.isEmpty()) 
+				&& !initiator.equals(DCalendarApp.getApp().getCurrentUser())) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override
@@ -113,6 +142,30 @@ public class Appointment extends BaseModel {
 
 	public void setVenueId(long venueId) {
 		this.venueId = venueId;
+	}
+
+	public List<User> getaAccepted() {
+		return aAccepted;
+	}
+
+	public void setaAccepted(List<User> aAccepted) {
+		this.aAccepted = aAccepted;
+	}
+
+	public List<User> getaRejected() {
+		return aRejected;
+	}
+
+	public void setaRejected(List<User> aRejected) {
+		this.aRejected = aRejected;
+	}
+
+	public List<User> getaWaiting() {
+		return aWaiting;
+	}
+
+	public void setaWaiting(List<User> aWaiting) {
+		this.aWaiting = aWaiting;
 	}
 
 	public static final class Frequency {

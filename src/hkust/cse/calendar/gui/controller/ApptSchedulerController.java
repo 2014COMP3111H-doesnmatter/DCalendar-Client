@@ -11,6 +11,8 @@ import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.view.base.BaseApptSchedulerView;
 import hkust.cse.calendar.gui.view.base.BaseApptSchedulerView.ApptSchedulerViewEvent;
 import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.User;
+import hkust.cse.calendar.model.User.UserListQuery;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 
@@ -159,8 +161,18 @@ public class ApptSchedulerController extends EventSource implements Controller {
 	public void start() {
 		this.view.setaVenue(aVenue.getVenueList());
 		setCurrentAppt(currentAppt);
-		ApptSchedulerControllerEvent e = new ApptSchedulerControllerEvent(this, ApptSchedulerControllerEvent.Command.START);
-		fireList(aListener, e);
+		User.listUser(new GenListener<UserListQuery>() {
+
+			@Override
+			public void fireEvent(UserListQuery e) {
+				if(e.getRtnValue() == UserListQuery.RtnValue.LIST_OK) {
+					view.setUserList(e.getaUser());
+					ApptSchedulerControllerEvent ev = new ApptSchedulerControllerEvent(ApptSchedulerController.this, ApptSchedulerControllerEvent.Command.START);
+					fireList(aListener, ev);
+				}
+			}
+			
+		});
 	}
 
 	public CalMainModel getModel() {

@@ -1,17 +1,21 @@
 package hkust.cse.calendar.model;
 
+import hkust.cse.calendar.api.welcome.ListUserAPI;
 import hkust.cse.calendar.api.welcome.LoginAPI;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
 import hkust.cse.calendar.utils.network.APIHandler;
 import hkust.cse.calendar.utils.network.APIRequestEvent;
 
+import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User extends BaseModel {
+public class User extends BaseModel implements Comparable<User> {
 	private String username;
 	private String fullname;
 	private String email;
@@ -35,6 +39,16 @@ public class User extends BaseModel {
 	
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	static public List<User> fromJSONArray(JSONArray arr) throws JSONException {
+		int i;
+		List<User> aUser = new ArrayList<User>();
+		for(i = 0; i < arr.length(); i++) {
+			User u = new User(arr.getJSONObject(i));
+			aUser.add(u);
+		}
+		return aUser;
 	}
 	
 	static public void authUser(final String username, final String password, final GenListener<UserQuery> listener) {
@@ -62,6 +76,48 @@ public class User extends BaseModel {
 					}
 					else {
 						qry.setRtnValue(UserQuery.RtnValue.UNKNOWN_ERR);
+					}
+					fireTo(listener, qry);
+				} catch(JSONException ex) {
+					ex.printStackTrace();
+				}
+			}
+			
+		});
+		Thread thrd = new Thread(new APIHandler(api));
+		thrd.start();
+	}
+	
+	static public void listUser(final GenListener<UserListQuery> listener) {
+		ListUserAPI api = new ListUserAPI();
+		api.addDoneListener(new GenListener<APIRequestEvent>() {
+
+			@Override
+			public void fireEvent(APIRequestEvent e) {
+				JSONObject json = e.getJSON();
+				int i;
+				UserListQuery qry = new UserListQuery(this);
+				
+				try {
+					int rtnCode = json.getInt("rtnCode");
+					if(rtnCode == 200) {
+						qry.setRtnValue(UserListQuery.RtnValue.LIST_OK);
+						JSONArray jsonUser = json.getJSONArray("aUser");
+						List<User> aUser = new ArrayList<User>();
+						for(i = 0; i < jsonUser.length(); i++) {
+							User user = new User(jsonUser.getJSONObject(i));
+							aUser.add(user);
+						}
+						qry.setaUser(aUser);
+					}
+					else if(rtnCode == 201 || rtnCode == 202) {
+						qry.setRtnValue(UserListQuery.RtnValue.AUTH_FAIL);
+					}
+					else if(rtnCode == -1) {
+						qry.setRtnValue(UserListQuery.RtnValue.NETWORK_ERR);
+					}
+					else {
+						qry.setRtnValue(UserListQuery.RtnValue.UNKNOWN_ERR);
 					}
 					fireTo(listener, qry);
 				} catch(JSONException ex) {
@@ -138,5 +194,55 @@ public class User extends BaseModel {
 			this.user = user;
 		}
 		
+	}
+
+	static public class UserListQuery extends EventObject {
+		public enum RtnValue {
+			LIST_OK,
+			AUTH_FAIL,
+			NETWORK_ERR,
+			UNKNOWN_ERR
+		};
+		private RtnValue rtnValue;
+		private List<User> aUser;
+		
+		public UserListQuery(Object source) {
+			super(source);
+		}
+		
+		public UserListQuery(Object source, RtnValue rtnValue) {
+			super(source);
+			this.setRtnValue(rtnValue);
+		}
+
+		public RtnValue getRtnValue() {
+			return rtnValue;
+		}
+
+		public void setRtnValue(RtnValue rtnValue) {
+			this.rtnValue = rtnValue;
+		}
+
+		public List<User> getaUser() {
+			return aUser;
+		}
+
+		public void setaUser(List<User> aUser) {
+			this.aUser = aUser;
+		}
+
+		
+	}
+	
+	@Override
+	public int compareTo(User o) {
+		return (int)(this.id - o.id);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null) return false;
+		if(!(o instanceof User)) return false;
+		return this.id == ((User)o).id;
 	}
 }

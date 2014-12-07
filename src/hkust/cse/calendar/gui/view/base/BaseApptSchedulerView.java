@@ -2,6 +2,7 @@ package hkust.cse.calendar.gui.view.base;
 
 import hkust.cse.calendar.gui.controller.ApptSchedulerControllerEvent;
 import hkust.cse.calendar.model.Appointment;
+import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.model.Venue;
 import hkust.cse.calendar.utils.EventSource;
 import hkust.cse.calendar.utils.GenListener;
@@ -17,6 +18,7 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 	private List<GenListener<ApptSchedulerViewEvent>> aListener = new ArrayList<GenListener<ApptSchedulerViewEvent>>();
 	protected Map<Long, Venue> aVenue;
 	protected Appointment appt;
+	protected List<User> aUser;
 	
 	public void addApptSchedulerEventListener(GenListener<ApptSchedulerViewEvent> listener) {
 		aListener.add(listener);
@@ -36,6 +38,14 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 	final public void setAppt(Appointment appt) {
 		this.appt = appt;
 		updateAppt();
+	}
+	
+	abstract protected void updateUserList();
+	
+	final public void setUserList(List<User> aUser) {
+		this.aUser = aUser;
+		updateUserList();
+		
 	}
 	
 	abstract protected void updateAppt();
@@ -74,4 +84,5 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 
 	@Override
 	abstract public void fireEvent(ApptSchedulerControllerEvent e);
+
 }
