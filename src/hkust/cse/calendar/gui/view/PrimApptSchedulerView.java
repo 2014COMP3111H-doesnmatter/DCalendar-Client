@@ -236,6 +236,8 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		
+		panel2.add(new JCheckBox("Make it public"));
 
 		recBtn = new JButton("Recommend");
 		recBtn.addActionListener(this);
