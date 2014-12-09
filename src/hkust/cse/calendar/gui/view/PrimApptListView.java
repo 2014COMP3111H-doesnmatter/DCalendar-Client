@@ -1,6 +1,7 @@
 package hkust.cse.calendar.gui.view;
 
 import hkust.cse.calendar.gui.controller.ApptListControllerEvent;
+import hkust.cse.calendar.gui.domainModel.CalMainModel;
 import hkust.cse.calendar.gui.view.base.BaseApptListView;
 import hkust.cse.calendar.model.Appointment;
 
@@ -13,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -51,6 +53,7 @@ public class PrimApptListView extends BaseApptListView implements
 	private int currentRow = 0;
 	private int currentCol = 0;
 	private final Object[][] data = new Object[ROWNUM][6];
+	private final long[][] timeMat = new long[ROWNUM][6];
 	private JPopupMenu pop;
 	private JTable tableView;
 	private DragHelper dragHelper = new DragHelper();
@@ -273,6 +276,7 @@ public class PrimApptListView extends BaseApptListView implements
 		ApptListViewEvent e =
 				new ApptListViewEvent(this,
 						ApptListViewEvent.Command.NEW_APPOINTMENT);
+		e.selectedTime = this.getSelectedTime();
 		this.triggerApptListViewEvent(e);
 	}
 
@@ -345,14 +349,20 @@ public class PrimApptListView extends BaseApptListView implements
 		String s;
 		String am = new String("AM");
 		String pm = new String("PM");
-
+		long selectedDay = CalMainModel.getInstance().getSelectedDayStamp();
+		
 		int i;
 		for (i = 0; i < ROWNUM; i++)
 		{
-			if (tam % 60 == 0)
+			if (tam % 60 == 0) {
 				data[i][0] = (tam / 60) + ":" + "00" + am;
+			}
 			else
+			{
 				data[i][0] = (tam / 60) + ":" + (tam % 60) + am;
+				
+			}
+			this.timeMat[i][1] = selectedDay + tam*60*1000L;
 			tam = tam + SMALLEST_DURATION;
 			cellCMD[i][0] = NOT_COLORED;
 			cellCMD[i][1] = NOT_COLORED;
@@ -361,10 +371,15 @@ public class PrimApptListView extends BaseApptListView implements
 		}
 		for (i = 0; i < ROWNUM; i++)
 		{
-			if (tpm % 60 == 0)
+			if (tpm % 60 == 0) {
 				data[i][3] = (tpm / 60) + ":" + "00" + pm;
+			}
 			else
+			{
 				data[i][3] = (tpm / 60) + ":" + (tpm % 60) + pm;
+				
+			}
+			this.timeMat[i][4] = selectedDay + 12*60*60*1000L + tpm*60*1000L;
 			tpm = tpm + SMALLEST_DURATION;
 		}
 
@@ -400,6 +415,7 @@ public class PrimApptListView extends BaseApptListView implements
 	}
 
 	public void setTodayAppt(Appointment[] aAppt) {
+		getDataArray(data);
 		if (aAppt == null)
 			return;
 		for (int i = 0; i < aAppt.length; i++)
@@ -477,7 +493,15 @@ public class PrimApptListView extends BaseApptListView implements
 		// currColor = Color.yellow;
 
 	}
-	
+	public long getSelectedTime() {
+		if (currentRow < 0 || currentRow > ROWNUM - 1) {
+			return 0L;
+		}
+		if (currentCol < 3) {
+			return this.timeMat[currentRow][1];
+		} else
+			return this.timeMat[currentRow][4];
+	}
 	public Appointment getSelectedAppt() {
 		
 		Object apptTitle;

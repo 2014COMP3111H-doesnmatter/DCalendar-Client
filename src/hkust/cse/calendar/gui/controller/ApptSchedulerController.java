@@ -240,5 +240,9 @@ public class ApptSchedulerController extends EventSource implements Controller {
 	public void setaVenue(VenueCollection aVenue) {
 		this.aVenue = aVenue;
 	}
+	
+	public void setStartTime(long startTime) {
+		this.view.setStartTime(startTime);
+	}
 
 }

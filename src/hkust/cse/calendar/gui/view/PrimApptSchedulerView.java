@@ -608,5 +608,18 @@ public class PrimApptSchedulerView extends BaseApptSchedulerView implements Acti
 		if(this.appt.getaWaiting() != null)
 			userSeleB.addDestinationElements(this.appt.getaWaiting().toArray());
 	}
+
+	@Override
+	public void setStartTime(long startTime) {
+		Date stDate = new Date(startTime);
+		Date enDate = new Date(startTime + 15 * 60 * 1000);
+		yearF.setText(String.valueOf(stDate.getYear() + 1900));
+		monthBox.setSelectedIndex(stDate.getMonth());
+		dayF.setText(String.valueOf(stDate.getDate()));
+		sTimeHBox.setSelectedIndex(stDate.getHours());
+		sTimeMBox.setSelectedIndex(stDate.getMinutes()/15);
+		eTimeHBox.setSelectedIndex(enDate.getHours());
+		eTimeMBox.setSelectedIndex(enDate.getMinutes()/15);
+	}
 	
 }

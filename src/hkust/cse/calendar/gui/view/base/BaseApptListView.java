@@ -27,6 +27,7 @@ public abstract class BaseApptListView extends JPanel implements GenListener<App
 		};
 		private Command command;
 		public Appointment appt;
+		public long selectedTime;
 		
 		public ApptListViewEvent(Object source) {
 			super(source);

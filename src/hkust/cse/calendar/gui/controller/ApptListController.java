@@ -41,6 +41,7 @@ public class ApptListController extends EventSource implements Controller
 			case NEW_APPOINTMENT:
 				scheduler = new ApptSchedulerController(
 						manager.getApptSchedulerView(), null);
+				scheduler.setStartTime(e.selectedTime);
 				scheduler.start();
 				break;
 			case EDIT_APPOINTMENT:

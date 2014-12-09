@@ -95,4 +95,6 @@ public abstract class BaseApptSchedulerView extends JDialog implements GenListen
 	@Override
 	abstract public void fireEvent(ApptSchedulerControllerEvent e);
 
+	abstract public void setStartTime(long startTime);
+
 }
