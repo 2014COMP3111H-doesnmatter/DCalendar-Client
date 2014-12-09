@@ -82,6 +82,7 @@ public class AppointmentCollection extends Updatable {
 					UpdatableEvent ev = new UpdatableEvent(that);
 					if(rtnCode == 200) {
 						JSONArray aJson = json.getJSONArray("aAppointment");
+						aAppt.clear();
 						for(i = 0, size = aJson.length(); i < size; i++) {
 							JSONObject apptJson = aJson.getJSONObject(i);
 							Appointment appt = new Appointment(apptJson);
