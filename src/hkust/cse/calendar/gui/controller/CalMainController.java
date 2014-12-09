@@ -69,6 +69,7 @@ extends EventSource implements Controller {
 				BaseLoginView loginView = app.getViewManager().getLoginView();
 				app.switchController(new LoginController(loginView));
 				desktopCtrler.getView().dispose();
+				NotificationCollection.getInstance().stop();
 				app.getCurrentUser().logout();
 				view.dispose();
 				break;

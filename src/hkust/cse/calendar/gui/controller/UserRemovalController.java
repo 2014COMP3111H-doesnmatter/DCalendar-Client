@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import hkust.cse.calendar.Main.DCalendarApp;
 import hkust.cse.calendar.api.venue.ConfirmVenueRemovalAPI;
 import hkust.cse.calendar.api.welcome.ConfirmUserRemovalAPI;
+import hkust.cse.calendar.collection.NotificationCollection;
 import hkust.cse.calendar.gui.view.base.BaseLoginView;
 import hkust.cse.calendar.model.User;
 import hkust.cse.calendar.model.Venue;
@@ -43,6 +44,7 @@ public class UserRemovalController implements Controller {
 							APIHandler.resetCookie();
 							BaseLoginView loginView = app.getViewManager().getLoginView();
 							app.switchController(new LoginController(loginView));
+							NotificationCollection.getInstance().stop();
 							app.getCurrentUser().logout();
 							CalMainController.getInstance().getView().dispose();
 						}

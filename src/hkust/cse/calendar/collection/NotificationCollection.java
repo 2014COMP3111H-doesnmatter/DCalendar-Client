@@ -87,4 +87,8 @@ public class NotificationCollection extends Updatable {
 		ev.setNewVal(aNew);
 		fireList(colListener, ev);
 	}
+	
+	public void stop() {
+		instance = null;
+	}
 }

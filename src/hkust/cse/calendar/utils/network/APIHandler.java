@@ -49,6 +49,7 @@ public class APIHandler implements Runnable {
 			conn.setRequestProperty("Accept", "application/json");
 			conn.setRequestProperty("Accept-Charset", "utf-8");
 			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64) JavaSE/1.7 Jre/7(java.net, Like Chrome)");
+			conn.setUseCaches(false);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
